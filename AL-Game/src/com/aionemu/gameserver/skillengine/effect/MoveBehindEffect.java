@@ -16,9 +16,9 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
@@ -52,7 +52,7 @@ public class MoveBehindEffect extends DamageEffect {
 			return;
 		}
 		final Player effector = (Player) effect.getEffector();
-		if (effect.getSkill().getSkillId() == 11333) { // 쇠갈고리 [Mirash Sanctuary]
+		if (effect.getSkill().getSkillId() == 11333) { // ì‡ ê°ˆê³ ë¦¬ [Mirash Sanctuary]
 			effect.setDashStatus(DashStatus.MOVEBEHIND);
 			effect.setSkillMoveType(SkillMoveType.MOVEBEHIND);
 		}

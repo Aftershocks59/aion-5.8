@@ -15,9 +15,9 @@ quartz = "2.5.0"
 javassist = "3.30.2-GA"
 mysql = "9.2.0"
 bonecp = "0.8.0.RELEASE"      # DEBT: replace this pool, abandoned since 2013, with HikariCP
-jaxb = "2.3.9"                # DEBT: move off the javax.* namespace to jakarta.xml.bind 4.x
-jaxb-api = "2.3.1"
-activation = "1.2.0"
+jaxb = "4.0.5"
+jaxb-api = "4.0.2"
+activation = "2.1.3"
 jsr305 = "3.0.2"
 netty3 = "3.10.6.Final"       # DEBT: upgrade AL-Chat from end-of-life Netty 3 to Netty 4
 guice = "7.0.0"
@@ -37,9 +37,9 @@ quartz = { module = "org.quartz-scheduler:quartz", version.ref = "quartz" }
 javassist = { module = "org.javassist:javassist", version.ref = "javassist" }
 mysql = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }
 bonecp = { module = "com.jolbox:bonecp", version.ref = "bonecp" }
-jaxb-api = { module = "javax.xml.bind:jaxb-api", version.ref = "jaxb-api" }
+jaxb-api = { module = "jakarta.xml.bind:jakarta.xml.bind-api", version.ref = "jaxb-api" }
 jaxb-runtime = { module = "org.glassfish.jaxb:jaxb-runtime", version.ref = "jaxb" }
-activation = { module = "javax.activation:javax.activation-api", version.ref = "activation" }
+activation = { module = "jakarta.activation:jakarta.activation-api", version.ref = "activation" }
 jsr305 = { module = "com.google.code.findbugs:jsr305", version.ref = "jsr305" }
 netty3 = { module = "io.netty:netty", version.ref = "netty3" }
 guice = { module = "com.google.inject:guice", version.ref = "guice" }

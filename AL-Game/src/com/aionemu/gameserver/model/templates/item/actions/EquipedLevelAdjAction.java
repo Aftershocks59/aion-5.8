@@ -16,9 +16,9 @@
  */
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
@@ -78,7 +78,7 @@ public class EquipedLevelAdjAction extends AbstractItemAction {
 				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(),
 						parentItem.getObjectId().intValue(), parentItem.getItemTemplate().getTemplateId(), 0, 3, 0));
 				ItemPacketService.updateItemAfterInfoChange(player, targetItem);
-				// The reduction of %0‘s recommended level was canceled.
+				// The reduction of %0â€˜s recommended level was canceled.
 				PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_EQUIPLEVEL_ADJ_CANCEL(targetItem.getNameId()));
 			}

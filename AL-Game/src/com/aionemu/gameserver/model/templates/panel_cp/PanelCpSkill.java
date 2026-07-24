@@ -2,7 +2,7 @@ package com.aionemu.gameserver.model.templates.panel_cp;
 
 import com.aionemu.gameserver.model.Race;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 @XmlType(name = "panel_cp_skill")
 @XmlAccessorType(XmlAccessType.FIELD)
