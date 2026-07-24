@@ -18,7 +18,7 @@ package com.aionemu.gameserver.taskmanager.tasks;
 
 import static com.aionemu.gameserver.taskmanager.parallel.ForEach.forEach;
 
-import com.aionemu.commons.utils.internal.chmv8.ForkJoinTask;
+import java.util.concurrent.ForkJoinTask;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.model.gameobjects.Creature;
