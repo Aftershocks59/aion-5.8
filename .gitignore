@@ -7,6 +7,7 @@ bin/
 *.class
 
 # Ignore runtime artefacts produced by the servers.
+AL-Game/cache/
 log/
 *.log
 AL-Game/log/
