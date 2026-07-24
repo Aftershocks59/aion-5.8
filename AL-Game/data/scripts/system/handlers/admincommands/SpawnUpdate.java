@@ -178,7 +178,10 @@ public class SpawnUpdate extends AdminCommand {
 					}
 					List<SpawnGroup2> allSpawns = DataManager.SPAWNS_DATA2.getSpawnsByWorldId(npc.getWorldId());
 					List<SpawnTemplate> allSpots = allSpawns.stream().flatMap(g -> g.getSpawnTemplates().stream()).collect(Collectors.toList());
-					List<SpawnTemplate> sameIds = allSpots.stream().filter(s -> Objects.equals(s.getWalkerId(), walkerId)).collect(Collectors.toList());
+					// Copy into a local: walkerId is reassigned above, so a lambda cannot capture it.
+					final String targetWalkerId = walkerId;
+					List<SpawnTemplate> sameIds = allSpots.stream()
+							.filter(s -> Objects.equals(s.getWalkerId(), targetWalkerId)).collect(Collectors.toList());
 					if (sameIds.size() >= template.getPool()) {
 						PacketSendUtility.sendMessage(admin, "Can not assign, walker pool reached the limit.");
 						return;

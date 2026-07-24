@@ -41,7 +41,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import ai.instance.secretMunitionsFactory.LunaPatrolAI2;
 
 import java.util.Map;
 import java.util.Set;
@@ -317,7 +316,11 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler  {
 		Npc target = instance.getNpc(targetId);
 
 		if (MathUtil.isInRange(target, npc, 25)) {
-			((LunaPatrolAI2)npc.getAi2()).addAggro(target);
+			// Drive the aggro list directly through the core API. The former cast to
+			// LunaPatrolAI2 crossed script contexts: AI and instance handlers compile
+			// into separate classloaders, so that class is not visible from here.
+			npc.getAggroList().remove(target);
+			npc.getAggroList().addHate(target, 100000);
 		}
 	}
 
