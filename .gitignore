@@ -15,9 +15,8 @@ AL-Game/log/
 Geodata/
 *.geo
 
-# Ignore IDE files that are developer-specific.
-# Gradle regenerates the IntelliJ project from the build scripts.
-.idea/
+# Track the shared IntelliJ configuration, ignore the per-developer parts.
+# See .idea/.gitignore for the exclusions inside that directory.
 *.iml
 .classpath
 .project

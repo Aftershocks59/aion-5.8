@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <!-- Read and write every source file as UTF-8, matching the Gradle compiler
+       setting. The data/ XML templates contain non-ASCII item and NPC names. -->
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8" addBOMForNewFiles="with NO BOM">
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
