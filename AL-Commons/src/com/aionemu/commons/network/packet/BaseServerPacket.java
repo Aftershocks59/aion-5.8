@@ -154,4 +154,31 @@ public abstract class BaseServerPacket extends BasePacket {
     protected final void writeB(byte[] data) {
         buf.put(data);
     }
+
+    /**
+     * Write a hexadecimal string to buffer, ignoring any whitespace it contains.
+     * <p>
+     * Accepts both "00 01 FF" and "0001FF". Server packets built from captured
+     * client dumps rely on this overload.
+     *
+     * @param hex hexadecimal representation of the bytes to write
+     */
+    protected final void writeB(String hex) {
+        buf.put(hex2bytes(hex));
+    }
+
+    /**
+     * Decode a whitespace-tolerant hexadecimal string into its bytes.
+     *
+     * @param hex hexadecimal representation, with or without separators
+     * @return the decoded bytes
+     */
+    private static byte[] hex2bytes(String hex) {
+        String compact = hex.replaceAll("\\s+", "");
+        byte[] bytes = new byte[compact.length() / 2];
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = (byte) Integer.parseInt(compact.substring(2 * i, 2 * i + 2), 16);
+        }
+        return bytes;
+    }
 }
