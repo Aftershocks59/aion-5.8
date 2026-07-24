@@ -36,10 +36,28 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public abstract class AbstractLockManager {
 
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    private final ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
-    private final ReentrantReadWriteLock.ReadLock readLock = lock.readLock(); // Later could be used.
+    private ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
+    private ReentrantReadWriteLock.ReadLock readLock = lock.readLock(); // Later could be used.
+
+    /**
+     * Install a fresh, self-consistent set of locks.
+     * <p>
+     * Serves instances brought back to life without running a constructor, as a
+     * binary snapshot does: their lock fields would otherwise stay null. The three
+     * fields must come from the same {@link ReentrantReadWriteLock}, otherwise
+     * readers and writers stop excluding each other, so they are always replaced
+     * together.
+     * <p>
+     * Never call this on an instance other threads may be using: it discards the
+     * current lock state.
+     */
+    public final void resetLocks() {
+        lock = new ReentrantReadWriteLock();
+        writeLock = lock.writeLock();
+        readLock = lock.readLock();
+    }
 
     public final void writeLock() {
         writeLock.lock();

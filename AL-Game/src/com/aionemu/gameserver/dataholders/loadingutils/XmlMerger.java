@@ -182,6 +182,42 @@ public class XmlMerger {
 	}
 
 	/**
+	 * Reports whether every source XML file still matches the checksums recorded in
+	 * the metadata file.
+	 * <p>
+	 * Unlike {@link #process()}, this asks the question without needing the merged
+	 * output to exist, so a consumer holding its own artefact, such as the binary
+	 * snapshot, can decide whether that artefact is still current.
+	 *
+	 * @param referenceTime instant the caller's artefact was produced, in
+	 *                      milliseconds
+	 * @return true when no source file changed since that instant
+	 * @throws Exception on document parsing error
+	 */
+	public boolean isUpToDate(long referenceTime) throws Exception {
+		if (referenceTime <= 0 || !sourceFile.exists() || !metaDataFile.exists()) {
+			return false;
+		}
+
+		if (sourceFile.lastModified() > referenceTime) {
+			logger.debug("Source file is newer than the reference artefact");
+			return false;
+		}
+
+		Properties metadata = restoreFileModifications(metaDataFile);
+
+		if (metadata == null) {
+			return false;
+		}
+
+		SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+		TimeCheckerHandler handler = new TimeCheckerHandler(baseDir, metadata);
+		parser.parse(sourceFile, handler);
+
+		return !handler.isModified();
+	}
+
+	/**
 	 * Check for modifications of included files.
 	 *
 	 * @return <code>true</code> if at least one of included files has

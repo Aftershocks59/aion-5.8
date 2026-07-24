@@ -16,8 +16,10 @@
  */
 package com.aionemu.gameserver.dataholders.loadingutils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.Reader;
 
 import javax.xml.XMLConstants;
 import jakarta.xml.bind.JAXBContext;
@@ -25,6 +27,7 @@ import jakarta.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -64,16 +67,48 @@ public class XmlDataLoader {
 	 */
 	public StaticData loadStaticData() {
 		makeCacheDirectory();
-		File cachedXml = new File(CACHE_XML_FILE);
+		File mergedXml = new File(CACHE_XML_FILE);
 		File cleanMainXml = new File(MAIN_XML_FILE);
-		mergeXmlFiles(cachedXml, cleanMainXml);
+		XmlMerger merger = new XmlMerger(cleanMainXml, mergedXml);
+
+		// Fast path: reuse the binary snapshot when no source XML changed. This skips
+		// merging and JAXB entirely, which together dominate the start time.
+		try {
+			if (BinaryStaticDataCache.exists() && merger.isUpToDate(BinaryStaticDataCache.lastModified())) {
+				StaticData cached = BinaryStaticDataCache.load();
+				if (cached != null) {
+					return cached;
+				}
+			}
+		} catch (Exception e) {
+			log.warn("Could not verify the static data snapshot, rebuilding from XML.", e);
+		}
+
+		// Slow path: a source file changed, or no usable snapshot exists.
+		log.info("Static data changed, rebuilding from XML.");
+		mergeXmlFiles(merger);
 
 		try {
 			JAXBContext jc = JAXBContext.newInstance(StaticData.class);
 			Unmarshaller un = jc.createUnmarshaller();
 			un.setEventHandler(new XmlValidationHandler());
 			un.setSchema(getSchema());
-			return (StaticData) un.unmarshal(new FileReader(CACHE_XML_FILE));
+
+			StaticData data;
+			// Buffer the reader: an unbuffered FileReader decodes the aggregate one
+			// character at a time.
+			try (Reader reader = new BufferedReader(new FileReader(CACHE_XML_FILE), 1 << 20)) {
+				data = (StaticData) un.unmarshal(reader);
+			}
+
+			BinaryStaticDataCache.save(data);
+
+			// Drop the merged XML: it is a build artefact of this pass, and keeping it
+			// costs several hundred megabytes on disk for nothing. The snapshot plus
+			// the merger metadata are enough to answer every later start.
+			FileUtils.deleteQuietly(mergedXml);
+
+			return data;
 		}
 		/*
 		 * catch (IllegalAnnotationsException e) {
@@ -125,8 +160,7 @@ public class XmlDataLoader {
 	 * @param cleanMainXml
 	 * @throws Error is thrown if some problem occured.
 	 */
-	private void mergeXmlFiles(File cachedXml, File cleanMainXml) throws Error {
-		XmlMerger merger = new XmlMerger(cleanMainXml, cachedXml);
+	private void mergeXmlFiles(XmlMerger merger) throws Error {
 		try {
 			merger.process();
 		} catch (Exception e) {

@@ -11,6 +11,10 @@ dependencies {
     api(project(":AL-Commons"))
 
     implementation(libs.trove4j)
+
+    // Snapshot the parsed static data graph to a binary cache, so a start with
+    // unchanged XML skips JAXB entirely.
+    implementation(libs.kryo)
     implementation(libs.joda.time)
     implementation(libs.jaxb.api)
     runtimeOnly(libs.jaxb.runtime)

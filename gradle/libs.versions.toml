@@ -10,6 +10,7 @@ guava = "33.4.8-jre"
 commons-io = "2.19.0"
 commons-lang = "2.6"          # DEBT: keep org.apache.commons.lang v2, migrate to lang3
 trove4j = "3.0.3"
+kryo = "5.6.2"
 joda-time = "2.13.1"
 quartz = "2.5.0"
 javassist = "3.30.2-GA"
@@ -31,6 +32,7 @@ guava = { module = "com.google.guava:guava", version.ref = "guava" }
 commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
 commons-lang = { module = "commons-lang:commons-lang", version.ref = "commons-lang" }
 trove4j = { module = "net.sf.trove4j:trove4j", version.ref = "trove4j" }
+kryo = { module = "com.esotericsoftware:kryo", version.ref = "kryo" }
 joda-time = { module = "joda-time:joda-time", version.ref = "joda-time" }
 quartz = { module = "org.quartz-scheduler:quartz", version.ref = "quartz" }
 javassist = { module = "org.javassist:javassist", version.ref = "javassist" }
