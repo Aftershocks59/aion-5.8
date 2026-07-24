@@ -19,7 +19,7 @@
  * Credits goes to all Open Source Core Developer Groups listed below
  * Please do not change here something, regarding the developer credits, except the "developed by XXXX".
  * Even if you edit a lot of files in this source, you still have no rights to call it as "your Core".
- * Everybody knows that this Emulator Core was developed by Aion Lightning 
+ * Everybody knows that this Emulator Core was developed by Aion Lightning
  * @-Aion-Unique-
  * @-Aion-Lightning
  * @Aion-Engine
@@ -29,20 +29,27 @@
  */
 package com.aionemu.commons.scripting.impl.javacompiler;
 
-import com.sun.tools.javac.file.BaseFileObject;
-
-import java.io.*;
+import javax.tools.SimpleJavaFileObject;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.net.URI;
 
-//import com.sun.tools.javac.file.BaseFileObject;
-
 /**
- * This class is just a hack to make javac compiler work with classes loaded by
- * prevoius classloader. Also it's used as container for loaded class
+ * Holds the bytecode a compilation run produces for a single class, and hands it
+ * back to the compiler and to the classloader on demand.
+ * <p>
+ * Extends {@link SimpleJavaFileObject} rather than {@code com.sun.tools.javac.file.BaseFileObject}:
+ * that internal javac type was removed in JDK 9. Only the constructor was ever
+ * inherited from it, so the public API of this class is unchanged.
  *
  * @author SoulKeeper
  */
-public class BinaryClass extends BaseFileObject {
+public class BinaryClass extends SimpleJavaFileObject {
 
     /**
      * ClassName
@@ -65,30 +72,19 @@ public class BinaryClass extends BaseFileObject {
      * @param name class name
      */
     protected BinaryClass(String name) {
-        super(null);
+        // Build a synthetic URI: the bytecode lives in memory, not on disk.
+        super(URI.create("bytes:///" + name.replace('.', '/') + Kind.CLASS.extension), Kind.CLASS);
         this.name = name;
-    }
-
-    /**
-     * Throws {@link UnsupportedOperationException}
-     *
-     * @return nothing
-     */
-    @Override
-    public URI toUri() {
-        throw new UnsupportedOperationException();
     }
 
     /**
      * Returns name of this class with ".class" suffix
      *
      * @return name of this class with ".class" suffix
-     * @deprecated
      */
-    @Deprecated
     @Override
     public String getName() {
-        return name + ".class";
+        return name + Kind.CLASS.extension;
     }
 
     /**
@@ -159,7 +155,6 @@ public class BinaryClass extends BaseFileObject {
      * @param path doesn't matter
      * @return class name
      */
-    @Override
     protected String inferBinaryName(Iterable<? extends File> path) {
         return name;
     }

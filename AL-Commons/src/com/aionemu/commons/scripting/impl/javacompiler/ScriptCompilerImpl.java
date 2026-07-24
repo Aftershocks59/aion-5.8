@@ -32,7 +32,6 @@ package com.aionemu.commons.scripting.impl.javacompiler;
 import com.aionemu.commons.scripting.CompilationResult;
 import com.aionemu.commons.scripting.ScriptClassLoader;
 import com.aionemu.commons.scripting.ScriptCompiler;
-import com.sun.tools.javac.api.JavacTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,12 +77,14 @@ public class ScriptCompilerImpl implements ScriptCompiler {
      * @throws RuntimeException if compiler is not available
      */
     public ScriptCompilerImpl() {
-        this.javaCompiler = JavacTool.create();
+        // Resolve the compiler through the standard javax.tools SPI. The former
+        // com.sun.tools.javac.api.JavacTool entry point is an internal javac type
+        // that JDK 9+ no longer exports to the unnamed module.
+        this.javaCompiler = ToolProvider.getSystemJavaCompiler();
 
         if (javaCompiler == null) {
-            if (ToolProvider.getSystemJavaCompiler() != null) {
-                throw new RuntimeException(new InstantiationException("JavaCompiler is not aviable."));
-            }
+            throw new RuntimeException(new InstantiationException(
+                    "JavaCompiler is not available. Run the server on a JDK, not a JRE."));
         }
     }
 
@@ -177,7 +178,9 @@ public class ScriptCompilerImpl implements ScriptCompiler {
     protected CompilationResult doCompilation(Iterable<JavaFileObject> compilationUnits) {
         List<String> options = Arrays.asList("-encoding", "UTF-8", "-g");
         DiagnosticListener<JavaFileObject> listener = new ErrorListener();
-        ClassFileManager manager = new ClassFileManager(JavacTool.create(), listener);
+        // Reuse the compiler resolved in the constructor instead of spawning a
+        // second instance through the internal JavacTool API.
+        ClassFileManager manager = new ClassFileManager(javaCompiler, listener);
         manager.setParentClassLoader(parentClassLoader);
 
         if (libraries != null) {
