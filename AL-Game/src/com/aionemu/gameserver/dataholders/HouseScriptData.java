@@ -41,8 +41,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -115,19 +120,24 @@ public class HouseScriptData {
 		private static final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		private static DocumentBuilder db;
 
-		@SuppressWarnings("restriction")
+		/**
+		 * Pretty-print an XML document through JAXP.
+		 * <p>
+		 * Replaces the former Xerces org.apache.xml.serialize.XMLSerializer, an
+		 * internal API dropped from modern Xerces releases.
+		 */
 		public static String format(String unformattedXml) {
 			try {
 				Document document = parseXmlFile(unformattedXml);
-				OutputFormat format = new OutputFormat(document);
-				format.setIndenting(true);
-				format.setIndent(2);
-				format.setEncoding("UTF-8");
+				Transformer transformer = TransformerFactory.newInstance().newTransformer();
+				transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+				transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 				Writer out = new StringWriter();
-				XMLSerializer serializer = new XMLSerializer(out, format);
-				serializer.serialize(document);
+				transformer.transform(new DOMSource(document), new StreamResult(out));
 				return out.toString();
-			} catch (IOException e) {
+			} catch (TransformerException e) {
+				log.error("Could not format XML document", e);
 			}
 			return null;
 		}

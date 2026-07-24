@@ -50,8 +50,8 @@ import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.gameserver.world.zone.ZoneService;
 
-import sun.misc.Cleaner;
-import sun.nio.ch.DirectBuffer;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * @author Mr. Poke
@@ -316,10 +316,48 @@ public class GeoWorldLoader {
 		return (int) ((xIntBits * 73856093 ^ yIntBits * 19349663 ^ zIntBits * 83492791) % 50000);
 	}
 
+	/**
+	 * Release a direct buffer eagerly instead of waiting for the collector.
+	 * <p>
+	 * Unmapping matters on Windows, where a mapped geodata file stays locked for
+	 * as long as the mapping lives. The former sun.misc.Cleaner and
+	 * sun.nio.ch.DirectBuffer route disappeared in JDK 9, so go through
+	 * sun.misc.Unsafe#invokeCleaner, which jdk.unsupported still exports.
+	 * Degrade to a no-op when the JVM denies access: the buffer is then simply
+	 * freed later by the garbage collector.
+	 */
 	private static void destroyDirectByteBuffer(Buffer toBeDestroyed) {
-		Cleaner cleaner = ((DirectBuffer) toBeDestroyed).cleaner();
-		if (cleaner != null) {
-			cleaner.clean();
+		if (INVOKE_CLEANER == null || UNSAFE == null || !toBeDestroyed.isDirect()
+				|| !(toBeDestroyed instanceof ByteBuffer)) {
+			return;
 		}
+		try {
+			INVOKE_CLEANER.invoke(UNSAFE, toBeDestroyed);
+		} catch (ReflectiveOperationException e) {
+			log.warn("Could not release a mapped geodata buffer", e);
+		}
+	}
+
+	/** Holds sun.misc.Unsafe#theUnsafe, or null when it cannot be reached. */
+	private static final Object UNSAFE;
+
+	/** Holds sun.misc.Unsafe#invokeCleaner, or null when it cannot be reached. */
+	private static final Method INVOKE_CLEANER;
+
+	static {
+		Object unsafe = null;
+		Method invokeCleaner = null;
+		try {
+			Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+			Field theUnsafe = unsafeClass.getDeclaredField("theUnsafe");
+			theUnsafe.setAccessible(true);
+			unsafe = theUnsafe.get(null);
+			invokeCleaner = unsafeClass.getMethod("invokeCleaner", ByteBuffer.class);
+		} catch (ReflectiveOperationException | RuntimeException e) {
+			unsafe = null;
+			invokeCleaner = null;
+		}
+		UNSAFE = unsafe;
+		INVOKE_CLEANER = invokeCleaner;
 	}
 }
