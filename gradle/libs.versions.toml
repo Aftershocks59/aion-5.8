@@ -1,0 +1,49 @@
+# Catalogue de versions centralise.
+#
+# Les entrees marquees "DETTE" sont des dependances mortes ou obsoletes conservees
+# temporairement pour obtenir un build vert. Elles sont retirees au palier B.
+
+[versions]
+slf4j = "2.0.17"
+logback = "1.5.18"
+guava = "33.4.8-jre"
+commons-io = "2.19.0"
+commons-lang = "2.6"          # DETTE : org.apache.commons.lang (v2), a migrer vers lang3
+trove4j = "3.0.3"
+joda-time = "2.13.1"
+quartz = "2.5.0"
+javassist = "3.30.2-GA"
+mysql = "9.2.0"
+bonecp = "0.8.0.RELEASE"      # DETTE : pool abandonne depuis 2013, a remplacer par HikariCP
+jaxb = "2.3.9"                # DETTE : namespace javax.*, a migrer vers jakarta.xml.bind 4.x
+jaxb-api = "2.3.1"
+activation = "1.2.0"
+jsr305 = "3.0.2"
+netty3 = "3.10.6.Final"       # DETTE : Netty 3 (AL-Chat uniquement), a migrer vers Netty 4
+javolution = "5.5.1"          # DETTE : FastMap/FastList/FastSet, a remplacer par java.util
+hamcrest = "1.3"              # DETTE : requis uniquement par lambdaj
+
+[libraries]
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+logback-core = { module = "ch.qos.logback:logback-core", version.ref = "logback" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
+commons-lang = { module = "commons-lang:commons-lang", version.ref = "commons-lang" }
+trove4j = { module = "net.sf.trove4j:trove4j", version.ref = "trove4j" }
+joda-time = { module = "joda-time:joda-time", version.ref = "joda-time" }
+quartz = { module = "org.quartz-scheduler:quartz", version.ref = "quartz" }
+javassist = { module = "org.javassist:javassist", version.ref = "javassist" }
+mysql = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }
+bonecp = { module = "com.jolbox:bonecp", version.ref = "bonecp" }
+jaxb-api = { module = "javax.xml.bind:jaxb-api", version.ref = "jaxb-api" }
+jaxb-runtime = { module = "org.glassfish.jaxb:jaxb-runtime", version.ref = "jaxb" }
+activation = { module = "javax.activation:javax.activation-api", version.ref = "activation" }
+jsr305 = { module = "com.google.code.findbugs:jsr305", version.ref = "jsr305" }
+netty3 = { module = "io.netty:netty", version.ref = "netty3" }
+javolution = { module = "javolution:javolution", version.ref = "javolution" }
+hamcrest = { module = "org.hamcrest:hamcrest-all", version.ref = "hamcrest" }
+
+[bundles]
+logging = ["slf4j-api", "logback-classic", "logback-core"]
+jaxb = ["jaxb-api", "jaxb-runtime", "activation"]
