@@ -1,0 +1,37 @@
+# Ignore Gradle build outputs and caches.
+build/
+.gradle/
+
+# Ignore legacy Ant build outputs.
+bin/
+*.class
+
+# Ignore runtime artefacts produced by the servers.
+log/
+*.log
+AL-Game/log/
+
+# Ignore geodata, which is distributed separately (see README).
+Geodata/
+*.geo
+
+# Ignore IDE files that are developer-specific.
+# Gradle regenerates the IntelliJ project from the build scripts.
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+out/
+nbactions.xml
+
+# Ignore OS noise.
+Thumbs.db
+.DS_Store
+
+# Exclude AI assistant artefacts from the repository.
+.claude/
+CLAUDE.md
+.cursor/
+.aider*
+.github/copilot-instructions.md
