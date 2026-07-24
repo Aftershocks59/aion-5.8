@@ -15,7 +15,7 @@ dependencies {
     api(libs.quartz)
     api(libs.javassist)
     api(libs.bonecp)
-    api(libs.mysql)
+    api(libs.mariadb)
     api(libs.javolution)
     api(libs.jsr305)
     api(libs.jaxb.api)

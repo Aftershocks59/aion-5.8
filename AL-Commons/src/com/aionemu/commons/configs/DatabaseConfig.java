@@ -49,7 +49,7 @@ public class DatabaseConfig {
     /**
      * Name of database Driver
      */
-    @Property(key = "database.driver", defaultValue = "com.mysql.jdbc.Driver")
+    @Property(key = "database.driver", defaultValue = "org.mariadb.jdbc.Driver")
     public static Class<?> DATABASE_DRIVER;
 
     /**

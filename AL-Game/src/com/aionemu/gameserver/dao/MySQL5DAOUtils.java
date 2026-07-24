@@ -20,7 +20,12 @@ public class MySQL5DAOUtils {
 
 	public static final String MYSQL_DB_NAME = "MySQL";
 
+	/**
+	 * Constant for the MariaDB product name, reported by the MariaDB driver.
+	 */
+	public static final String MARIADB_DB_NAME = "MariaDB";
+
 	public static boolean supports(String db, int majorVersion, int minorVersion) {
-		return ("MySQL".equals(db)) && (majorVersion == 5);
+		return (MYSQL_DB_NAME.equalsIgnoreCase(db) || MARIADB_DB_NAME.equalsIgnoreCase(db)) && majorVersion >= 5;
 	}
 }

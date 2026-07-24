@@ -13,7 +13,7 @@ trove4j = "3.0.3"
 joda-time = "2.13.1"
 quartz = "2.5.0"
 javassist = "3.30.2-GA"
-mysql = "9.2.0"
+mariadb = "3.5.9"
 bonecp = "0.8.0.RELEASE"      # DEBT: replace this pool, abandoned since 2013, with HikariCP
 jaxb = "4.0.5"
 jaxb-api = "4.0.2"
@@ -35,7 +35,7 @@ trove4j = { module = "net.sf.trove4j:trove4j", version.ref = "trove4j" }
 joda-time = { module = "joda-time:joda-time", version.ref = "joda-time" }
 quartz = { module = "org.quartz-scheduler:quartz", version.ref = "quartz" }
 javassist = { module = "org.javassist:javassist", version.ref = "javassist" }
-mysql = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }
+mariadb = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "mariadb" }
 bonecp = { module = "com.jolbox:bonecp", version.ref = "bonecp" }
 jaxb-api = { module = "jakarta.xml.bind:jakarta.xml.bind-api", version.ref = "jaxb-api" }
 jaxb-runtime = { module = "org.glassfish.jaxb:jaxb-runtime", version.ref = "jaxb" }

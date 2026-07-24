@@ -36,6 +36,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class is designed to simplify routine job with properties
@@ -65,9 +67,54 @@ public class PropertiesUtils {
     public static Properties load(File file) throws IOException {
         FileInputStream fis = new FileInputStream(file);
         Properties p = new Properties();
-        p.load(fis);
-        fis.close();
+        try {
+            p.load(fis);
+        } finally {
+            fis.close();
+        }
+        resolvePlaceholders(p);
         return p;
+    }
+
+    /**
+     * Matches a ${NAME} or ${NAME:default} placeholder inside a property value.
+     */
+    private static final Pattern PLACEHOLDER = Pattern.compile("\\$\\{([A-Za-z0-9_.\\-]+)(?::([^}]*))?}");
+
+    /**
+     * Substitute every ${NAME} and ${NAME:default} placeholder in the given
+     * properties.
+     * <p>
+     * Resolves each name against JVM system properties first, then environment
+     * variables, then the inline default. This keeps credentials out of the
+     * tracked configuration files: a file ships a harmless default and the real
+     * value is supplied by the environment at deployment time.
+     *
+     * @param properties properties to substitute in place
+     */
+    public static void resolvePlaceholders(Properties properties) {
+        for (String key : properties.stringPropertyNames()) {
+            String value = properties.getProperty(key);
+            if (value == null || value.indexOf("${") < 0) {
+                continue;
+            }
+            Matcher matcher = PLACEHOLDER.matcher(value);
+            StringBuffer resolved = new StringBuffer();
+            while (matcher.find()) {
+                String name = matcher.group(1);
+                String fallback = matcher.group(2) == null ? "" : matcher.group(2);
+                String replacement = System.getProperty(name);
+                if (replacement == null) {
+                    replacement = System.getenv(name);
+                }
+                if (replacement == null) {
+                    replacement = fallback;
+                }
+                matcher.appendReplacement(resolved, Matcher.quoteReplacement(replacement));
+            }
+            matcher.appendTail(resolved);
+            properties.setProperty(key, resolved.toString());
+        }
     }
 
     /**
