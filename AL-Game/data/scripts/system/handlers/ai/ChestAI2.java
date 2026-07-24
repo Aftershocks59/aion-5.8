@@ -34,7 +34,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import static ch.lambdaj.Lambda.maxFrom;
 
 @AIName("chest")
 public class ChestAI2 extends ActionItemNpcAI2
@@ -72,7 +71,7 @@ public class ChestAI2 extends ActionItemNpcAI2
 			} else {
 				players.add(player);
 			}
-			DropRegistrationService.getInstance().registerDrop(getOwner(), player, maxFrom(players).getLevel(), players);
+			DropRegistrationService.getInstance().registerDrop(getOwner(), player, players.stream().mapToInt(Player::getLevel).max().orElse(0), players);
 			DropService.getInstance().requestDropList(player, getObjectId());
 		} else {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111300, player.getObjectId(), 2));

@@ -169,7 +169,6 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.zone.ZoneService;
 
-import ch.lambdaj.Lambda;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
@@ -242,7 +241,6 @@ public class GameServer {
 	public static void main(String[] args) {
 		long start = System.currentTimeMillis();
 
-		Lambda.enableJitting(true);
 		final GameEngine[] parallelEngines = { QuestEngine.getInstance(), InstanceEngine.getInstance(),
 				AI2Engine.getInstance(), ChatProcessor.getInstance() };
 

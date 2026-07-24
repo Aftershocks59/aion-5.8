@@ -16,20 +16,25 @@
  */
 package com.aionemu.gameserver.model.team.legion;
 
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.select;
-import static org.hamcrest.Matchers.equalTo;
 
 import java.sql.Timestamp;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import java.util.Collection;
+import java.util.stream.Collectors;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.SortedSet;
+import java.util.stream.Collectors;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.configs.main.LegionConfig;
@@ -510,7 +515,7 @@ public class Legion {
 		if (legionHistory.isEmpty()) {
 			return legionHistory;
 		}
-		return select(legionHistory, having(on(LegionHistory.class).getTabId(), equalTo(tabType)));
+		return legionHistory.stream().filter(h -> h.getTabId() == tabType).collect(Collectors.toList());
 	}
 
 	/**
@@ -522,12 +527,12 @@ public class Legion {
 
 	public void addBonus() {
 		ArrayList<Player> members = getOnlineLegionMembers();
-		// 레기온 창고란 같은 레기온원들 끼리 공동으로 사용하는 창고의 개념이다.
-		// 즉, 다른 레기온원이 이곳에 물건을 넣으면, 자신 외에 다른 권한을 가진 레기온원이 꺼내서 사용할 수 있다는 것.
-		// 아직 영혼 각인하지 않은 무기, 방어구라든지 각종 소비 아이템, 심지어 키나까지도 레기온원들 끼리 공동으로 사용할 수 있게 해주는 아주
-		// 편리한 시스템이다.
-		// 레기온 창고는 레기온을 설립하면 바로 이용이 가능하며, 레기온 창고의 이용 방식은 일반 창고와 동일하다.
-		// 레기온의 레벨이 올라갈 수록 레기온 창고의 슬롯 수를 늘릴 수 있다.
+		// ë ˆê¸°ì˜¨ ì°½ê³ ëž€ ê°™ì€ ë ˆê¸°ì˜¨ì›ë“¤ ë¼ë¦¬ ê³µë™ìœ¼ë¡œ ì‚¬ìš©í•˜ëŠ” ì°½ê³ ì˜ ê°œë…ì´ë‹¤.
+		// ì¦‰, ë‹¤ë¥¸ ë ˆê¸°ì˜¨ì›ì´ ì´ê³³ì— ë¬¼ê±´ì„ ë„£ìœ¼ë©´, ìžì‹  ì™¸ì— ë‹¤ë¥¸ ê¶Œí•œì„ ê°€ì§„ ë ˆê¸°ì˜¨ì›ì´ êº¼ë‚´ì„œ ì‚¬ìš©í•  ìˆ˜ ìžˆë‹¤ëŠ” ê²ƒ.
+		// ì•„ì§ ì˜í˜¼ ê°ì¸í•˜ì§€ ì•Šì€ ë¬´ê¸°, ë°©ì–´êµ¬ë¼ë“ ì§€ ê°ì¢… ì†Œë¹„ ì•„ì´í…œ, ì‹¬ì§€ì–´ í‚¤ë‚˜ê¹Œì§€ë„ ë ˆê¸°ì˜¨ì›ë“¤ ë¼ë¦¬ ê³µë™ìœ¼ë¡œ ì‚¬ìš©í•  ìˆ˜ ìžˆê²Œ í•´ì£¼ëŠ” ì•„ì£¼
+		// íŽ¸ë¦¬í•œ ì‹œìŠ¤í…œì´ë‹¤.
+		// ë ˆê¸°ì˜¨ ì°½ê³ ëŠ” ë ˆê¸°ì˜¨ì„ ì„¤ë¦½í•˜ë©´ ë°”ë¡œ ì´ìš©ì´ ê°€ëŠ¥í•˜ë©°, ë ˆê¸°ì˜¨ ì°½ê³ ì˜ ì´ìš© ë°©ì‹ì€ ì¼ë°˜ ì°½ê³ ì™€ ë™ì¼í•˜ë‹¤.
+		// ë ˆê¸°ì˜¨ì˜ ë ˆë²¨ì´ ì˜¬ë¼ê°ˆ ìˆ˜ë¡ ë ˆê¸°ì˜¨ ì°½ê³ ì˜ ìŠ¬ë¡¯ ìˆ˜ë¥¼ ëŠ˜ë¦´ ìˆ˜ ìžˆë‹¤.
 		if (members.size() >= 2 && members.size() <= 9) {
 			if (hasBonus.compareAndSet(false, true)) {
 				for (Player member : members) {

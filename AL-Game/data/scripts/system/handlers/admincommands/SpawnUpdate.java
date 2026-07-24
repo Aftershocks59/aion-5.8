@@ -29,10 +29,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.List;
 
-import static ch.lambdaj.Lambda.*;
-import static org.hamcrest.Matchers.equalTo;
 
 /**
  * @author KID
@@ -176,8 +177,8 @@ public class SpawnUpdate extends AdminCommand {
 						return;
 					}
 					List<SpawnGroup2> allSpawns = DataManager.SPAWNS_DATA2.getSpawnsByWorldId(npc.getWorldId());
-					List<SpawnTemplate> allSpots = flatten(extractIterator(allSpawns, on(SpawnGroup2.class).getSpawnTemplates()));
-					List<SpawnTemplate> sameIds = filter(having(on(SpawnTemplate.class).getWalkerId(), equalTo(walkerId)), allSpots);
+					List<SpawnTemplate> allSpots = allSpawns.stream().flatMap(g -> g.getSpawnTemplates().stream()).collect(Collectors.toList());
+					List<SpawnTemplate> sameIds = allSpots.stream().filter(s -> Objects.equals(s.getWalkerId(), walkerId)).collect(Collectors.toList());
 					if (sameIds.size() >= template.getPool()) {
 						PacketSendUtility.sendMessage(admin, "Can not assign, walker pool reached the limit.");
 						return;

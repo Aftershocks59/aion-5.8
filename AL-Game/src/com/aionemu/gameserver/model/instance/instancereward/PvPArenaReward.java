@@ -16,17 +16,13 @@
  */
 package com.aionemu.gameserver.model.instance.instancereward;
 
-import static ch.lambdaj.Lambda.maxFrom;
-import static ch.lambdaj.Lambda.minFrom;
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.sort;
-import static ch.lambdaj.Lambda.sum;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Map;
 
 import com.aionemu.commons.utils.Rnd;
@@ -165,12 +161,9 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	}
 
 	public List<PvPArenaPlayerReward> sortPoints() {
-		return sort(getInstanceRewards(), on(PvPArenaPlayerReward.class).getScorePoints(), new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return o2 != null ? o2.compareTo(o1) : -o1.compareTo(o2);
-			}
-		});
+		return getInstanceRewards().stream()
+				.sorted(Comparator.comparingInt(PvPArenaPlayerReward::getScorePoints).reversed())
+				.collect(Collectors.toList());
 	}
 
 	public boolean canRewardOpportunityToken(PvPArenaPlayerReward rewardedPlayer) {
@@ -193,13 +186,13 @@ public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 
 	public boolean hasCapPoints() {
 		if (isSoloArena()
-				&& (maxFrom(getInstanceRewards()).getPoints() - minFrom(getInstanceRewards()).getPoints() >= 1500))
+				&& (getInstanceRewards().stream().mapToInt(PvPArenaPlayerReward::getPoints).max().orElse(0) - getInstanceRewards().stream().mapToInt(PvPArenaPlayerReward::getPoints).min().orElse(0) >= 1500))
 			return true;
-		return maxFrom(getInstanceRewards()).getPoints() >= capPoints;
+		return getInstanceRewards().stream().mapToInt(PvPArenaPlayerReward::getPoints).max().orElse(0) >= capPoints;
 	}
 
 	public int getTotalPoints() {
-		return sum(getInstanceRewards(), on(PvPArenaPlayerReward.class).getScorePoints());
+		return getInstanceRewards().stream().mapToInt(PvPArenaPlayerReward::getScorePoints).sum();
 	}
 
 	public boolean canRewarded() {

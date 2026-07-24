@@ -16,12 +16,9 @@
  */
 package com.aionemu.gameserver.model.autogroup;
 
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.select;
-import static org.hamcrest.Matchers.equalTo;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -101,10 +98,10 @@ public class AutoKamarBattlefieldInstance extends AutoInstance {
 	}
 
 	private List<AGPlayer> getAGPlayersByRace(Race race) {
-		return select(players, having(on(AGPlayer.class).getRace(), equalTo(race)));
+		return players.values().stream().filter(p -> p.getRace() == race).collect(Collectors.toList());
 	}
 
 	private List<Player> getPlayersByRace(Race race) {
-		return select(instance.getPlayersInside(), having(on(Player.class).getRace(), equalTo(race)));
+		return instance.getPlayersInside().stream().filter(p -> p.getRace() == race).collect(Collectors.toList());
 	}
 }

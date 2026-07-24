@@ -16,15 +16,18 @@
  */
 package com.aionemu.gameserver.dataholders;
 
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.selectDistinct;
-import static ch.lambdaj.collection.LambdaCollections.with;
 
+import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import java.util.Collection;
+import java.util.stream.Collectors;
 import java.util.Collections;
+import java.util.stream.Collectors;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Map;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -264,7 +267,7 @@ public class ItemGroupsData {
 			List<ItemRaceEntry> food = getPetFood(foodType);
 			if (food != null) {
 				FastSet<Integer> itemIds = FastSet.newInstance();
-				itemIds.addAll(selectDistinct(with(food).extract(on(ItemRaceEntry.class).getId())));
+				itemIds.addAll(food.stream().map(ItemRaceEntry::getId).distinct().collect(Collectors.toList()));
 				petFood.put(foodType, itemIds);
 				if (foodType != FoodType.EXCLUDES && foodType != FoodType.STINKY) {
 					petFoodCount += itemIds.size();

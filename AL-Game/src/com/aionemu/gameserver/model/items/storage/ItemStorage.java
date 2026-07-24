@@ -16,12 +16,8 @@
  */
 package com.aionemu.gameserver.model.items.storage;
 
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.select;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.lessThan;
 
+import java.util.stream.Collectors;
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -144,11 +140,11 @@ public class ItemStorage {
 	}
 
 	public List<Item> getSpecialCubeItems() {
-		return select(items.values(), having(on(Item.class).getItemTemplate().getExtraInventoryId(), greaterThan(0)));
+		return items.values().stream().filter(i -> i.getItemTemplate().getExtraInventoryId() > 0).collect(Collectors.toList());
 	}
 
 	public List<Item> getCubeItems() {
-		return select(items.values(), having(on(Item.class).getItemTemplate().getExtraInventoryId(), lessThan(1)));
+		return items.values().stream().filter(i -> i.getItemTemplate().getExtraInventoryId() < 1).collect(Collectors.toList());
 	}
 
 	public int getFreeSlots() {

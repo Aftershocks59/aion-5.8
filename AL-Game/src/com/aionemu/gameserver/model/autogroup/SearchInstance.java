@@ -16,11 +16,10 @@
  */
 package com.aionemu.gameserver.model.autogroup;
 
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.on;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
@@ -34,7 +33,7 @@ public class SearchInstance {
 		this.instanceMaskId = instanceMaskId;
 		this.ert = ert;
 		if (members != null) {
-			this.members = extract(members, on(Player.class).getObjectId());
+			this.members = members.stream().map(Player::getObjectId).collect(Collectors.toList());
 		}
 	}
 

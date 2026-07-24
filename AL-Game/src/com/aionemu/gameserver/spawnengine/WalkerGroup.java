@@ -16,10 +16,14 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.sort;
-import static ch.lambdaj.Lambda.sum;
 
+import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -51,7 +55,7 @@ public class WalkerGroup {
 	private volatile int groupStep;
 
 	public WalkerGroup(List<ClusteredNpc> members) {
-		this.members = sort(members, on(ClusteredNpc.class).getWalkerIndex());
+		this.members = members.stream().sorted(Comparator.comparingInt(ClusteredNpc::getWalkerIndex)).collect(Collectors.toList());
 		memberSteps = new int[members.size()];
 		walkerXpos = members.get(0).getX();
 		walkerYpos = members.get(0).getY();
@@ -61,15 +65,15 @@ public class WalkerGroup {
 	public void form() {
 		if (getWalkType() == WalkerGroupType.SQUARE) {
 			int[] rows = members.get(0).getWalkTemplate().getRows();
-			if (sum(ArrayUtils.toObject(rows), on(Integer.class)) != members.size()) {
+			if (Arrays.stream(rows).sum() != members.size()) {
 				log.warn("Invalid row sizes for walk cluster " + members.get(0).getWalkTemplate().getRouteId());
 			}
 			if (rows.length == 1) {
 				// Line formation: distance 2 meters from each other (divide by 2 and multiple
 				// by 2)
 				// negative at left hand and positive at the right hand
-				float bounds = sum(members,
-						on(ClusteredNpc.class).getNpc().getObjectTemplate().getBoundRadius().getSide());
+				float bounds = (float) members.stream()
+						.mapToDouble(n -> n.getNpc().getObjectTemplate().getBoundRadius().getSide()).sum();
 				float distance = (1 - members.size()) / 2f * (WalkerGroupShift.DISTANCE + bounds);
 				Point2D origin = new Point2D(walkerXpos, walkerYpos);
 				Point2D destination = new Point2D(members.get(0).getWalkTemplate().getRouteStep(2).getX(),
