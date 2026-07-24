@@ -1,5 +1,5 @@
-// Bibliotheque partagee par les trois serveurs (jeu, login, chat).
-// Produit egalement le javaagent d'instrumentation des callbacks.
+// Share this library across the three servers (game, login, chat).
+// Produce the java agent that instruments the callback classes.
 
 plugins {
     `java-library`

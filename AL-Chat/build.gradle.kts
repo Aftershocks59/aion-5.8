@@ -1,5 +1,5 @@
-// Serveur de chat : canaux, diffusion, relais vers le serveur de jeu.
-// Seul module a dependre de Netty.
+// Build the chat server: channels, broadcasting, relay to the game server.
+// Note this is the only module that depends on Netty.
 
 plugins {
     `java-library`
@@ -8,9 +8,13 @@ plugins {
 dependencies {
     api(project(":AL-Commons"))
 
-    // DETTE : Netty 3.x (package org.jboss.netty), fin de vie. Migration Netty 4
-    // a prevoir apres le palier B.
+    // DEBT: migrate off Netty 3.x (org.jboss.netty package), which is end of
+    // life, once the dependency clean-up stage lands.
     implementation(libs.netty3)
+
+    // Inject the chat services through Guice. Only com.google.inject.* is used,
+    // so the javax/jakarta namespace split does not apply here.
+    implementation(libs.guice)
 }
 
 tasks.jar {

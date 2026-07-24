@@ -1,7 +1,7 @@
-// Serveur de jeu. Contient l'essentiel du code (~2950 fichiers).
+// Build the game server, which holds most of the code (~2950 files).
 //
-// Note : data/scripts/ (quetes, IA, instances) n'est PAS compile ici. Ces
-// sources sont compilees a chaud au demarrage par le ScriptCompiler d'AL-Commons.
+// Note that data/scripts/ (quests, AI, instances) is NOT compiled here: the
+// ScriptCompiler in AL-Commons compiles those sources at server startup.
 
 plugins {
     `java-library`
@@ -15,9 +15,9 @@ dependencies {
     implementation(libs.jaxb.api)
     runtimeOnly(libs.jaxb.runtime)
 
-    // DETTE : lambdaj est abandonne depuis 2013 et absent de Maven Central dans
-    // cette version. Consomme depuis le jar local en attendant son retrait
-    // (palier B) au profit des streams Java 8. hamcrest n'existe que pour lui.
+    // DEBT: consume lambdaj from the local jar. The library was abandoned in
+    // 2013 and this version is missing from Maven Central. Drop it in favour of
+    // Java 8 streams; hamcrest exists only to satisfy it.
     implementation(files("libs/lambdaj-2.4.jar"))
     implementation(libs.hamcrest)
 }

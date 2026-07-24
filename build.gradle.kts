@@ -1,8 +1,8 @@
-// Configuration commune aux quatre modules.
+// Share the settings common to the four modules.
 //
-// Chaque module declare lui-meme `plugins { java-library }` : c'est ce qui
-// genere ses accesseurs types (api, implementation, tasks.jar...). Ici on se
-// contente de reagir a cette application, ce qui rend l'ordre indifferent.
+// Let each module declare `plugins { java-library }` itself: that is what
+// generates its typed accessors (api, implementation, tasks.jar...). React to
+// that application here so the order stays irrelevant.
 
 subprojects {
     group = "com.aionemu"
@@ -15,9 +15,8 @@ subprojects {
             }
         }
 
-        // Le depot utilise une arborescence historique "src/" a plat plutot que
-        // la convention Maven "src/main/java". On adapte le layout au code
-        // existant au lieu de deplacer 3265 fichiers.
+        // Map the source sets onto the historic flat "src/" tree rather than the
+        // Maven "src/main/java" convention, to avoid moving 3265 files.
         extensions.configure<SourceSetContainer> {
             named("main") {
                 java.setSrcDirs(listOf("src"))
@@ -31,8 +30,8 @@ subprojects {
 
         tasks.withType<JavaCompile>().configureEach {
             options.encoding = "UTF-8"
-            // Base heritee de Java 7 : le bruit des avertissements masquerait
-            // les erreurs reelles pendant la migration. A reactiver au palier B.
+            // Silence warnings while migrating: on a Java 7 era codebase they
+            // would bury the real errors. Re-enable once the migration lands.
             options.compilerArgs.addAll(listOf("-nowarn", "-Xlint:none"))
             options.isDeprecation = false
         }

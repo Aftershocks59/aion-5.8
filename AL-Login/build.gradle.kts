@@ -1,4 +1,4 @@
-// Serveur d'authentification : comptes, sessions, table des game servers.
+// Build the authentication server: accounts, sessions, game server table.
 
 plugins {
     `java-library`
