@@ -29,7 +29,9 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.IPRange;
 import com.aionemu.commons.utils.NetworkUtils;
-import com.aionemu.loginserver.dao.GameServersDAO;
+import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.loginserver.repository.GameServerRepository;
+import com.aionemu.loginserver.repository.JdbcGameServerRepository;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.GsAuthResponse;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
@@ -65,7 +67,7 @@ public class GameServerTable {
      * Load GameServers from database.
      */
     public static void load() {
-        gameservers = getDAO().getAllGameServers();
+        gameservers = repository().findAll();
         log.info("GameServerTable loaded " + gameservers.size() + " registered GameServers.");
     }
 
@@ -162,14 +164,14 @@ public class GameServerTable {
         }
     }
 
-    /**
-     * Retuns {@link com.aionemu.loginserver.dao.GameServersDAO} , just a
-     * shortcut
-     *
-     * @return {@link com.aionemu.loginserver.dao.GameServersDAO}
-     */
-    private static GameServersDAO getDAO() {
-        return DAOManager.getDAO(GameServersDAO.class);
+    /** Built on first use, since it needs the connection pool to be open. */
+    private static GameServerRepository repository;
+
+    private static synchronized GameServerRepository repository() {
+        if (repository == null) {
+            repository = new JdbcGameServerRepository(DatabaseFactory.getDataSource());
+        }
+        return repository;
     }
 
     public static void pong(byte serverId, int pid) {

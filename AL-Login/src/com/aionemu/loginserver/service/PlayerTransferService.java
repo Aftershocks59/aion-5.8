@@ -33,7 +33,9 @@ import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.dao.AccountDAO;
-import com.aionemu.loginserver.dao.PlayerTransferDAO;
+import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.loginserver.repository.JdbcPlayerTransferRepository;
+import com.aionemu.loginserver.repository.PlayerTransferRepository;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PTRANSFER_RESPONSE;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferRequest;
@@ -56,7 +58,7 @@ public class PlayerTransferService {
     private Map<Integer, PlayerTransferRequest> transfers = new LinkedHashMap<>();
     private Map<Integer, PlayerTransferTask> tasks = new LinkedHashMap<>();
     private Future<?> veryfyTask;
-    private PlayerTransferDAO dao;
+    private PlayerTransferRepository repository;
 
     public PlayerTransferService() {
         veryfyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
@@ -65,7 +67,7 @@ public class PlayerTransferService {
                 verifyNewTasks();
             }
         }, 10000, 7 * 60000);
-        this.dao = DAOManager.getDAO(PlayerTransferDAO.class);
+        this.repository = new JdbcPlayerTransferRepository(DatabaseFactory.getDataSource());
         log.info("PlayerTransferService will be initialized in 10 sec.");
     }
 
@@ -73,7 +75,7 @@ public class PlayerTransferService {
      * first init. getting values from sql
      */
     protected void verifyNewTasks() {
-        List<PlayerTransferTask> tasksNew = this.dao.getNew();
+        List<PlayerTransferTask> tasksNew = this.repository.findPending();
         log.info("PlayerTransfer perform task init. " + tasks.size() + " new tasks.");
         for (PlayerTransferTask task : tasksNew) {
             GameServerInfo server = GameServerTable.getGameServerInfo(task.sourceServerId);
@@ -100,7 +102,7 @@ public class PlayerTransferService {
 
             task.status = PlayerTransferTask.STATUS_ACTIVE;
             tasks.put(task.id, task);
-            this.dao.update(task);
+            this.repository.save(task);
             server.getConnection().sendPacket(new SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus.PERFORM_ACTION, task));
             log.info("performing player transfer #" + task.id);
         }
@@ -171,7 +173,7 @@ public class PlayerTransferService {
         PlayerTransferTask task = this.tasks.remove(taskId);
         task.status = PlayerTransferTask.STATUS_ERROR;
         task.comment = reason;
-        this.dao.update(task);
+        this.repository.save(task);
     }
 
     /**
@@ -182,7 +184,7 @@ public class PlayerTransferService {
         PlayerTransferTask task = this.tasks.remove(taskId);
         task.status = PlayerTransferTask.STATUS_ERROR;
         task.comment = reason;
-        this.dao.update(task);
+        this.repository.save(task);
         GameServerInfo targetServer = GameServerTable.getGameServerInfo(request.targetServerId);
         if (targetServer == null || targetServer.getConnection() == null) {
             log.error("Player transfer requests offline server! #" + request.targetServerId);
@@ -205,7 +207,7 @@ public class PlayerTransferService {
         PlayerTransferTask task = this.tasks.remove(taskId);
         task.status = PlayerTransferTask.STATUS_DONE;
         task.comment = "task done";
-        this.dao.update(task);
+        this.repository.save(task);
         GameServerInfo sourceServer = GameServerTable.getGameServerInfo(request.serverId);
         if (sourceServer == null || sourceServer.getConnection() == null) {
             log.error("Player transfer requests offline server! #" + request.serverId);

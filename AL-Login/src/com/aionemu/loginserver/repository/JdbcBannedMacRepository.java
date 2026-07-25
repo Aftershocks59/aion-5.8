@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import com.aionemu.commons.database.JdbcRepositorySupport;
 import com.aionemu.commons.database.RepositoryException;
 import com.aionemu.loginserver.model.base.BannedMacEntry;
 
@@ -33,26 +34,21 @@ import com.aionemu.loginserver.model.base.BannedMacEntry;
  *
  * @author Oraion
  */
-public final class JdbcBannedMacRepository implements BannedMacRepository {
+public final class JdbcBannedMacRepository extends JdbcRepositorySupport implements BannedMacRepository {
 
 	private static final String SELECT_ALL = "SELECT `address`,`time`,`details` FROM `banned_mac`";
 	private static final String REPLACE_ONE = "REPLACE INTO `banned_mac` (`address`,`time`,`details`) VALUES (?,?,?)";
 	private static final String DELETE_ONE = "DELETE FROM `banned_mac` WHERE `address` = ?";
 	private static final String DELETE_EXPIRED = "DELETE FROM `banned_mac` WHERE `time` < CURRENT_DATE";
 
-	private final DataSource dataSource;
-
 	public JdbcBannedMacRepository(DataSource dataSource) {
-		if (dataSource == null) {
-			throw new IllegalArgumentException("A repository needs a data source.");
-		}
-		this.dataSource = dataSource;
+		super(dataSource);
 	}
 
 	@Override
 	public Map<String, BannedMacEntry> findAll() {
 		Map<String, BannedMacEntry> bans = new LinkedHashMap<String, BannedMacEntry>();
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = connection();
 				PreparedStatement statement = connection.prepareStatement(SELECT_ALL);
 				ResultSet rows = statement.executeQuery()) {
 			while (rows.next()) {
@@ -72,7 +68,7 @@ public final class JdbcBannedMacRepository implements BannedMacRepository {
 			throw new IllegalArgumentException("Cannot store a null ban.");
 		}
 
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = connection();
 				PreparedStatement statement = connection.prepareStatement(REPLACE_ONE)) {
 			statement.setString(1, entry.getMac());
 			statement.setTimestamp(2, entry.getTime());
@@ -85,7 +81,7 @@ public final class JdbcBannedMacRepository implements BannedMacRepository {
 
 	@Override
 	public boolean remove(String address) {
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = connection();
 				PreparedStatement statement = connection.prepareStatement(DELETE_ONE)) {
 			statement.setString(1, address);
 			return statement.executeUpdate() > 0;
@@ -96,7 +92,7 @@ public final class JdbcBannedMacRepository implements BannedMacRepository {
 
 	@Override
 	public int removeExpired() {
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = connection();
 				PreparedStatement statement = connection.prepareStatement(DELETE_EXPIRED)) {
 			return statement.executeUpdate();
 		} catch (SQLException e) {
