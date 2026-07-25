@@ -37,6 +37,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -355,28 +356,46 @@ public class MySQL5AbyssRankDAO extends AbyssRankDAO
 		Connection con = null;
 		try {
 			con = DatabaseFactory.getConnection();
-			PreparedStatement stmt = con.prepareStatement(UPDATE_PLAYER_RANK_LIST);
-			stmt = con.prepareStatement(UPDATE_PLAYER_RANK_LIST);
-			stmt.addBatch("SET @a:=0;");
-			stmt.setString(1, "ELYOS");
-			stmt.addBatch();
-			stmt.addBatch("SET @a:=0;");
-			stmt.setString(1, "ASMODIANS");
-			stmt.addBatch();
-			stmt.executeBatch();
-			stmt.close();
-			stmt = con.prepareStatement(UPDATE_LEGION_RANK_LIST);
-			stmt.addBatch("SET @a:=0;");
-			stmt.setString(1, "ELYOS");
-			stmt.addBatch();
-			stmt.addBatch("SET @a:=0;");
-			stmt.setString(1, "ASMODIANS");
-			stmt.addBatch();
-			stmt.executeBatch();
+
+			// Run one ranking pass per race, resetting the row counter before each.
+			//
+			// The counter lived in a SET @a:=0 fed to addBatch(String) on a
+			// PreparedStatement, which JDBC forbids: MySQL tolerated it, MariaDB
+			// rejects it outright, and the whole ranking update had been failing since
+			// the driver changed. Batching could not have ordered the reset against
+			// the statements anyway. The reset and the query must share a connection,
+			// user variables being per connection.
+			for (String race : new String[] { "ELYOS", "ASMODIANS" }) {
+				updateRanking(con, UPDATE_PLAYER_RANK_LIST, race);
+			}
+
+			for (String race : new String[] { "ELYOS", "ASMODIANS" }) {
+				updateRanking(con, UPDATE_LEGION_RANK_LIST, race);
+			}
 		} catch (SQLException e) {
 			log.error("updateRank", e);
 		} finally {
 			DatabaseFactory.close(con);
+		}
+	}
+
+	/**
+	 * Recomputes one ranking, for one race.
+	 *
+	 * @param con   connection the reset and the query must share, the row counter
+	 *              being a per connection user variable
+	 * @param query ranking statement, taking the race as its only parameter
+	 * @param race  race to rank
+	 * @throws SQLException if either statement fails
+	 */
+	private static void updateRanking(Connection con, String query, String race) throws SQLException {
+		try (Statement reset = con.createStatement()) {
+			reset.execute("SET @a := 0");
+		}
+
+		try (PreparedStatement stmt = con.prepareStatement(query)) {
+			stmt.setString(1, race);
+			stmt.execute();
 		}
 	}
 	
