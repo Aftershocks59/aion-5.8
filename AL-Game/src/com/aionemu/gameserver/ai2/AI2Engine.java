@@ -18,22 +18,15 @@ package com.aionemu.gameserver.ai2;
 
 
 import java.io.File;
-import java.util.stream.Collectors;
-import java.util.LinkedHashSet;
-import java.util.stream.Collectors;
 import java.util.Collection;
-import java.util.stream.Collectors;
-import java.util.LinkedHashSet;
-import java.util.stream.Collectors;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 import java.util.LinkedHashSet;
-import java.util.stream.Collectors;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.LinkedHashSet;
-import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +52,8 @@ public class AI2Engine implements GameEngine {
 	private static ScriptManager scriptManager = new ScriptManager();
 	public static final File INSTANCE_DESCRIPTOR_FILE = new File("./data/scripts/system/aihandlers.xml");
 	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<String, Class<? extends AbstractAI>>();
+	/** Records the names two different handlers both claimed. */
+	private final Set<String> duplicateNames = new TreeSet<String>();
 
 	@Override
 	public void load(CountDownLatch progressLatch) {
@@ -74,6 +69,10 @@ public class AI2Engine implements GameEngine {
 		try {
 			scriptManager.load(INSTANCE_DESCRIPTOR_FILE);
 			log.info("Loaded " + aiMap.size() + " AI2.");
+			if (!duplicateNames.isEmpty()) {
+				log.warn("Registered " + duplicateNames.size() + " AI names more than once: "
+						+ String.join(", ", duplicateNames));
+			}
 			validateScripts();
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize ai handlers.", e);
@@ -93,11 +92,36 @@ public class AI2Engine implements GameEngine {
 		log.info("AI2 engine shutdown complete");
 	}
 
+	/**
+	 * Registers a handler under the name its annotation declares.
+	 * <p>
+	 * Keeps the historic behaviour of letting the last handler scanned win, but
+	 * says so: several handlers ship the same name from different packages, and a
+	 * silent overwrite made the surviving one depend on the order the filesystem
+	 * happened to enumerate the scripts.
+	 */
 	public void registerAI(Class<? extends AbstractAI> class1) {
 		AIName nameAnnotation = class1.getAnnotation(AIName.class);
-		if (nameAnnotation != null) {
-			aiMap.put(nameAnnotation.value(), class1);
+		if (nameAnnotation == null) {
+			return;
 		}
+
+		Class<? extends AbstractAI> previous = aiMap.put(nameAnnotation.value(), class1);
+		if (previous != null && !previous.equals(class1)) {
+			duplicateNames.add(nameAnnotation.value());
+			log.warn("Duplicate AI name \"" + nameAnnotation.value() + "\": " + class1.getName() + " replaces "
+					+ previous.getName() + ". Which one answers depends on the scan order.");
+		}
+	}
+
+	/** Returns the names more than one handler claimed, for tests and diagnostics. */
+	public Set<String> getDuplicateNames() {
+		return Collections.unmodifiableSet(duplicateNames);
+	}
+
+	/** Returns the handler a name currently resolves to. Kept package visible for tests. */
+	Class<? extends AbstractAI> getRegisteredAI(String name) {
+		return aiMap.get(name);
 	}
 
 	public final AI2 setupAI(String name, Creature owner) {
