@@ -1,3 +1,6 @@
+import java.time.Duration
+import java.util.concurrent.TimeUnit
+
 // Share the settings common to the four modules.
 //
 // Let each module declare `plugins { java-library }` itself: that is what
@@ -51,6 +54,166 @@ subprojects {
         registerScriptCompilation()
     }
 }
+
+// Boot both servers, pair them, and fail on anything the logs report.
+//
+// Three of the four regressions found so far were invisible to the compiler and
+// to the unit tests: a task manager that threw once its queue ran dry, a driver
+// that refused a blob where its predecessor converted silently, and a batch call
+// JDBC forbids. Every one of them surfaced as a stack trace in a log during a
+// real boot. This automates the reading that caught them.
+//
+// It does not replace a client: nothing here logs a character in. It covers
+// startup, the login and game server handshake, and any exception raised while
+// the servers settle.
+tasks.register("smokeTest") {
+    group = "verification"
+    description = "Start both servers, verify they pair, and fail on any exception logged"
+
+    dependsOn(":AL-Login:classes", ":AL-Game:classes", ":AL-Login:compileScripts", ":AL-Game:compileScripts")
+
+    // Resolve everything the task needs while configuring: reaching into another
+    // project while executing is what breaks under the configuration cache.
+    val login = ServerUnderTest(
+        name = "LoginServer",
+        mainClass = "com.aionemu.loginserver.LoginServer",
+        workingDir = project(":AL-Login").projectDir,
+        classpath = project(":AL-Login").extensions.getByType<SourceSetContainer>()["main"].runtimeClasspath,
+        readyMarker = "Login Server started",
+    )
+    val game = ServerUnderTest(
+        name = "GameServer",
+        mainClass = "com.aionemu.gameserver.GameServer",
+        workingDir = project(":AL-Game").projectDir,
+        classpath = project(":AL-Game").extensions.getByType<SourceSetContainer>()["main"].runtimeClasspath,
+        readyMarker = "Connected to LoginServer",
+    )
+    val agent = project(":AL-Commons").tasks.named<Jar>("jar")
+    val credentials = listOf("AION_DB_HOST", "AION_DB_PORT", "AION_DB_USER", "AION_DB_PASSWORD")
+        .mapNotNull { key -> (findProperty(key) as String? ?: System.getenv(key))?.let { key to it } }
+        .toMap()
+
+    doLast {
+        runSmokeTest(listOf(login, game), agent.get().archiveFile.get().asFile, credentials)
+    }
+}
+
+/** Describes one server the smoke test has to bring up. */
+data class ServerUnderTest(
+    val name: String,
+    val mainClass: String,
+    val workingDir: File,
+    val classpath: FileCollection,
+    /** Line proving the server is up; the game server only counts once paired. */
+    val readyMarker: String,
+)
+
+/**
+ * Starts each server in order, waits for its marker, then reports what the logs
+ * hold.
+ *
+ * Always stops what it started, including on failure: a leftover server holds
+ * ports 2106, 7777 and 9014 and makes every later run fail for the wrong reason.
+ */
+fun runSmokeTest(servers: List<ServerUnderTest>, agentJar: File, credentials: Map<String, String>) {
+    val readyTimeout = Duration.ofMinutes(3)
+    val started = mutableListOf<Pair<ServerUnderTest, Process>>()
+    val failures = mutableListOf<String>()
+
+    try {
+        for (server in servers) {
+            val output = File.createTempFile("smoke-${server.name}-", ".log")
+            val command = mutableListOf(
+                "${System.getProperty("java.home")}/bin/java",
+                "-javaagent:${agentJar.absolutePath}",
+                "-Xmx4g",
+            )
+            credentials.forEach { (key, value) -> command += "-D$key=$value" }
+            command += listOf("-cp", server.classpath.asPath, server.mainClass)
+
+            logger.lifecycle("smokeTest: starting ${server.name}")
+            val process = ProcessBuilder(command)
+                .directory(server.workingDir)
+                .redirectErrorStream(true)
+                .redirectOutput(output)
+                .start()
+            started += server to process
+
+            if (!awaitMarker(output, server.readyMarker, readyTimeout) { process.isAlive }) {
+                failures += "${server.name} never reported \"${server.readyMarker}\"."
+                failures += tail(output, 40)
+                return
+            }
+            logger.lifecycle("smokeTest: ${server.name} is up")
+
+            // Let the scheduled work fire: the ranking refresh and the periodic task
+            // managers only run once the server has settled, and that is where two of
+            // the regressions showed.
+            Thread.sleep(20_000)
+            failures += scanForFailures(server.name, output)
+        }
+    } finally {
+        started.reversed().forEach { (server, process) ->
+            logger.lifecycle("smokeTest: stopping ${server.name}")
+            process.destroy()
+            if (!process.waitFor(20, TimeUnit.SECONDS)) {
+                process.destroyForcibly()
+            }
+        }
+
+        if (failures.isNotEmpty()) {
+            throw GradleException("smokeTest failed:\n" + failures.joinToString("\n"))
+        }
+        logger.lifecycle("smokeTest: both servers started and logged no failure")
+    }
+}
+
+/**
+ * Waits for a marker to appear in a growing file.
+ *
+ * @return true if the marker appeared, false on timeout or if the process died
+ */
+fun awaitMarker(output: File, marker: String, timeout: Duration, alive: () -> Boolean): Boolean {
+    val deadline = System.nanoTime() + timeout.toNanos()
+    while (System.nanoTime() < deadline) {
+        if (output.exists() && output.readText().contains(marker)) {
+            return true
+        }
+        if (!alive()) {
+            return false
+        }
+        Thread.sleep(1_000)
+    }
+    return false
+}
+
+/**
+ * Reports the failures a server log holds.
+ *
+ * Matches the shapes that actually cost us a working server, rather than every
+ * line carrying the word error: a stack trace, an aborted script context, or the
+ * handler refusing to start.
+ */
+fun scanForFailures(name: String, output: File): List<String> {
+    val text = if (output.exists()) output.readText() else return listOf("$name produced no output.")
+    val patterns = mapOf(
+        "Exception in thread" to "an uncaught exception",
+        "Critical Error" to "a critical error",
+        "Error while compiling classes" to "a script context that failed to compile",
+        "ConcurrentModificationException" to "a collection modified while being walked",
+        "SQLException" to "a database failure",
+        "SQLSyntaxErrorException" to "an invalid statement",
+        "SQLDataException" to "a value the driver refused",
+    )
+
+    return patterns.mapNotNull { (needle, description) ->
+        if (text.contains(needle)) "$name logged $description ($needle)." else null
+    }
+}
+
+/** Returns the last lines of a file, to explain a failure without dumping it whole. */
+fun tail(output: File, lines: Int): List<String> =
+    if (output.exists()) output.readLines().takeLast(lines) else listOf("(no output)")
 
 /**
  * Compiles the runtime script contexts the way the server does.
