@@ -26,9 +26,9 @@ import com.aionemu.gameserver.services.QuestService;
 public class _16825Escape_From_The_Contaminated_Library extends QuestHandler
 {
     private final static int questId = 16825;
-	private final static int[] npcs = {806283}; //�?�딜리스.
-	private final static int[] IDEternity02TowerBoss75Ah = {220534}; //타�?�한 물�?� �?빌림.
-	private final static int[] IDEternity02CKeyRa75Ae = {220597}; //오염�?� 제3 서고 입구 잠금장치.
+	private final static int[] npcs = {806283}; //�딜리스.
+	private final static int[] IDEternity02TowerBoss75Ah = {220534}; //타�한 물� �빌림.
+	private final static int[] IDEternity02CKeyRa75Ae = {220597}; //오염� 제3 서고 입구 잠금장치.
 	
     public _16825Escape_From_The_Contaminated_Library() {
         super(questId);
@@ -60,7 +60,7 @@ public class _16825Escape_From_The_Contaminated_Library extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (player.getWorldId() == 301550000) { //지�?�?� 정�?.
+		if (player.getWorldId() == 301550000) { //지�� 정�.
             if (qs == null || qs.canRepeat()) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {
@@ -76,8 +76,8 @@ public class _16825Escape_From_The_Contaminated_Library extends QuestHandler
         QuestState qs = player.getQuestStateList().getQuestState(questId);
         if (qs != null && qs.getStatus() == QuestStatus.START) {
             switch (env.getTargetId()) {
-                case 220534: //타�?�한 물�?� �?빌림.
-				case 220597: //오염�?� 제3 서고 입구 잠금장치.
+                case 220534: //타�한 물� �빌림.
+				case 220597: //오염� 제3 서고 입구 잠금장치.
                 if (qs.getQuestVarById(1) < 1) {
 					qs.setQuestVarById(1, qs.getQuestVarById(1) + 1);
 					updateQuestStatus(env);

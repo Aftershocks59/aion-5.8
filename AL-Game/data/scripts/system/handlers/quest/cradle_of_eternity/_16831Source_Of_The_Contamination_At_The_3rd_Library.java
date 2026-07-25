@@ -27,7 +27,7 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 public class _16831Source_Of_The_Contamination_At_The_3rd_Library extends QuestHandler
 {
     private final static int questId = 16831;
-	private final static int[] npcs = {806283}; //ë?¼ë”œë¦¬ìŠ¤.
+	private final static int[] npcs = {806283}; //ï¿½ë”œë¦¬ìŠ¤.
 	
     public _16831Source_Of_The_Contamination_At_The_3rd_Library() {
         super(questId);
@@ -59,7 +59,7 @@ public class _16831Source_Of_The_Contamination_At_The_3rd_Library extends QuestH
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (player.getWorldId() == 301550000) { //ì§€ì‹?ì?˜ ì •ì›?.
+		if (player.getWorldId() == 301550000) { //ì§€ï¿½ï¿½ ì •ï¿½.
             if (qs == null) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {

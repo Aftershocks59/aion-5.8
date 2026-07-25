@@ -26,7 +26,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 public class _18997Artifact_Controlling_Kroban extends QuestHandler
 {
     private final static int questId = 18997;
-	private final static int[] IDLF1TVanqNamed73Ah = {243684}; //아티팩트를 지배하는 �?�로반.
+	private final static int[] IDLF1TVanqNamed73Ah = {243684}; //아티팩트를 지배하는 �로반.
 	
     public _18997Artifact_Controlling_Kroban() {
         super(questId);
@@ -85,7 +85,7 @@ public class _18997Artifact_Controlling_Kroban extends QuestHandler
         QuestState qs = player.getQuestStateList().getQuestState(questId);
         if (qs != null && qs.getStatus() == QuestStatus.START) {
             switch (env.getTargetId()) {
-				case 243684: //아티팩트를 지배하는 �?�로반.
+				case 243684: //아티팩트를 지배하는 �로반.
                 if (qs.getQuestVarById(1) < 1) {
 					qs.setQuestVarById(1, qs.getQuestVarById(1) + 1);
 					updateQuestStatus(env);

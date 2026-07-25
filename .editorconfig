@@ -1,0 +1,38 @@
+# Pin the encoding every editor and tool must use.
+#
+# Several script files reached the repository with bytes destroyed by a lossy
+# round trip through a single-byte charset: the Korean comments they carried are
+# unrecoverable. Declaring the charset here keeps editors from repeating it.
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = false
+
+[*.java]
+indent_style = tab
+indent_size = 4
+max_line_length = 120
+
+[*.{kts,gradle}]
+indent_style = space
+indent_size = 4
+
+[*.{xml,xsd}]
+indent_style = tab
+indent_size = 4
+
+[*.{yml,yaml,json}]
+indent_style = space
+indent_size = 2
+
+[*.properties]
+indent_style = space
+indent_size = 4
+
+[*.md]
+indent_style = space
+indent_size = 2

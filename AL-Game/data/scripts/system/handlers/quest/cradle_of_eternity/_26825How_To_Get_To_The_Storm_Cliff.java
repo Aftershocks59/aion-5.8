@@ -27,8 +27,8 @@ public class _26825How_To_Get_To_The_Storm_Cliff extends QuestHandler
 {
     private final static int questId = 26825;
 	private final static int[] npcs = {806288}; //스티게터.
-	private final static int[] IDEternity02TowerBoss75Ah = {220534}; //타�?�한 물�?� �?빌림.
-	private final static int[] IDEternity02CKeyRa75Ae = {220597}; //오염�?� 제3 서고 입구 잠금장치.
+	private final static int[] IDEternity02TowerBoss75Ah = {220534}; //타�한 물� �빌림.
+	private final static int[] IDEternity02CKeyRa75Ae = {220597}; //오염� 제3 서고 입구 잠금장치.
 	
     public _26825How_To_Get_To_The_Storm_Cliff() {
         super(questId);
@@ -60,7 +60,7 @@ public class _26825How_To_Get_To_The_Storm_Cliff extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (player.getWorldId() == 301550000) { //지�?�?� 정�?.
+		if (player.getWorldId() == 301550000) { //지�� 정�.
             if (qs == null || qs.canRepeat()) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {
@@ -76,8 +76,8 @@ public class _26825How_To_Get_To_The_Storm_Cliff extends QuestHandler
         QuestState qs = player.getQuestStateList().getQuestState(questId);
         if (qs != null && qs.getStatus() == QuestStatus.START) {
             switch (env.getTargetId()) {
-                case 220534: //타�?�한 물�?� �?빌림.
-				case 220597: //오염�?� 제3 서고 입구 잠금장치.
+                case 220534: //타�한 물� �빌림.
+				case 220597: //오염� 제3 서고 입구 잠금장치.
                 if (qs.getQuestVarById(1) < 1) {
 					qs.setQuestVarById(1, qs.getQuestVarById(1) + 1);
 					updateQuestStatus(env);

@@ -50,7 +50,7 @@ public class _16820Urgent_Summons extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
-        if (player.getWorldId() == 301550000) { //ì§€ì‹?ì?˜ ì •ì›?.
+        if (player.getWorldId() == 301550000) { //ì§€ï¿½ï¿½ ì •ï¿½.
 			if (qs != null && qs.getStatus() == QuestStatus.START) {
                 int var = qs.getQuestVars().getQuestVars();
                 if (var == 1) {
@@ -69,7 +69,7 @@ public class _16820Urgent_Summons extends QuestHandler
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
         int targetId = env.getTargetId();
         if (qs == null || qs.getStatus() == QuestStatus.START) {
-			if (targetId == 806232) { //ì—?í…Œìž?ë¥´. 
+			if (targetId == 806232) { //ï¿½í…Œï¿½ë¥´. 
 				switch (env.getDialog()) {
                     case START_DIALOG: {
                         return sendQuestDialog(env, 1011);
@@ -85,7 +85,7 @@ public class _16820Urgent_Summons extends QuestHandler
                 }
 			}
 		} else if (qs.getStatus() == QuestStatus.REWARD) {
-            if (targetId == 806134) { //ì—?í…Œìž?ë¥´.
+            if (targetId == 806134) { //ï¿½í…Œï¿½ë¥´.
                 if (env.getDialog() == QuestDialog.START_DIALOG) {
                     return sendQuestDialog(env, 10002);
                 } else {

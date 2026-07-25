@@ -64,7 +64,7 @@ public class TheobomosTestChamberInstance extends GeneralInstanceHandler
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //ì?´ê³„ ì•”ë£¡ì?˜ ë¬´ê¸° ìƒ?ìž?.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //ï¿½ê³„ ì•”ë£¡ï¿½ ë¬´ê¸° ï¿½ï¿½.
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188057620, 1)); //Chaotic Dimension Stone Bundle.
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 166040001, 1)); //Essence Core Solution.
 						switch (Rnd.get(1, 4)) {

@@ -92,8 +92,8 @@ public class _15605Mystery_Of_The_Aetherion extends QuestHandler
 						playQuestMovie(env, 1002);
 						giveQuestItem(env, 182215995, 1);
 						changeQuestStep(env, 1, 2, false);
-						removeQuestItem(env, 182216010, 1); //�?�미한 고대�?� 유�? 조�?.
-						removeQuestItem(env, 182216011, 1); //빛나는 고대�?� 유�? 조�?.
+						removeQuestItem(env, 182216010, 1); //�미한 고대� 유� 조�.
+						removeQuestItem(env, 182216011, 1); //빛나는 고대� 유� 조�.
 						return closeDialogWindow(env);
 					} case CHECK_COLLECTED_ITEMS: {
 						if (QuestService.collectItemCheck(env, true)) {

@@ -78,7 +78,7 @@ public class BoliagAI2 extends AggressiveNpcAI2
 	}
 	
 	private void spawnBossPortal() {
-		//불리온�?� 촉수가 나타났습니다. 촉수를 파괴하면 불리온�?� 심장부로 �?��?�할 수 있습니다.
+		//불리온� 촉수가 나타났습니다. 촉수를 파괴하면 불리온� 심장부로 ��할 수 있습니다.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_03_Dimension_02, 0);
 		spawn(246937, 229.87758f, 1049.37230f, 706.75494f, (byte) 84);
 		spawn(246442, 226.18071f, 1048.9526f, 706.75494f, (byte) 86);

@@ -101,7 +101,7 @@ public class _15601Harthen_Ghost extends QuestHandler
                     case USE_OBJECT: {
                         if (var == 3) {
 							playQuestMovie(env, 1001);
-                            giveQuestItem(env, 182215993, 1); //ë‚¡ì?€ í•´ì ? ì?¼ì§€.
+                            giveQuestItem(env, 182215993, 1); //ë‚¡ï¿½ í•´ï¿½ ï¿½ì§€.
 							changeQuestStep(env, 3, 4, false);
 							return closeDialogWindow(env);
                         }

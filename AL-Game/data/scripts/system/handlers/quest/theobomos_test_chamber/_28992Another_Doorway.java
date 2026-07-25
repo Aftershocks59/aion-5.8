@@ -26,9 +26,9 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 public class _28992Another_Doorway extends QuestHandler
 {
     private final static int questId = 28992;
-	private final static int[] IDF6LapShelukSN67Ae = {220424}; //피�?� 계약�?� 맺�?� 아�?��?�네.
-	private final static int[] IDF6LapPrincessSN67Ae = {220425}; //피�?� 계약�?� 맺�?� 갈�?�테�?�아.
-	private final static int[] IDF6LapGodElemental67Ah = {220426}; //아티팩트를 지배하는 �?소 군주.
+	private final static int[] IDF6LapShelukSN67Ae = {220424}; //피� 계약� 맺� 아��네.
+	private final static int[] IDF6LapPrincessSN67Ae = {220425}; //피� 계약� 맺� 갈�테�아.
+	private final static int[] IDF6LapGodElemental67Ah = {220426}; //아티팩트를 지배하는 �소 군주.
 	
     public _28992Another_Doorway() {
         super(questId);
@@ -106,9 +106,9 @@ public class _28992Another_Doorway extends QuestHandler
         if (qs.getStatus() != QuestStatus.START) {
             return false;
         } if (var == 1) {
-			if (targetId == 220424) { //피�?� 계약�?� 맺�?� 아�?��?�네.
+			if (targetId == 220424) { //피� 계약� 맺� 아��네.
 				qs.setQuestVarById(1, 1);
-			} else if (targetId == 220425) { //피�?� 계약�?� 맺�?� 갈�?�테�?�아.
+			} else if (targetId == 220425) { //피� 계약� 맺� 갈�테�아.
 				qs.setQuestVarById(2, 1);
 			}
 			updateQuestStatus(env);
@@ -116,7 +116,7 @@ public class _28992Another_Doorway extends QuestHandler
 				changeQuestStep(env, 1, 2, false);
 			}
 		} else if (var == 2) {
-            if (targetId == 220426) { //아티팩트를 지배하는 �?소 군주.
+            if (targetId == 220426) { //아티팩트를 지배하는 �소 군주.
                 qs.setStatus(QuestStatus.REWARD);
 				changeQuestStep(env, 2, 3, false);
 				updateQuestStatus(env);

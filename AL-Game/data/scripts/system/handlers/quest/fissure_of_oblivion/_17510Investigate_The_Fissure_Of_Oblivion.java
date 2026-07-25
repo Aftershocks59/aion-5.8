@@ -49,7 +49,7 @@ public class _17510Investigate_The_Fissure_Of_Oblivion extends QuestHandler
 	public void register() {
 		qe.registerQuestNpc(806075).addOnTalkEvent(questId); //Viola.
 		qe.registerQuestNpc(806436).addOnTalkEvent(questId); //Rimia.
-		qe.registerQuestNpc(834194).addOnTalkEvent(questId); //운명�?� 보주.
+		qe.registerQuestNpc(834194).addOnTalkEvent(questId); //운명� 보주.
 		for (int mob: IDTransformSado) {
 			qe.registerQuestNpc(mob).addOnKillEvent(questId);
 		} for (int mob: shadowOfOblivion) {
@@ -111,7 +111,7 @@ public class _17510Investigate_The_Fissure_Of_Oblivion extends QuestHandler
 						return closeDialogWindow(env);
 					}
                 }
-			} if (targetId == 834194) { //운명�?� 보주.
+			} if (targetId == 834194) { //운명� 보주.
 				switch (env.getDialog()) {
                     case START_DIALOG: {
                         if (var == 4) {

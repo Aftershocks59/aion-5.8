@@ -46,7 +46,7 @@ public class _20525Agent_Peregrine_Call extends QuestHandler
             qe.registerQuestNpc(npc).addOnTalkEvent(questId);
         }
 		qe.registerOnLevelUp(questId);
-		qe.registerQuestItem(182216084, questId); //오드 �?�?� 마력�?.
+		qe.registerQuestItem(182216084, questId); //오드 �� 마력�.
 		qe.registerOnEnterZoneMissionEnd(questId);
 		qe.registerOnEnterZone(ZoneName.get("DF6_ITEMUSEAREA_Q20525"), questId);
     }
@@ -123,10 +123,10 @@ public class _20525Agent_Peregrine_Call extends QuestHandler
 						changeQuestStep(env, 3, 4, false);
 						return closeDialogWindow(env);
 					} case STEP_TO_6: {
-						removeQuestItem(env, 182216081, 20); //달빛�?� 마법�?.
-						removeQuestItem(env, 182216082, 20); //별빛�?� 마법�?.
-						removeQuestItem(env, 182216083, 5); //금빛�?� 마법�?.
-						return defaultCloseDialog(env, 5, 6, false, false, 182216084, 1, 0, 0); //오드 �?�?� 마법�?.
+						removeQuestItem(env, 182216081, 20); //달빛� 마법�.
+						removeQuestItem(env, 182216082, 20); //별빛� 마법�.
+						removeQuestItem(env, 182216083, 5); //금빛� 마법�.
+						return defaultCloseDialog(env, 5, 6, false, false, 182216084, 1, 0, 0); //오드 �� 마법�.
 					} case CHECK_COLLECTED_ITEMS: {
 						return checkQuestItems(env, 4, 5, false, 10000, 10001);
 					} case FINISH_DIALOG: {
@@ -172,8 +172,8 @@ public class _20525Agent_Peregrine_Call extends QuestHandler
 			}
             int var = qs.getQuestVarById(0);
             if (var == 6) {
-				giveQuestItem(env, 182216084, 1); //오드 �?�?� 마법�?.
-				giveQuestItem(env, 182216085, 1); //탈진한 위�?보보.
+				giveQuestItem(env, 182216084, 1); //오드 �� 마법�.
+				giveQuestItem(env, 182216085, 1); //탈진한 위�보보.
                 return HandlerResult.fromBoolean(useQuestItem(env, item, 6, 6, true));
             }
         }

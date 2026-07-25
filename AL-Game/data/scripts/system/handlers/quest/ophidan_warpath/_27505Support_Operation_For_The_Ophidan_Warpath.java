@@ -34,11 +34,11 @@ public class _27505Support_Operation_For_The_Ophidan_Warpath extends QuestHandle
 	
 	public void register() {
 		qe.registerOnEnterWorld(questId);
-		qe.registerQuestItem(182216068, questId); //슈고�?� 특수 물약.
-		qe.registerQuestNpc(806268).addOnQuestStart(questId); //바우프�?�.
-		qe.registerQuestNpc(806268).addOnTalkEvent(questId); //바우프�?�.
+		qe.registerQuestItem(182216068, questId); //슈고� 특수 물약.
+		qe.registerQuestNpc(806268).addOnQuestStart(questId); //바우프�.
+		qe.registerQuestNpc(806268).addOnTalkEvent(questId); //바우프�.
 		qe.registerQuestNpc(806269).addOnTalkEvent(questId); //간게르.
-		qe.registerQuestNpc(806271).addOnTalkEvent(questId); //토고�?.
+		qe.registerQuestNpc(806271).addOnTalkEvent(questId); //토고�.
 		qe.registerOnEnterZone(ZoneName.get("IDLDF5_UNDER_02_WAR_ITEMUSEAREA_17505A"), questId);
 	}
 	
@@ -49,7 +49,7 @@ public class _27505Support_Operation_For_The_Ophidan_Warpath extends QuestHandle
 		int var = qs.getQuestVarById(0);
         int targetId = env.getTargetId();
         if (qs == null || qs.getStatus() == QuestStatus.NONE) {
-			if (targetId == 806268) { //바우프�?�.
+			if (targetId == 806268) { //바우프�.
 				switch (env.getDialog()) {
                     case START_DIALOG: {
 						return sendQuestDialog(env, 4762);
@@ -62,7 +62,7 @@ public class _27505Support_Operation_For_The_Ophidan_Warpath extends QuestHandle
                 }
 			}
 		} else if (qs.getStatus() == QuestStatus.START) {
-			if (targetId == 806271) { //토고�?.
+			if (targetId == 806271) { //토고�.
 				switch (env.getDialog()) {
                     case START_DIALOG: {
                         if (var == 0) {
@@ -73,7 +73,7 @@ public class _27505Support_Operation_For_The_Ophidan_Warpath extends QuestHandle
 							return sendQuestDialog(env, 1012);
 						}
 					} case STEP_TO_1: {
-						giveQuestItem(env, 182216068, 1); //슈고�?� 특수 물약.
+						giveQuestItem(env, 182216068, 1); //슈고� 특수 물약.
                         return defaultCloseDialog(env, 0, 1);
 					}
                 }
@@ -94,7 +94,7 @@ public class _27505Support_Operation_For_The_Ophidan_Warpath extends QuestHandle
                 }
 			}
 		} else if (qs.getStatus() == QuestStatus.REWARD) {
-            if (targetId == 806268) { //바우프�?�.
+            if (targetId == 806268) { //바우프�.
                 if (env.getDialog() == QuestDialog.START_DIALOG) {
                     return sendQuestDialog(env, 10002);
                 } else {
@@ -125,7 +125,7 @@ public class _27505Support_Operation_For_The_Ophidan_Warpath extends QuestHandle
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		if (qs != null && qs.getQuestVarById(0) == 2) {
-			removeQuestItem(env, 182216068, 1); //슈고�?� 특수 물약.
+			removeQuestItem(env, 182216068, 1); //슈고� 특수 물약.
 			return HandlerResult.fromBoolean(useQuestItem(env, item, 2, 3, false));
 		}
 		return HandlerResult.FAILED;

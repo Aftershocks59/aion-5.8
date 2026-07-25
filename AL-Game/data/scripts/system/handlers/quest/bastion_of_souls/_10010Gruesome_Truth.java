@@ -146,7 +146,7 @@ public class _10010Gruesome_Truth extends QuestHandler
 							return sendQuestDialog(env, 2461);
 						}
 					} case STEP_TO_5: {
-						giveQuestItem(env, 182216175, 1); //마�??로쉬�?� 보고서.
+						giveQuestItem(env, 182216175, 1); //마�로쉬� 보고서.
                         changeQuestStep(env, 4, 5, false);
 						return closeDialogWindow(env);
 					}

@@ -27,7 +27,7 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 public class _16827Altar_Of_Emptiness extends QuestHandler
 {
     private final static int questId = 16827;
-	private final static int[] npcs = {806282}; //ì—?í…Œìž?ë¥´.
+	private final static int[] npcs = {806282}; //ï¿½í…Œï¿½ë¥´.
 	
     public _16827Altar_Of_Emptiness() {
         super(questId);
@@ -57,7 +57,7 @@ public class _16827Altar_Of_Emptiness extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (player.getWorldId() == 301550000) { //ì§€ì‹?ì?˜ ì •ì›?.
+		if (player.getWorldId() == 301550000) { //ì§€ï¿½ï¿½ ì •ï¿½.
             if (qs == null) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {

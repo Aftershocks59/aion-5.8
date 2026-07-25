@@ -45,10 +45,10 @@ public class _25606The_White_Sinsye extends QuestHandler
 		qe.registerOnLevelUp(questId);
         qe.registerQuestNpc(806175).addOnQuestStart(questId); //Chaelsean.
 		qe.registerQuestNpc(806175).addOnTalkEvent(questId); //Chaelsean.
-		qe.registerQuestNpc(806178).addOnTalkEvent(questId); //배회하는 �?혼.
-		qe.registerQuestNpc(806156).addOnTalkEvent(questId); //기억�?� 잃�?� 여�?�.
+		qe.registerQuestNpc(806178).addOnTalkEvent(questId); //배회하는 �혼.
+		qe.registerQuestNpc(806156).addOnTalkEvent(questId); //기억� 잃� 여�.
 		qe.registerQuestNpc(806157).addOnTalkEvent(questId); //리니.
-		qe.registerQuestNpc(703140).addOnTalkEvent(questId); //리니�?� 소품 �?�?.
+		qe.registerQuestNpc(703140).addOnTalkEvent(questId); //리니� 소품 ��.
 		for (int mobs: DF6G6NamedSinsi68Ah) {
             qe.registerQuestNpc(mobs).addOnKillEvent(questId);
         }
@@ -82,7 +82,7 @@ public class _25606The_White_Sinsye extends QuestHandler
                 }
 			}
 		} else if (qs.getStatus() == QuestStatus.START) {
-			if (targetId == 806178) { //배회하는 �?혼.
+			if (targetId == 806178) { //배회하는 �혼.
 				switch (env.getDialog()) {
 					case START_DIALOG: {
 						if (var == 1) {
@@ -99,7 +99,7 @@ public class _25606The_White_Sinsye extends QuestHandler
 						return closeDialogWindow(env);
 					}
 				}
-			} if (targetId == 806156) { //기억�?� 잃�?� 여�?�.
+			} if (targetId == 806156) { //기억� 잃� 여�.
 				switch (env.getDialog()) {
 					case START_DIALOG: {
 						if (var == 3) {
@@ -122,11 +122,11 @@ public class _25606The_White_Sinsye extends QuestHandler
 						return closeDialogWindow(env);
 					}
 				}
-			} if (targetId == 703140) { //리니�?� 소품 �?�?.
+			} if (targetId == 703140) { //리니� 소품 ��.
                 switch (env.getDialog()) {
                     case USE_OBJECT: {
                         if (var == 7) {
-                            giveQuestItem(env, 182216006, 1); //리니�?� �?�기장.
+                            giveQuestItem(env, 182216006, 1); //리니� �기장.
 							qs.setStatus(QuestStatus.REWARD);
 							updateQuestStatus(env);
 							return closeDialogWindow(env);
@@ -137,7 +137,7 @@ public class _25606The_White_Sinsye extends QuestHandler
 		} else if (qs.getStatus() == QuestStatus.REWARD) {
             if (targetId == 806175) { //Chaelsean.
                 if (env.getDialog() == QuestDialog.START_DIALOG) {
-					removeQuestItem(env, 182216006, 1); //리니�?� �?�기장.
+					removeQuestItem(env, 182216006, 1); //리니� �기장.
                     return sendQuestDialog(env, 10002);
 				} else if (env.getDialog() == QuestDialog.SELECT_REWARD) {
 					return sendQuestDialog(env, 5);
@@ -181,7 +181,7 @@ public class _25606The_White_Sinsye extends QuestHandler
             int var = qs.getQuestVarById(0);
 			if (zoneName == ZoneName.get("DF6_SENSORY_AREA_Q25606_A_DYNAMIC_ENV_220110000")) {
 				if (var == 0) {
-					QuestService.addNewSpawn(220110000, 1, 806178, player.getX(), player.getY(), player.getZ(), (byte) 0); //배회하는 �?혼.
+					QuestService.addNewSpawn(220110000, 1, 806178, player.getX(), player.getY(), player.getZ(), (byte) 0); //배회하는 �혼.
 					changeQuestStep(env, 0, 1, false);
 					return true;
 				}

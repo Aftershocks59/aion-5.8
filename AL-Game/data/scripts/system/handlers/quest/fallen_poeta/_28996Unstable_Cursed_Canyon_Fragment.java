@@ -27,8 +27,8 @@ public class _28996Unstable_Cursed_Canyon_Fragment extends QuestHandler
 {
     private final static int questId = 28996;
 	private final static int[] npcs = {806079, 806253, 834035};
-	private final static int[] IDLF1TBarricadeDragon01 = {703290}; //어�?운 �?��?길 철책.
-	private final static int[] IDLF1TBarricadeDragon03 = {703292}; //트몰리아 �??광 입구 철책.
+	private final static int[] IDLF1TBarricadeDragon01 = {703290}; //어�운 ��길 철책.
+	private final static int[] IDLF1TBarricadeDragon03 = {703292}; //트몰리아 �광 입구 철책.
 	
     public _28996Unstable_Cursed_Canyon_Fragment() {
         super(questId);
@@ -49,7 +49,7 @@ public class _28996Unstable_Cursed_Canyon_Fragment extends QuestHandler
 		}
 		qe.registerOnLevelUp(questId);
 		qe.registerQuestNpc(243683).addOnKillEvent(questId); //군단장 타하바타.
-		qe.registerQuestNpc(243684).addOnKillEvent(questId); //아티팩트를 지배하는 �?�로반.
+		qe.registerQuestNpc(243684).addOnKillEvent(questId); //아티팩트를 지배하는 �로반.
     }
 	
     @Override
@@ -72,7 +72,7 @@ public class _28996Unstable_Cursed_Canyon_Fragment extends QuestHandler
 						return closeDialogWindow(env);
 					}
                 }
-            } if (targetId == 834035) { //로�?�코.
+            } if (targetId == 834035) { //로�코.
                 switch (env.getDialog()) {
                     case START_DIALOG: {
                         return sendQuestDialog(env, 1352);
@@ -104,12 +104,12 @@ public class _28996Unstable_Cursed_Canyon_Fragment extends QuestHandler
 		if (qs != null && qs.getStatus() == QuestStatus.START) {
 			int var = qs.getQuestVarById(0);
 			if (var == 2) {
-				int[] IDLF1TBarricadeDragon01 = {703290}; //어�?운 �?��?길 철책.
-				int[] IDLF1TBarricadeDragon03 = {703292}; //트몰리아 �??광 입구 철책.
+				int[] IDLF1TBarricadeDragon01 = {703290}; //어�운 ��길 철책.
+				int[] IDLF1TBarricadeDragon03 = {703292}; //트몰리아 �광 입구 철책.
 				switch (targetId) {
-					case 703290: { //어�?운 �?��?길 철책.
+					case 703290: { //어�운 ��길 철책.
 						return defaultOnKillEvent(env, IDLF1TBarricadeDragon01, 0, 1, 1);
-					} case 703292: { //트몰리아 �??광 입구 철책.
+					} case 703292: { //트몰리아 �광 입구 철책.
 						qs.setQuestVar(3);
 					    updateQuestStatus(env);
 						return defaultOnKillEvent(env, IDLF1TBarricadeDragon03, 0, 1, 2);
@@ -125,7 +125,7 @@ public class _28996Unstable_Cursed_Canyon_Fragment extends QuestHandler
                 }
 			} else if (var == 4) {
 				switch (targetId) {
-                    case 243684: { //아티팩트를 지배하는 �?�로반.
+                    case 243684: { //아티팩트를 지배하는 �로반.
 						qs.setStatus(QuestStatus.REWARD);
 						updateQuestStatus(env);
 						return true;

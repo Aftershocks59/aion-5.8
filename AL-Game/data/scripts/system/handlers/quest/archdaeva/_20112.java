@@ -36,7 +36,7 @@ public class _20112 extends QuestHandler
 {
     public static final int questId = 20112;
 	private final static int[] npcs = {805356, 806780, 703465};
-	private final static int[] Ab1EreshFiEvent = {885140}; //�?레슈란타�?� 눈 수호병.
+	private final static int[] Ab1EreshFiEvent = {885140}; //�레슈란타� 눈 수호병.
 	
     public _20112() {
         super(questId);
@@ -46,13 +46,13 @@ public class _20112 extends QuestHandler
     public void register() {
         for (int npc: npcs) {
             qe.registerQuestNpc(npc).addOnTalkEvent(questId);
-        } for (int mob: Ab1EreshFiEvent) { //�?레슈란타�?� 눈 수호병.
+        } for (int mob: Ab1EreshFiEvent) { //�레슈란타� 눈 수호병.
 		    qe.registerQuestNpc(mob).addOnKillEvent(questId);
 		}
 		qe.registerOnLevelUp(questId);
-		qe.registerQuestItem(182216238, questId); //마족 �?�바 구급�?�?.
+		qe.registerQuestItem(182216238, questId); //마족 �바 구급��.
 		qe.registerOnEnterZoneMissionEnd(questId);
-		qe.registerQuestNpc(885141).addOnKillEvent(questId); //�?레슈란타�?� 눈 수호장�?.
+		qe.registerQuestNpc(885141).addOnKillEvent(questId); //�레슈란타� 눈 수호장�.
     }
 	
 	@Override
@@ -113,7 +113,7 @@ public class _20112 extends QuestHandler
 							return sendQuestDialog(env, 2376);
 						}
 					} case STEP_TO_2: {
-						return defaultCloseDialog(env, 1, 2, false, false, 182216238, 1, 0, 0); //마족 �?�바 구급�?�?.
+						return defaultCloseDialog(env, 1, 2, false, false, 182216238, 1, 0, 0); //마족 �바 구급��.
 					} case CHECK_COLLECTED_ITEMS: {
 						if (QuestService.collectItemCheck(env, true)) {
 							qs.setStatus(QuestStatus.REWARD);
@@ -125,7 +125,7 @@ public class _20112 extends QuestHandler
 						}
 					}
 				}
-            } if (targetId == 703465) { //부서진 보급품 �?�?.
+            } if (targetId == 703465) { //부서진 보급품 ��.
                 switch (env.getDialog()) {
                     case USE_OBJECT: {
                         return closeDialogWindow(env);
@@ -155,7 +155,7 @@ public class _20112 extends QuestHandler
 				int itemId = item.getItemId();
 				int var = qs.getQuestVarById(0);
 				int var1 = qs.getQuestVarById(1);
-				if (itemId == 182216238) { //마족 �?�바 구급�?�?.
+				if (itemId == 182216238) { //마족 �바 구급��.
 					if (var == 2) {
 						if (var1 >= 0 && var1 < 4) {
 							changeQuestStep(env, var1, var1 + 1, false, 1);
@@ -182,11 +182,11 @@ public class _20112 extends QuestHandler
 			if (var == 3) {
 				int[] Ab1EreshFiEvent = {885140};
 				switch (targetId) {
-					case 885140: { //�?레슈란타�?� 눈 수호병.
+					case 885140: { //�레슈란타� 눈 수호병.
 						return defaultOnKillEvent(env, Ab1EreshFiEvent, 0, 5, 1);
 					}
 				} switch (targetId) {
-				    case 885141: { //�?레슈란타�?� 눈 수호장�?.
+				    case 885141: { //�레슈란타� 눈 수호장�.
 						qs.setQuestVar(4);
 						updateQuestStatus(env);
 						return true;

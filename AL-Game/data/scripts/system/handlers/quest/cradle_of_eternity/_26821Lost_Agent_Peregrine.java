@@ -43,7 +43,7 @@ public class _26821Lost_Agent_Peregrine extends QuestHandler
 			qe.registerQuestNpc(mob).addOnKillEvent(questId);
 		}
 		qe.registerOnEnterWorld(questId);
-		qe.registerQuestNpc(220526).addOnKillEvent(questId); //ì‹¬ì•ˆì?˜ ëˆˆë?™ìž?.
+		qe.registerQuestNpc(220526).addOnKillEvent(questId); //ì‹¬ì•ˆï¿½ ëˆˆï¿½ï¿½.
 		qe.registerOnEnterZone(ZoneName.get("IDETERNITY_02_Q16821_A_301550000"), questId);
 		qe.registerOnEnterZone(ZoneName.get("IDETERNITY_02_Q16821_B_301550000"), questId);
 	}
@@ -92,7 +92,7 @@ public class _26821Lost_Agent_Peregrine extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (player.getWorldId() == 301550000) { //ì§€ì‹?ì?˜ ì •ì›?.
+		if (player.getWorldId() == 301550000) { //ì§€ï¿½ï¿½ ì •ï¿½.
             if (qs == null) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {
@@ -121,7 +121,7 @@ public class _26821Lost_Agent_Peregrine extends QuestHandler
                 }
             } else if (var == 5) {
 				switch (targetId) {
-                    case 220526: { //ì‹¬ì•ˆì?˜ ëˆˆë?™ìž?.
+                    case 220526: { //ì‹¬ì•ˆï¿½ ëˆˆï¿½ï¿½.
 						qs.setQuestVar(6);
 						qs.setStatus(QuestStatus.REWARD);
 						updateQuestStatus(env);

@@ -102,9 +102,9 @@ public class _18990A_New_Phenomenon extends QuestHandler {
         if (qs.getStatus() != QuestStatus.START) {
             return false;
         } if (var == 1) {
-			if (targetId == 220417) { //악령�?� 저주를 받�?� 지투른.
+			if (targetId == 220417) { //악령� 저주를 받� 지투른.
 				qs.setQuestVarById(1, 1);
-			} else if (targetId == 220418) { //악령�?� 저주를 받�?� 카르미웬.
+			} else if (targetId == 220418) { //악령� 저주를 받� 카르미웬.
 				qs.setQuestVarById(2, 1);
 			}
 			updateQuestStatus(env);

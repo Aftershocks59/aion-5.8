@@ -190,7 +190,7 @@ public class _20529Building_A_Protection_Artifact_2 extends QuestHandler
 								@Override
 								public void run() {
 									QuestService.addNewSpawn(301690000, player.getInstanceId(), 244129, (float) 172.000, (float) 156.000, (float) 230.53053, (byte) 96); //유니우스.
-									QuestService.addNewSpawn(301690000, player.getInstanceId(), 806299, (float) 173.08958, (float) 153.30316, (float) 230.3820, (byte) 67); //쓰러진 위�?보보.
+									QuestService.addNewSpawn(301690000, player.getInstanceId(), 806299, (float) 173.08958, (float) 153.30316, (float) 230.3820, (byte) 67); //쓰러진 위�보보.
 								}
 							}, 30000);
 							return closeDialogWindow(env);

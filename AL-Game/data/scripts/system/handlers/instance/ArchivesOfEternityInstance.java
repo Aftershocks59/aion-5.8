@@ -67,7 +67,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			case 857464: //Mountainous Shardgolem.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //ì?´ê³„ ì•”ë£¡ì?˜ ë¬´ê¸° ìƒ?ìž?.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //ï¿½ê³„ ì•”ë£¡ï¿½ ë¬´ê¸° ï¿½ï¿½.
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 166040001, 1)); //Essence Core Solution.
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100344, 1)); //Ruby Starlight Particle.
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100345, 1)); //Sapphire Starlight Particle.
@@ -96,7 +96,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			 * Chosen "Guardian's Set"
 			 * Appearance change items obtainable from "Archives Of Eternity"
 			 * Can be used on any type of item.
-			 * Headgear can be obtained from "í™˜ì˜?ì?˜ ìƒ?ìž?"
+			 * Headgear can be obtained from "í™˜ï¿½ï¿½ ï¿½ï¿½"
 			 * Pants, Shoes, Pauldrons and Gloves can be obtained from "Cryptograph Cube"
 			 */
 			case 806139: //Cryptograph Cube.

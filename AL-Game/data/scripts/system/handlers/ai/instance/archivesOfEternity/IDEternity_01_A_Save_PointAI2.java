@@ -99,7 +99,7 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//주신�?� 기�?보관소 �?��?�장치가 활성화 �?�었습니다.
+					//주신� 기�보관소 ��장치가 활성화 �었습니다.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_Teleport_MSG_01);
 				}
 			}
@@ -110,7 +110,7 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//�?�간�?� 기�?보관소 �?��?�장치가 활성화 �?�었습니다.
+					//�간� 기�보관소 ��장치가 활성화 �었습니다.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_Teleport_MSG_02);
 				}
 			}
@@ -121,7 +121,7 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//아트레�?�아�?� 기�?보관소 �?��?�장치가 활성화 �?�었습니다.
+					//아트레�아� 기�보관소 ��장치가 활성화 �었습니다.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_Teleport_MSG_03);
 				}
 			}
@@ -132,7 +132,7 @@ public class IDEternity_01_A_Save_PointAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//근�?�?� 기�?보관소 �?��?�장치가 활성화 �?�었습니다.
+					//근�� 기�보관소 ��장치가 활성화 �었습니다.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_Teleport_MSG_04);
 				}
 			}

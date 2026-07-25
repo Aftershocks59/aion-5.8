@@ -28,7 +28,7 @@ public class _26822Traveling_With_The_Earth_Jotun extends QuestHandler
 {
     private final static int questId = 26822;
 	private final static int[] npcs = {220588, 220590, 806283};
-	private final static int[] IDEternity02NepilimBoss75Ah = {220534}; //타�?�한 물�?� �?빌림.
+	private final static int[] IDEternity02NepilimBoss75Ah = {220534}; //타�한 물� �빌림.
 	
     public _26822Traveling_With_The_Earth_Jotun() {
         super(questId);
@@ -67,7 +67,7 @@ public class _26822Traveling_With_The_Earth_Jotun extends QuestHandler
 		int var = qs.getQuestVarById(0);
 		int targetId = env.getTargetId();
 		if (qs == null || qs.getStatus() == QuestStatus.START) {
-			if (targetId == 220588) { //전투중�?� 대지�?� �?빌림.
+			if (targetId == 220588) { //전투중� 대지� �빌림.
 				switch (env.getDialog()) {
                     case START_DIALOG: {
                         if (var == 1) {
@@ -82,7 +82,7 @@ public class _26822Traveling_With_The_Earth_Jotun extends QuestHandler
 						return closeDialogWindow(env);
 					}
                 }
-			} if (targetId == 220590) { //대지�?� �?빌림.
+			} if (targetId == 220590) { //대지� �빌림.
 				switch (env.getDialog()) {
 					case START_DIALOG: {
 						if (var == 3) {
@@ -108,7 +108,7 @@ public class _26822Traveling_With_The_Earth_Jotun extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (player.getWorldId() == 301550000) { //지�?�?� 정�?.
+		if (player.getWorldId() == 301550000) { //지�� 정�.
             if (qs == null) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {
@@ -127,9 +127,9 @@ public class _26822Traveling_With_The_Earth_Jotun extends QuestHandler
 		if (qs != null && qs.getStatus() == QuestStatus.START) {
 			int var = qs.getQuestVarById(0);
 			if (var == 5) {
-				int[] IDEternity02NepilimBoss75Ah = {220534}; //타�?�한 물�?� �?빌림.
+				int[] IDEternity02NepilimBoss75Ah = {220534}; //타�한 물� �빌림.
 				switch (targetId) {
-					case 220534: { //타�?�한 물�?� �?빌림.
+					case 220534: { //타�한 물� �빌림.
 						qs.setQuestVar(6);
 					    updateQuestStatus(env);
 						return defaultOnKillEvent(env, IDEternity02NepilimBoss75Ah, 0, 1, 1);

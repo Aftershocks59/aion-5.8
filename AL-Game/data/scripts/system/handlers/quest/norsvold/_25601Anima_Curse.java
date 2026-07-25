@@ -45,10 +45,10 @@ public class _25601Anima_Curse extends QuestHandler
     @Override
     public void register() {
 		qe.registerOnLevelUp(questId);
-		qe.registerQuestItem(182216001, questId); //스피리투스 �?�?�?� 깃털.
+		qe.registerQuestItem(182216001, questId); //스피리투스 ��� 깃털.
         qe.registerQuestNpc(806170).addOnQuestStart(questId); //Hekadun.
 		qe.registerQuestNpc(806170).addOnTalkEvent(questId); //Hekadun.
-        qe.registerQuestNpc(806196).addOnTalkEvent(questId); //스피리투스�?� �?혼.
+        qe.registerQuestNpc(806196).addOnTalkEvent(questId); //스피리투스� �혼.
 		for (int boss: DF6B224NamedBirdmom70Al) {
             qe.registerQuestNpc(boss).addOnKillEvent(questId);
         }
@@ -89,7 +89,7 @@ public class _25601Anima_Curse extends QuestHandler
 							return sendQuestDialog(env, 1693);
 						}
 					} case STEP_TO_3: {
-						giveQuestItem(env, 182216001, 1); //스피리투스 �?�?�?� 깃털.
+						giveQuestItem(env, 182216001, 1); //스피리투스 ��� 깃털.
 						changeQuestStep(env, 2, 3, false);
 						return closeDialogWindow(env);
 					} case CHECK_COLLECTED_ITEMS: {
@@ -101,7 +101,7 @@ public class _25601Anima_Curse extends QuestHandler
 						}
 					}
 				}
-			} if (targetId == 806196) { //스피리투스�?� �?혼.
+			} if (targetId == 806196) { //스피리투스� �혼.
 				switch (env.getDialog()) {
 					case START_DIALOG: {
 						if (var == 4) {
@@ -110,7 +110,7 @@ public class _25601Anima_Curse extends QuestHandler
 					} case STEP_TO_5: {
 						changeQuestStep(env, 4, 5, false);
 						npc.getController().onDelete();
-						removeQuestItem(env, 182216001, 1); //스피리투스 �?�?�?� 깃털.
+						removeQuestItem(env, 182216001, 1); //스피리투스 ��� 깃털.
 						return closeDialogWindow(env);
 					}
 				}
@@ -159,7 +159,7 @@ public class _25601Anima_Curse extends QuestHandler
 			}
             int var = qs.getQuestVarById(0);
             if (var == 3) {
-				QuestService.addNewSpawn(220110000, 1, 806196, player.getX(), player.getY(), player.getZ(), (byte) 0); //스피리투스�?� �?혼.
+				QuestService.addNewSpawn(220110000, 1, 806196, player.getX(), player.getY(), player.getZ(), (byte) 0); //스피리투스� �혼.
                 return HandlerResult.fromBoolean(useQuestItem(env, item, 3, 4, false));
             }
         }

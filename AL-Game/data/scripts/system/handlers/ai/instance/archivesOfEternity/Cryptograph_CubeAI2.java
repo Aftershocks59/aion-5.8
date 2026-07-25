@@ -44,7 +44,7 @@ public class Cryptograph_CubeAI2 extends GeneralNpcAI2
 			switch (getNpcId()) {
 				case 806152: //Cryptograph Cube.
 				case 806153: //Cryptograph Cube.
-				    ItemService.addItem(player, 125004516, 1); //ì„ íƒ?ë°›ì?€ ìˆ˜í˜¸ìž?ì?˜ ë‘?ê±´.
+				    ItemService.addItem(player, 125004516, 1); //ì„ ï¿½ë°›ï¿½ ìˆ˜í˜¸ï¿½ï¿½ ï¿½ê±´.
 			    break;
 			}
 		}

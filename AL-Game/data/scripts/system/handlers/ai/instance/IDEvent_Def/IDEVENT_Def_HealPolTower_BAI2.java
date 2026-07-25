@@ -40,7 +40,7 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		PlayerEffectController effectController = player.getEffectController();
-		//강력한 �?명�?� �?�바 I
+		//강력한 �명� �바 I
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(186000470, 2)) {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
 				effectController.removeEffect(4936);
@@ -56,7 +56,7 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 				SkillEngine.getInstance().applyEffectDirectly(4940, player, player, 1200000 * 1);
 			}
 		}
-		//강력한 �?명�?� �?�바 II
+		//강력한 �명� �바 II
 		else if (dialogId == 10001 && player.getInventory().decreaseByItemId(186000470, 7)) {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
 				effectController.removeEffect(4935);
@@ -72,7 +72,7 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 				SkillEngine.getInstance().applyEffectDirectly(4941, player, player, 1200000 * 1);
 			}
 		}
-		//강력한 �?명�?� �?�바 III
+		//강력한 �명� �바 III
 		else if (dialogId == 10002 && player.getInventory().decreaseByItemId(186000470, 13)) {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
 				effectController.removeEffect(4935);
@@ -88,7 +88,7 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 				SkillEngine.getInstance().applyEffectDirectly(4942, player, player, 1200000 * 1);
 			}
 		}
-		//강력한 �?명�?� �?�바 IV
+		//강력한 �명� �바 IV
 		else if (dialogId == 10003 && player.getInventory().decreaseByItemId(186000470, 20)) {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
 				effectController.removeEffect(4935);
@@ -104,7 +104,7 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 				SkillEngine.getInstance().applyEffectDirectly(4943, player, player, 1200000 * 1);
 			}
 		}
-		//강력한 �?명�?� �?�바 V
+		//강력한 �명� �바 V
 		else if (dialogId == 10004 && player.getInventory().decreaseByItemId(186000470, 30)) {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
 				effectController.removeEffect(4935);

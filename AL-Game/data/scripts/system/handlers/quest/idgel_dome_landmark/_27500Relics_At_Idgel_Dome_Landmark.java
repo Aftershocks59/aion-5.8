@@ -33,9 +33,9 @@ public class _27500Relics_At_Idgel_Dome_Landmark extends QuestHandler
     }
 	
 	public void register() {
-		qe.registerQuestNpc(806264).addOnQuestStart(questId); //ì?¼ë§ˆë¦¬ë„¨.
-		qe.registerQuestNpc(806264).addOnTalkEvent(questId); //ì?¼ë§ˆë¦¬ë„¨.
-		qe.registerQuestNpc(806265).addOnTalkEvent(questId); //ìž?ì?´í?¬ì„¸ë„¤.
+		qe.registerQuestNpc(806264).addOnQuestStart(questId); //ï¿½ë§ˆë¦¬ë„¨.
+		qe.registerQuestNpc(806264).addOnTalkEvent(questId); //ï¿½ë§ˆë¦¬ë„¨.
+		qe.registerQuestNpc(806265).addOnTalkEvent(questId); //ï¿½ï¿½ï¿½ì„¸ë„¤.
 		qe.registerOnEnterZone(ZoneName.get("IDLDF5_FORTRESS_WAR_Q27500_A_301680000"), questId);
 		qe.registerOnEnterZone(ZoneName.get("IDLDF5_FORTRESS_WAR_Q17500_B_301680000"), questId);
 	}
@@ -46,7 +46,7 @@ public class _27500Relics_At_Idgel_Dome_Landmark extends QuestHandler
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
         int targetId = env.getTargetId();
         if (qs == null || qs.getStatus() == QuestStatus.NONE) {
-			if (targetId == 806264) { //ì?¼ë§ˆë¦¬ë„¨.
+			if (targetId == 806264) { //ï¿½ë§ˆë¦¬ë„¨.
 				switch (env.getDialog()) {
                     case START_DIALOG: {
                         return sendQuestDialog(env, 4762);
@@ -61,7 +61,7 @@ public class _27500Relics_At_Idgel_Dome_Landmark extends QuestHandler
                 }
 			}
 		} else if (qs.getStatus() == QuestStatus.START) {
-			if (targetId == 806265) { //ìž?ì?´í?¬ì„¸ë„¤.
+			if (targetId == 806265) { //ï¿½ï¿½ï¿½ì„¸ë„¤.
 				switch (env.getDialog()) {
                     case START_DIALOG: {
                         return sendQuestDialog(env, 1353);
@@ -72,7 +72,7 @@ public class _27500Relics_At_Idgel_Dome_Landmark extends QuestHandler
                 }
 			}
 		} else if (qs.getStatus() == QuestStatus.REWARD) {
-            if (targetId == 806264) { //ì?¼ë§ˆë¦¬ë„¨.
+            if (targetId == 806264) { //ï¿½ë§ˆë¦¬ë„¨.
                 if (env.getDialog() == QuestDialog.START_DIALOG) {
                     return sendQuestDialog(env, 10002);
                 } else {

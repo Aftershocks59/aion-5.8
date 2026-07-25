@@ -81,16 +81,16 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 			case 835733: //IDAbRe_Core_03_TreasureBox04.
 				switch (Rnd.get(1, 4)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058115, 1)); //미�?�쉬 성소 중급 유물 꾸러미.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058115, 1)); //미�쉬 성소 중급 유물 꾸러미.
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058116, 1)); //미�?�쉬 성소 �?급 유물 꾸러미.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058116, 1)); //미�쉬 성소 �급 유물 꾸러미.
 				    break;
 					case 3:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058117, 1)); //미�?�쉬 성소 스피넬 공훈 훈장 �?�?.
+					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058117, 1)); //미�쉬 성소 스피넬 공훈 훈장 ��.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058118, 1)); //미�?�쉬 성소 스티그마 꾸러미.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058118, 1)); //미�쉬 성소 스티그마 꾸러미.
 					break;
 				}
 			break;
@@ -129,22 +129,22 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 			case 248013: //노래하는 키르쉬카.
 				switch (Rnd.get(1, 6)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058117, 1)); //미�?�쉬 성소 스피넬 공훈 훈장 �?�?.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058117, 1)); //미�쉬 성소 스피넬 공훈 훈장 ��.
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058118, 1)); //미�?�쉬 성소 스티그마 꾸러미.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058118, 1)); //미�쉬 성소 스티그마 꾸러미.
 				    break;
 					case 3:
 					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //미니움.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058130, 1)); //미�?�쉬 성소 하�?� 친위대 무기 �?�?.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058130, 1)); //미�쉬 성소 하� 친위대 무기 ��.
 					break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058131, 1)); //미�?�쉬 성소 하�?� 친위대 방어구 �?�?.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058131, 1)); //미�쉬 성소 하� 친위대 방어구 ��.
 					break;
 					case 6:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058132, 1)); //미�?�쉬 성소 하�?� 친위대 장신구 �?�?.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058132, 1)); //미�쉬 성소 하� 친위대 장신구 ��.
 					break;
 				} switch (Rnd.get(1, 4)) {
 					case 1:

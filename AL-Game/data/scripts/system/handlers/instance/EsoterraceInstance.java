@@ -123,7 +123,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 			/**
 			 * From the main entrance, players have access to the larger half of the Esoterrace Secret Laboratory.
 			 * In the middle of the Laboratory is a Surkana Feeder.
-			 * Destroy this to face Warden Surama, the “Hard Mode�? final Named Monster.
+			 * Destroy this to face Warden Surama, the “Hard Mode� final Named Monster.
 			 * Leave it alone to face Kexkra, the normal final Named Monster.
 			 */
 			case 282291: //Surkana Feeder.

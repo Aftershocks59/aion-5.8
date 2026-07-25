@@ -31,7 +31,7 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 public class _25605An_Adventure_In_Time extends QuestHandler
 {
     public static final int questId = 25605;
-	private final static int[] DF6F224NamedDeathKnight70Al = {241217}; //페르�?.
+	private final static int[] DF6F224NamedDeathKnight70Al = {241217}; //페르�.
 	
     public _25605An_Adventure_In_Time() {
         super(questId);
@@ -45,10 +45,10 @@ public class _25605An_Adventure_In_Time extends QuestHandler
     @Override
     public void register() {
 		qe.registerOnLevelUp(questId);
-		qe.registerQuestItem(182216005, questId); //간�?� 시공간 제어기.
+		qe.registerQuestItem(182216005, questId); //간� 시공간 제어기.
         qe.registerQuestNpc(806174).addOnQuestStart(questId); //Chardelil.
 		qe.registerQuestNpc(806174).addOnTalkEvent(questId); //Chardelil.
-		qe.registerQuestNpc(806199).addOnTalkEvent(questId); //차�?�? 묶�?� �?�바.
+		qe.registerQuestNpc(806199).addOnTalkEvent(questId); //차�� 묶� �바.
 		for (int mobs: DF6F224NamedDeathKnight70Al) {
             qe.registerQuestNpc(mobs).addOnKillEvent(questId);
         }
@@ -89,7 +89,7 @@ public class _25605An_Adventure_In_Time extends QuestHandler
 							return sendQuestDialog(env, 1693);
 						}
 					} case STEP_TO_3: {
-						giveQuestItem(env, 182216005, 1); //간�?� 시공간 제어기.
+						giveQuestItem(env, 182216005, 1); //간� 시공간 제어기.
 						changeQuestStep(env, 2, 3, false);
 						return closeDialogWindow(env);
 					} case CHECK_COLLECTED_ITEMS: {
@@ -101,7 +101,7 @@ public class _25605An_Adventure_In_Time extends QuestHandler
 						}
 					}
 				}
-			} if (targetId == 806199) { //차�?�? 묶�?� �?�바.
+			} if (targetId == 806199) { //차�� 묶� �바.
 				switch (env.getDialog()) {
 					case START_DIALOG: {
 						if (var == 4) {
@@ -110,7 +110,7 @@ public class _25605An_Adventure_In_Time extends QuestHandler
 					} case STEP_TO_5: {
 						changeQuestStep(env, 4, 5, false);
 						npc.getController().onDelete();
-						removeQuestItem(env, 182216005, 1); //간�?� 시공간 제어기.
+						removeQuestItem(env, 182216005, 1); //간� 시공간 제어기.
 						return closeDialogWindow(env);
 					}
 				}
@@ -138,7 +138,7 @@ public class _25605An_Adventure_In_Time extends QuestHandler
             int var = qs.getQuestVarById(0);
             if (var == 6) {
 				switch (targetId) {
-                    case 241217: { //페르�?.
+                    case 241217: { //페르�.
 						qs.setStatus(QuestStatus.REWARD);
 					    updateQuestStatus(env);
 						return true;
@@ -159,7 +159,7 @@ public class _25605An_Adventure_In_Time extends QuestHandler
 			}
             int var = qs.getQuestVarById(0);
             if (var == 3) {
-				QuestService.addNewSpawn(220110000, 1, 806199, player.getX(), player.getY(), player.getZ(), (byte) 0); //차�?�? 묶�?� �?�바.
+				QuestService.addNewSpawn(220110000, 1, 806199, player.getX(), player.getY(), player.getZ(), (byte) 0); //차�� 묶� �바.
                 return HandlerResult.fromBoolean(useQuestItem(env, item, 3, 4, false));
             }
         }

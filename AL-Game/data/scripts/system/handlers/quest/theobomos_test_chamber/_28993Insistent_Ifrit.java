@@ -26,7 +26,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 public class _28993Insistent_Ifrit extends QuestHandler
 {
     private final static int questId = 28993;
-	private final static int[] IDF6LapGodElemental67Ah = {220426}; //아티팩트를 지배하는 �?소 군주.
+	private final static int[] IDF6LapGodElemental67Ah = {220426}; //아티팩트를 지배하는 �소 군주.
 	
     public _28993Insistent_Ifrit() {
         super(questId);
@@ -83,7 +83,7 @@ public class _28993Insistent_Ifrit extends QuestHandler
         QuestState qs = player.getQuestStateList().getQuestState(questId);
         if (qs != null && qs.getStatus() == QuestStatus.START) {
             switch (env.getTargetId()) {
-				case 220426: //아티팩트를 지배하는 �?소 군주.
+				case 220426: //아티팩트를 지배하는 �소 군주.
                 if (qs.getQuestVarById(1) < 1) {
 					qs.setQuestVarById(1, qs.getQuestVarById(1) + 1);
 					updateQuestStatus(env);

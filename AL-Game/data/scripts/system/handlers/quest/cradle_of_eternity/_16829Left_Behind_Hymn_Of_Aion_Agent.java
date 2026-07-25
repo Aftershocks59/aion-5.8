@@ -26,7 +26,7 @@ import com.aionemu.gameserver.services.QuestService;
 public class _16829Left_Behind_Hymn_Of_Aion_Agent extends QuestHandler
 {
     private final static int questId = 16829;
-	private final static int[] npcs = {806282}; //ì—?í…Œìž?ë¥´.
+	private final static int[] npcs = {806282}; //ï¿½í…Œï¿½ë¥´.
 	private final static int[] IDEternity02AS72Ae = {220458, 220465, 220466, 220469,
 	220475, 220476, 220477, 220479};
 	
@@ -58,7 +58,7 @@ public class _16829Left_Behind_Hymn_Of_Aion_Agent extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (player.getWorldId() == 301550000) { //ì§€ì‹?ì?˜ ì •ì›?.
+		if (player.getWorldId() == 301550000) { //ì§€ï¿½ï¿½ ì •ï¿½.
             if (qs == null) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {

@@ -88,7 +88,7 @@ public class IDEternity_W_Tele_E_To_OP_UpAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//E�?� 순간�?��?� 장치가 �?령 가능합니다.
+					//E� 순간�� 장치가 �령 가능합니다.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_10);
 				}
 			}
@@ -99,7 +99,7 @@ public class IDEternity_W_Tele_E_To_OP_UpAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//E�?� 순간�?��?� 장치를 천족�?� �?령해 �?�용 가능 합니다.
+					//E� 순간�� 장치를 천족� �령해 �용 가능 합니다.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_03);
 				}
 			}
@@ -110,7 +110,7 @@ public class IDEternity_W_Tele_E_To_OP_UpAI2 extends NpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					//E�?� 순간�?��?� 장치를 마족�?� �?령해 �?�용 가능 합니다.
+					//E� 순간�� 장치를 마족� �령해 �용 가능 합니다.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDEternity_War_tele_04);
 				}
 			}

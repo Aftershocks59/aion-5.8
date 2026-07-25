@@ -49,7 +49,7 @@ public class _27510Forgotten_Memories extends QuestHandler
 	public void register() {
 		qe.registerQuestNpc(806079).addOnTalkEvent(questId); //Peregrine.
 		qe.registerQuestNpc(806437).addOnTalkEvent(questId); //Stella.
-		qe.registerQuestNpc(834194).addOnTalkEvent(questId); //운명�?� 보주.
+		qe.registerQuestNpc(834194).addOnTalkEvent(questId); //운명� 보주.
 		for (int mob: IDTransformSado) {
 			qe.registerQuestNpc(mob).addOnKillEvent(questId);
 		} for (int mob: shadowOfOblivion) {
@@ -111,7 +111,7 @@ public class _27510Forgotten_Memories extends QuestHandler
 						return closeDialogWindow(env);
 					}
                 }
-			} if (targetId == 834194) { //운명�?� 보주.
+			} if (targetId == 834194) { //운명� 보주.
 				switch (env.getDialog()) {
                     case START_DIALOG: {
                         if (var == 4) {

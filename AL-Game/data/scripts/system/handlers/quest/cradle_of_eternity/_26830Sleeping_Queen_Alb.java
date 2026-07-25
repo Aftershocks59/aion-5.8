@@ -58,7 +58,7 @@ public class _26830Sleeping_Queen_Alb extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (player.getWorldId() == 301550000) { //ì§€ì‹?ì?˜ ì •ì›?.
+		if (player.getWorldId() == 301550000) { //ì§€ï¿½ï¿½ ì •ï¿½.
             if (qs == null) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {

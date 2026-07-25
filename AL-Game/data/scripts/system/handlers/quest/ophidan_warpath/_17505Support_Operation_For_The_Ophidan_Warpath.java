@@ -34,7 +34,7 @@ public class _17505Support_Operation_For_The_Ophidan_Warpath extends QuestHandle
 
 	public void register() {
 		qe.registerOnEnterWorld(questId);
-		qe.registerQuestItem(182216067, questId); //슈고�?� 특수 물약.
+		qe.registerQuestItem(182216067, questId); //슈고� 특수 물약.
 		qe.registerQuestNpc(806266).addOnQuestStart(questId); //세베루스.
 		qe.registerQuestNpc(806266).addOnTalkEvent(questId); //세베루스.
 		qe.registerQuestNpc(806267).addOnTalkEvent(questId); //테루아.
@@ -73,7 +73,7 @@ public class _17505Support_Operation_For_The_Ophidan_Warpath extends QuestHandle
 							return sendQuestDialog(env, 1012);
 						}
 					} case STEP_TO_1: {
-						giveQuestItem(env, 182216067, 1); //슈고�?� 특수 물약.
+						giveQuestItem(env, 182216067, 1); //슈고� 특수 물약.
                         return defaultCloseDialog(env, 0, 1);
 					}
                 }
@@ -125,7 +125,7 @@ public class _17505Support_Operation_For_The_Ophidan_Warpath extends QuestHandle
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		if (qs != null && qs.getQuestVarById(0) == 2) {
-			removeQuestItem(env, 182216067, 1); //슈고�?� 특수 물약.
+			removeQuestItem(env, 182216067, 1); //슈고� 특수 물약.
 			return HandlerResult.fromBoolean(useQuestItem(env, item, 2, 3, false));
 		}
 		return HandlerResult.FAILED;

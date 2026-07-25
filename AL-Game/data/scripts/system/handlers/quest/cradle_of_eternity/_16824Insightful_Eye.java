@@ -26,8 +26,8 @@ import com.aionemu.gameserver.services.QuestService;
 public class _16824Insightful_Eye extends QuestHandler
 {
     private final static int questId = 16824;
-	private final static int[] npcs = {220587}; //í’€ë ¤ë‚œ ëŒ€ì§€ì?˜ ëŠ?ë¹Œë¦¼.
-	private final static int[] IDEternity02TowerBoss75Ah = {220526}; //ì‹¬ì•ˆì?˜ ëˆˆë?™ìž?.
+	private final static int[] npcs = {220587}; //í’€ë ¤ë‚œ ëŒ€ì§€ï¿½ ï¿½ë¹Œë¦¼.
+	private final static int[] IDEternity02TowerBoss75Ah = {220526}; //ì‹¬ì•ˆï¿½ ëˆˆï¿½ï¿½.
 	
     public _16824Insightful_Eye() {
         super(questId);
@@ -57,7 +57,7 @@ public class _16824Insightful_Eye extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (player.getWorldId() == 301550000) { //ì§€ì‹?ì?˜ ì •ì›?.
+		if (player.getWorldId() == 301550000) { //ì§€ï¿½ï¿½ ì •ï¿½.
             if (qs == null || qs.canRepeat()) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {
@@ -77,7 +77,7 @@ public class _16824Insightful_Eye extends QuestHandler
             int var = qs.getQuestVarById(0);
             if (var == 0) {
 				switch (targetId) {
-                    case 220526: { //ì‹¬ì•ˆì?˜ ëˆˆë?™ìž?.
+                    case 220526: { //ì‹¬ì•ˆï¿½ ëˆˆï¿½ï¿½.
 					    qs.setQuestVar(1);
 						qs.setStatus(QuestStatus.REWARD);
 					    updateQuestStatus(env);

@@ -26,7 +26,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 public class _28994The_Legion_Knocks extends QuestHandler
 {
     private final static int questId = 28994;
-	private final static int[] IDF6DragonArtifactBoost = {857974,857975, 857976}; //용족 차�?문 �?�?� 장치.
+	private final static int[] IDF6DragonArtifactBoost = {857974,857975, 857976}; //용족 차�문 �� 장치.
 	
     public _28994The_Legion_Knocks() {
         super(questId);

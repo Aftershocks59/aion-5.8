@@ -146,7 +146,7 @@ public class _20010Cruel_Truth extends QuestHandler
 							return sendQuestDialog(env, 2461);
 						}
 					} case STEP_TO_5: {
-						giveQuestItem(env, 182216184, 1); //관리소장�?� 보고서.
+						giveQuestItem(env, 182216184, 1); //관리소장� 보고서.
                         changeQuestStep(env, 4, 5, false);
 						return closeDialogWindow(env);
 					}

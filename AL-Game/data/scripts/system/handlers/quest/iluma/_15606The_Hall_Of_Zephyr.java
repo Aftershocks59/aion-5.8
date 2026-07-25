@@ -90,7 +90,7 @@ public class _15606The_Hall_Of_Zephyr extends QuestHandler
 						return closeDialogWindow(env);
 					} case CHECK_COLLECTED_ITEMS: {
 						if (QuestService.collectItemCheck(env, true)) {
-							removeQuestItem(env, 182215996, 1); //ì„œí’?ì?˜ ë?°ë°” í›ˆë ¨ ê¸°ë¡?.
+							removeQuestItem(env, 182215996, 1); //ì„œï¿½ï¿½ ï¿½ë°” í›ˆë ¨ ê¸°ï¿½.
 							changeQuestStep(env, 4, 5, true);
 							return sendQuestDialog(env, 10000);
 						} else {
@@ -102,7 +102,7 @@ public class _15606The_Hall_Of_Zephyr extends QuestHandler
                 switch (env.getDialog()) {
                     case USE_OBJECT: {
                         if (var == 1) {
-							giveQuestItem(env, 182215996, 1); //ì„œí’?ì?˜ ë?°ë°” í›ˆë ¨ ê¸°ë¡?.
+							giveQuestItem(env, 182215996, 1); //ì„œï¿½ï¿½ ï¿½ë°” í›ˆë ¨ ê¸°ï¿½.
 							changeQuestStep(env, 1, 2, false);
 							return closeDialogWindow(env);
                         }

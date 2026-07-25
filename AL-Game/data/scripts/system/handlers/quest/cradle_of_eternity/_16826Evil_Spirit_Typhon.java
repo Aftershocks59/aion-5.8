@@ -57,7 +57,7 @@ public class _16826Evil_Spirit_Typhon extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (player.getWorldId() == 301550000) { //ì§€ì‹?ì?˜ ì •ì›?.
+		if (player.getWorldId() == 301550000) { //ì§€ï¿½ï¿½ ì •ï¿½.
             if (qs == null || qs.canRepeat()) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {

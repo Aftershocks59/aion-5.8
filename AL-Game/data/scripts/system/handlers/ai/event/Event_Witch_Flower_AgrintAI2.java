@@ -30,12 +30,12 @@ public class Event_Witch_Flower_AgrintAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
-			case 248365: //마녀�?� 나무 I.
-			case 248366: //마녀�?� 나무 II.
+			case 248365: //마녀� 나무 I.
+			case 248366: //마녀� 나무 II.
 				spawn(835678, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
 			break;
-			case 248367: //마녀�?� 나무 I.
-			case 248368: //마녀�?� 나무 II.
+			case 248367: //마녀� 나무 I.
+			case 248368: //마녀� 나무 II.
 				spawn(835679, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
 			break;
 		}

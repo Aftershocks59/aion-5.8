@@ -118,7 +118,7 @@ public class _10529Protection_Artifact_2 extends QuestHandler
 						return closeDialogWindow(env);
 					}
                 }
-            } if (targetId == 806295) { //�?�제르.
+            } if (targetId == 806295) { //�제르.
 				switch (env.getDialog()) {
 					case START_DIALOG: {
 						if (var == 1) {
@@ -165,7 +165,7 @@ public class _10529Protection_Artifact_2 extends QuestHandler
 						}
 					}
 				}
-            } if (targetId == 806293) { //�?��?보보.
+            } if (targetId == 806293) { //��보보.
 				switch (env.getDialog()) {
 					case START_DIALOG: {
 						if (var == 5) {
@@ -180,7 +180,7 @@ public class _10529Protection_Artifact_2 extends QuestHandler
 						return closeDialogWindow(env);
 					}
 				}
-			} if (targetId == 703317) { //마족 차�?�?� 소용�?��?�.
+			} if (targetId == 703317) { //마족 차�� 소용��.
                 switch (env.getDialog()) {
                     case USE_OBJECT: {
                         if (var == 7) {
@@ -190,14 +190,14 @@ public class _10529Protection_Artifact_2 extends QuestHandler
 								@Override
 								public void run() {
 									QuestService.addNewSpawn(301690000, player.getInstanceId(), 244113, (float) 172.000, (float) 156.000, (float) 230.53053, (byte) 96); //헬뇨르.
-									QuestService.addNewSpawn(301690000, player.getInstanceId(), 806294, (float) 173.08958, (float) 153.30316, (float) 230.3820, (byte) 67); //쓰러진 �?��?보보.
+									QuestService.addNewSpawn(301690000, player.getInstanceId(), 806294, (float) 173.08958, (float) 153.30316, (float) 230.3820, (byte) 67); //쓰러진 ��보보.
 								}
 							}, 30000);
 							return closeDialogWindow(env);
                         }
 					}
                 }
-            } if (targetId == 806294) { //쓰러진 �?��?보보.
+            } if (targetId == 806294) { //쓰러진 ��보보.
 				switch (env.getDialog()) {
 					case START_DIALOG: {
 						if (var == 9) {

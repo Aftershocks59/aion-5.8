@@ -26,7 +26,7 @@ import com.aionemu.gameserver.services.QuestService;
 public class _16828A_Secret_Place extends QuestHandler
 {
     private final static int questId = 16828;
-	private final static int[] npcs = {806282}; //ì—?í…Œìž?ë¥´.
+	private final static int[] npcs = {806282}; //ï¿½í…Œï¿½ë¥´.
 	private final static int[] IDEternity02AGuardianFiSN72Ae = {220470, 220471, 220472, 220594};
 	
     public _16828A_Secret_Place() {
@@ -57,7 +57,7 @@ public class _16828A_Secret_Place extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
         QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (player.getWorldId() == 301550000) { //ì§€ì‹?ì?˜ ì •ì›?.
+		if (player.getWorldId() == 301550000) { //ì§€ï¿½ï¿½ ì •ï¿½.
             if (qs == null) {
                 env.setQuestId(questId);
                 if (QuestService.startQuest(env)) {

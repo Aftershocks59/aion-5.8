@@ -45,7 +45,7 @@ public class _26820Urgent_Call extends QuestHandler
     public boolean onEnterWorldEvent(QuestEnv env) {
         Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
-        if (player.getWorldId() == 301550000) { //지�?�?� 정�?.
+        if (player.getWorldId() == 301550000) { //지�� 정�.
 			if (qs != null && qs.getStatus() == QuestStatus.START) {
                 int var = qs.getQuestVars().getQuestVars();
                 if (var == 1) {
@@ -63,7 +63,7 @@ public class _26820Urgent_Call extends QuestHandler
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
         int targetId = env.getTargetId();
         if (qs == null || qs.getStatus() == QuestStatus.START) {
-			if (targetId == 806233) { //엔피�?타.
+			if (targetId == 806233) { //엔피�타.
 				switch (env.getDialog()) {
                     case START_DIALOG: {
                         return sendQuestDialog(env, 1011);
