@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.cache;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -35,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.HTMLConfig;
 
-import javolution.util.FastMap;
 
 /**
  * @authors Layane, nbali, savormix, hex1r0, lord_rex
@@ -63,7 +65,7 @@ public final class HTMLCache {
 		return SingletonHolder.INSTANCE;
 	}
 
-	private FastMap<String, String> cache = new FastMap<String, String>(16000);
+	private Map<String, String> cache = new LinkedHashMap<String, String>(16000);
 
 	private int loadedFiles;
 	private int size;
@@ -90,23 +92,33 @@ public final class HTMLCache {
 		if (cacheFile.exists()) {
 			log.info("Cache[HTML]: Using cache file... OK.");
 
-			ObjectInputStream ois = null;
-			try {
-				ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(getCacheFile())));
+			boolean cacheUnreadable = false;
+			// Close the stream before touching the file. The previous version retried
+			// from inside the catch block, so the stream was still open: on Windows the
+			// delete then failed, the unreadable file was still there, and reload
+			// recursed until the stack overflowed and the server never started.
+			try (ObjectInputStream ois = new ObjectInputStream(
+					new BufferedInputStream(new FileInputStream(cacheFile)))) {
 
-				cache = (FastMap<String, String>) ois.readObject();
+				cache = (Map<String, String>) ois.readObject();
 
 				for (String html : cache.values()) {
 					loadedFiles++;
 					size += html.length();
 				}
 			} catch (Exception e) {
-				log.warn("", e);
+				log.warn("Cache[HTML]: Cache file unreadable, rebuilding from source.", e);
+				cacheUnreadable = true;
+			}
 
-				reload(true);
-				return;
-			} finally {
-				IOUtils.closeQuietly(ois);
+			if (cacheUnreadable) {
+				if (cacheFile.exists() && !cacheFile.delete()) {
+					log.warn("Cache[HTML]: Could not delete the stale cache file {}.", cacheFile);
+				}
+				cache.clear();
+				loadedFiles = 0;
+				size = 0;
+				parseDir(HTML_ROOT);
 			}
 		} else {
 			parseDir(HTML_ROOT);
