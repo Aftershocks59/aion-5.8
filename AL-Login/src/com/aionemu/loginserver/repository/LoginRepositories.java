@@ -21,11 +21,11 @@ import com.aionemu.commons.database.DatabaseFactory;
  * Hands out the login server's repositories, built once over the connection
  * pool.
  * <p>
- * This is not a step back towards the DAO lookup it replaces. That answered
- * DAOManager.getDAO(SomeDAO.class) with a cast from a map, so a caller named a
- * class and hoped; here every accessor is typed, the set is visible in one
- * place, and each repository still takes its data source by constructor, which
- * is what lets a test hand it a different one.
+ * This is not a step back towards the lookup it replaces. That answered a class
+ * with a cast from a map, so a caller named a class and hoped; here every
+ * accessor is typed, the set is visible in one place, and each repository still
+ * takes its data source by constructor, which is what lets a test hand it a
+ * different one.
  * <p>
  * Built lazily because the pool is only open once the server has started.
  *
