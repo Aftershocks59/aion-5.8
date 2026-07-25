@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.utils.idfactory;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.concurrent.locks.ReentrantLock;
@@ -25,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.GenericValidator;
-import com.aionemu.gameserver.dao.GuideDAO;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.LegionDAO;
@@ -79,7 +79,7 @@ public class IDFactory {
 		lockIds(DAOManager.getDAO(PlayerRegisteredItemsDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(LegionDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(MailDAO.class).getUsedIDs());
-		lockIds(DAOManager.getDAO(GuideDAO.class).getUsedIDs());
+		lockIds(GameRepositories.guides().findUsedIds());
 		lockIds(DAOManager.getDAO(HousesDAO.class).getUsedIDs());
 		log.info("IDFactory: " + getUsedCount() + " id's used.");
 	}

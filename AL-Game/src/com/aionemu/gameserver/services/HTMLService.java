@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
-import com.aionemu.gameserver.dao.GuideDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.guide.Guide;
@@ -112,7 +112,7 @@ public class HTMLService {
 				}
 				int id = IDFactory.getInstance().nextId();
 				sendData(player, id, getHTMLTemplate(template));
-				DAOManager.getDAO(GuideDAO.class).saveGuide(id, player, template.getTitle());
+				GameRepositories.guides().save(id, player, template.getTitle());
 			}
 		}
 	}
@@ -121,7 +121,7 @@ public class HTMLService {
 		if (player == null)
 			return;
 
-		List<Guide> guides = DAOManager.getDAO(GuideDAO.class).loadGuides(player.getObjectId());
+		List<Guide> guides = GameRepositories.guides().findAll(player.getObjectId());
 
 		for (Guide guide : guides) {
 			GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(guide.getTitle());
@@ -144,7 +144,7 @@ public class HTMLService {
 			return;
 		}
 
-		Guide guide = DAOManager.getDAO(GuideDAO.class).loadGuide(player.getObjectId(), messageId);
+		Guide guide = GameRepositories.guides().find(player.getObjectId(), messageId);
 
 		if (guide != null) {
 			GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(guide.getTitle());
@@ -176,7 +176,7 @@ public class HTMLService {
 							item.getCount(), player.getName()));
 				}
 			}
-			DAOManager.getDAO(GuideDAO.class).deleteGuide(guide.getGuideId());
+			GameRepositories.guides().remove(guide.getGuideId());
 			items.clear();
 		}
 	}
@@ -195,7 +195,7 @@ public class HTMLService {
 		GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(title);
 		if (template != null) {
 			int id = IDFactory.getInstance().nextId();
-			DAOManager.getDAO(GuideDAO.class).saveGuide(id, player, title);
+			GameRepositories.guides().save(id, player, title);
 			sendData(player, id, getHTMLTemplate(template));
 		}
 	}

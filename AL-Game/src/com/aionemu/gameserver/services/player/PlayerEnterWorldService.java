@@ -25,7 +25,6 @@ import com.aionemu.gameserver.configs.main.HTMLConfig;
 import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.WeddingDAO;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.EmotionType;
@@ -187,7 +186,7 @@ public final class PlayerEnterWorldService {
 				client.close(new SM_QUIT_RESPONSE(), false);
 				return;
 			} else {
-				DAOManager.getDAO(PlayerPunishmentsDAO.class).unpunishPlayer(objectId, PunishmentType.CHARBAN);
+				GameRepositories.playerPunishments().pardon(objectId, PunishmentType.CHARBAN);
 			}
 		}
 		if (SecurityConfig.PASSKEY_ENABLE && !client.getAccount().getCharacterPasskey().isPass()) {

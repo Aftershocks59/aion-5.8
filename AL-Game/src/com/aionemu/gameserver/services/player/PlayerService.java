@@ -42,7 +42,6 @@ import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
-import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
@@ -114,8 +113,8 @@ public class PlayerService {
 		GameRepositories.playerSettings().save(player);
 		DAOManager.getDAO(PlayerQuestListDAO.class).store(player);
 		DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).storePlayerPunishments(player, PunishmentType.PRISON);
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).storePlayerPunishments(player, PunishmentType.GATHER);
+		GameRepositories.playerPunishments().save(player, PunishmentType.PRISON);
+		GameRepositories.playerPunishments().save(player, PunishmentType.GATHER);
 		DAOManager.getDAO(InventoryDAO.class).store(player);
 
 		for (House house : player.getHouses()) {
@@ -220,8 +219,8 @@ public class PlayerService {
 		}
 		player.setHouseRegistry(houseRegistry);
 		player.getEquipment().onLoadApplyEquipmentStats();
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).loadPlayerPunishments(player, PunishmentType.PRISON);
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).loadPlayerPunishments(player, PunishmentType.GATHER);
+		GameRepositories.playerPunishments().load(player, PunishmentType.PRISON);
+		GameRepositories.playerPunishments().load(player, PunishmentType.GATHER);
 		player.getController().updatePassiveStats();
 		GameRepositories.playerEffects().load(player);
 		GameRepositories.skillCooldowns().load(player);

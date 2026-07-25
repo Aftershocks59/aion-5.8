@@ -16,12 +16,12 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.Calendar;
 import java.util.concurrent.Future;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CAPTCHA;
@@ -47,7 +47,7 @@ public class PunishmentService {
 	 * @param delayInMinutes
 	 */
 	public static void unbanChar(int playerId) {
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).unpunishPlayer(playerId, PunishmentType.CHARBAN);
+		GameRepositories.playerPunishments().pardon(playerId, PunishmentType.CHARBAN);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class PunishmentService {
 	 * @param delayInMinutes
 	 */
 	public static void banChar(int playerId, int dayCount, String reason) {
-		DAOManager.getDAO(PlayerPunishmentsDAO.class).punishPlayer(playerId, PunishmentType.CHARBAN,
+		GameRepositories.playerPunishments().punish(playerId, PunishmentType.CHARBAN,
 				calculateDuration(dayCount), reason);
 
 		// if player is online - kick him
@@ -108,7 +108,7 @@ public class PunishmentService {
 			}
 			player.setStartPrison(System.currentTimeMillis());
 			TeleportService2.teleportToPrison(player);
-			DAOManager.getDAO(PlayerPunishmentsDAO.class).punishPlayer(player, PunishmentType.PRISON, reason);
+			GameRepositories.playerPunishments().punish(player, PunishmentType.PRISON, reason);
 		} else {
 			PacketSendUtility.sendMessage(player, "You come out of prison.");
 
@@ -119,7 +119,7 @@ public class PunishmentService {
 
 			TeleportService2.moveToBindLocation(player, true);
 
-			DAOManager.getDAO(PlayerPunishmentsDAO.class).unpunishPlayer(player.getObjectId(), PunishmentType.PRISON);
+			GameRepositories.playerPunishments().pardon(player.getObjectId(), PunishmentType.PRISON);
 		}
 	}
 
@@ -217,7 +217,7 @@ public class PunishmentService {
 			player.setGatherableTimer(delay);
 			player.setStopGatherable(System.currentTimeMillis());
 			scheduleGatherableTask(player, delay);
-			DAOManager.getDAO(PlayerPunishmentsDAO.class).punishPlayer(player, PunishmentType.GATHER,
+			GameRepositories.playerPunishments().punish(player, PunishmentType.GATHER,
 					"Possible gatherbot");
 		} else {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400269));
@@ -225,7 +225,7 @@ public class PunishmentService {
 			player.setCaptchaImage(null);
 			player.setGatherableTimer(0);
 			player.setStopGatherable(0);
-			DAOManager.getDAO(PlayerPunishmentsDAO.class).unpunishPlayer(player.getObjectId(), PunishmentType.GATHER);
+			GameRepositories.playerPunishments().pardon(player.getObjectId(), PunishmentType.GATHER);
 		}
 	}
 
