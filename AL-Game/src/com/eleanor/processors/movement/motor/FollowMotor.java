@@ -66,13 +66,18 @@ public class FollowMotor extends AMovementMotor {
 			Vector3f getTargetPos = new Vector3f(target.getX(), target.getY(), newZ);
 			float range = (float) this._owner.getGameStats().getAttackRange().getCurrent() / 1000.0f;
 
-			if (this._lastMovePoint == null) {
-				this._lastMovePoint = new Vector3f(this._owner.getX(), this._owner.getY(), this._owner.getZ());
+			// Read the last point once and work from the copy. The null check below used
+			// to guard three later reads of the field, and another thread clearing it in
+			// between threw out of the movement scheduler.
+			Vector3f lastMovePoint = this._lastMovePoint;
+			if (lastMovePoint == null) {
+				lastMovePoint = new Vector3f(this._owner.getX(), this._owner.getY(), this._owner.getZ());
+				this._lastMovePoint = lastMovePoint;
 			}
-			double distance = GeomUtil.getDistance3D(this._lastMovePoint, getTargetPos.x, getTargetPos.y,
+			double distance = GeomUtil.getDistance3D(lastMovePoint, getTargetPos.x, getTargetPos.y,
 					getTargetPos.z) - Math.max(range, this._owner.getCollision());
-			Vector3f dir = GeomUtil.getDirection3D(this._lastMovePoint, getTargetPos);
-			this._targetPosition = GeomUtil.getNextPoint3D(this._lastMovePoint, dir, (float) distance);
+			Vector3f dir = GeomUtil.getDirection3D(lastMovePoint, getTargetPos);
+			this._targetPosition = GeomUtil.getNextPoint3D(lastMovePoint, dir, (float) distance);
 		} else if (pathfindRevalidationTime < System.currentTimeMillis()) {
 			this._targetPosition = null;
 		}

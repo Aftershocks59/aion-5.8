@@ -21,6 +21,7 @@ import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -79,10 +80,18 @@ public class SimpleAttackManager {
 			float distance = npc.getDistanceToTarget();
 			AI2Logger.info((AbstractAI) npc.getAi2(), "isTargetInAttackRange: " + distance);
 		}
-		if (!GeoService.getInstance().canSee(npc, npc.getTarget()) || npc.getTarget() == null
-				|| !(npc.getTarget() instanceof Creature))
+		// Look at the target before asking anything about it. These three checks were
+		// already here, but canSee came first and dereferenced the target, so a target
+		// that died or left the world between the attack being scheduled and it firing
+		// threw out of the scheduler instead of simply calling off the attack.
+		VisibleObject target = npc.getTarget();
+		if (!(target instanceof Creature)) {
 			return false;
-		return MathUtil.isInAttackRange(npc, (Creature) npc.getTarget(),
+		}
+		if (!GeoService.getInstance().canSee(npc, target)) {
+			return false;
+		}
+		return MathUtil.isInAttackRange(npc, (Creature) target,
 				npc.getGameStats().getAttackRange().getCurrent() / 1000f);
 		// return distance <= npc.getController().getAttackDistanceToTarget() +
 		// NpcMoveController.MOVE_CHECK_OFFSET;
