@@ -125,18 +125,22 @@ class GeoDataOnDiskTest {
 		assertTrue(faces >= 0);
 		assertTrue(triangles > 0 && vertices > 0);
 
-		// Which materials the worlds are actually made of settles how many rows the
-		// collision flag table needs. Report the lot rather than the first
-		// surprise, so one run answers the question.
-		StringBuilder used = new StringBuilder();
+		// The material table stops at two hundred rows. A world built of anything
+		// past that would have nothing to look its collision up in.
+		long walkable = 0;
 		for (int material = 0; material < materials.length; material++) {
-			if (materials[material] > 0) {
-				used.append(used.length() == 0 ? "" : ", ").append(material).append('=').append(materials[material]);
+			if (materials[material] == 0) {
+				continue;
+			}
+			assertTrue(material < MaterialCollision.MATERIAL_COUNT, "worlds are built of material " + material
+					+ ", which is past the end of the material table");
+			if (!MaterialCollision.blocksMovement(material)) {
+				walkable += materials[material];
 			}
 		}
+
 		System.out.println("Geodata read: " + read + " worlds, " + vertices + " vertices, " + triangles
-				+ " triangles, " + doors + " doors.");
-		System.out.println("Triangles by material: " + used);
+				+ " triangles, " + doors + " doors, " + walkable + " triangles walked through.");
 	}
 
 	private static void checkCorner(int worldId, int offset, int floats) {
