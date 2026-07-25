@@ -28,7 +28,11 @@ replay_pid*.log
 # published.
 import/
 # Ignore geodata, which is distributed separately (see README).
-Geodata/
+#
+# Anchor the directory to the root. Unanchored, and matched without regard to
+# case as it is on Windows, "Geodata/" also swallowed the source package named
+# geodata and kept it out of every commit.
+/Geodata/
 AL-Game/data/geo/
 *.geo
 
