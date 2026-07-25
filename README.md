@@ -179,10 +179,9 @@ A world may carry `HeightMap32.Dat` or `HeightMap24.Dat` instead of
 `HeightMap40.Dat`; the finest tier present is the one read. Worlds with no
 directory simply have no geodata, and are queried as if geodata were off.
 
-Switched on, the server answers ground height, line of sight and movement from
-these files. Doors and anything else whose collision moves are not answered
-yet: the files say which triangles belong to one, but its state lives in the
-running server and the mesh is not rebuilt for it.
+Switched on, the server answers ground height, line of sight, movement and
+doors from these files. A door blocks while it is shut and lets everything
+through once opened, per instance of the world.
 
 ## Static data cache
 
