@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.panel_cp;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import com.aionemu.gameserver.model.Race;
 
 import jakarta.xml.bind.annotation.*;

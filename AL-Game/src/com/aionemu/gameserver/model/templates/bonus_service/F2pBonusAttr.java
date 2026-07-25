@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.bonus_service;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import java.util.ArrayList;
 import java.util.List;
 

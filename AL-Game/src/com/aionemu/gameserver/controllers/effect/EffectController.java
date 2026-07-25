@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers.effect;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -42,14 +44,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
-import javolution.util.FastMap;
 
 public class EffectController {
 	private Creature owner;
 
-	protected Map<String, Effect> passiveEffectMap = new FastMap<String, Effect>().shared();
-	protected Map<String, Effect> noshowEffects = new FastMap<String, Effect>().shared();
-	protected Map<String, Effect> abnormalEffectMap = new FastMap<String, Effect>().shared();
+	protected Map<String, Effect> passiveEffectMap = new ConcurrentHashMap<String, Effect>();
+	protected Map<String, Effect> noshowEffects = new ConcurrentHashMap<String, Effect>();
+	protected Map<String, Effect> abnormalEffectMap = new ConcurrentHashMap<String, Effect>();
 
 	private final Lock lock = new ReentrantLock();
 

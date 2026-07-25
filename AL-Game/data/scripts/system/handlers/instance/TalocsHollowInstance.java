@@ -17,7 +17,6 @@
 package instance;
 
 import java.util.*;
-import javolution.util.*;
 import java.util.concurrent.Future;
 
 import com.aionemu.commons.utils.Rnd;
@@ -63,8 +62,8 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	private boolean isInstanceDestroyed;
 	private Map<Integer, StaticDoor> doors;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> talocTask = FastList.newInstance();
-	private FastMap<Integer, VisibleObject> objects = new FastMap<Integer, VisibleObject>();
+	private final List<Future<?>> talocTask = new ArrayList<>();
+	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
     
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
@@ -297,9 +296,9 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = talocTask.head(), end = talocTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : talocTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

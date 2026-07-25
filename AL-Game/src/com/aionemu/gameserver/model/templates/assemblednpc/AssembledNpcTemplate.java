@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.assemblednpc;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;

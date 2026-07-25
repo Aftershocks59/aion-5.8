@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +31,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.skillengine.model.SkinSkillTemplate;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
 
 /**
  * @author Ranastic
@@ -44,7 +45,8 @@ public class SkinSkillData {
 	@XmlTransient
 	private TIntObjectHashMap<SkinSkillTemplate> skinSkillData = new TIntObjectHashMap<SkinSkillTemplate>();
 
-	private final Map<String, SkinSkillTemplate> string = new FastMap<String, SkinSkillTemplate>().shared();
+	@XmlTransient
+	private final Map<String, SkinSkillTemplate> string = new ConcurrentHashMap<String, SkinSkillTemplate>();
 
 	void afterUnmarshal(Unmarshaller paramUnmarshaller, Object paramObject) {
 		for (SkinSkillTemplate skinSkill : tlist) {

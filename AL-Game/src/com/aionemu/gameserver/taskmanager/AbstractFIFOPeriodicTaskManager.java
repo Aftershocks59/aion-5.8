@@ -19,7 +19,7 @@ package com.aionemu.gameserver.taskmanager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.utils.AEFastSet;
+import java.util.LinkedHashSet;
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
 
 /**
@@ -29,9 +29,9 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 
 	protected static final Logger log = LoggerFactory.getLogger(AbstractFIFOPeriodicTaskManager.class);
 
-	private final AEFastSet<T> queue = new AEFastSet<T>();
+	private final LinkedHashSet<T> queue = new LinkedHashSet<T>();
 
-	private final AEFastSet<T> activeTasks = new AEFastSet<T>();
+	private final LinkedHashSet<T> activeTasks = new LinkedHashSet<T>();
 
 	public AbstractFIFOPeriodicTaskManager(int period) {
 		super(period);

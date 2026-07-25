@@ -16,12 +16,13 @@
  */
 package com.aionemu.gameserver.dao;
 
+import java.util.Map;
+
 import java.util.List;
 
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.ingameshop.IGItem;
 
-import javolution.util.FastMap;
 
 /**
  * @author xTz, KID
@@ -30,7 +31,7 @@ public abstract class InGameShopDAO implements DAO {
 
 	public abstract boolean deleteIngameShopItem(int itemId, byte category, byte list, int param);
 
-	public abstract FastMap<Byte, List<IGItem>> loadInGameShopItems();
+	public abstract Map<Byte, List<IGItem>> loadInGameShopItems();
 
 	public abstract void saveIngameShopItem(int paramInt1, int paramInt2, long paramLong1, long paramLong2,
 			byte paramByte1, byte paramByte2, int paramInt3, int paramInt4, byte paramByte3, byte paramByte4,

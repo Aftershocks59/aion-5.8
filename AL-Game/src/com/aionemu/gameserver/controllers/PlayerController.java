@@ -1,5 +1,8 @@
 package com.aionemu.gameserver.controllers;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -128,7 +131,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import javolution.util.FastMap;
 
 /**
  * This class is for controlling players.
@@ -143,7 +145,7 @@ public class PlayerController extends CreatureController<Player> {
 	private long lastAttackMilis = 0;
 	private long lastAttackedMilis = 0;
 	private int stance = 0;
-	private FastMap<Integer, VisibleObject> autoPortals = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> autoPortals = new LinkedHashMap<Integer, VisibleObject>();
 
 	@Override
 	public void see(VisibleObject object) {

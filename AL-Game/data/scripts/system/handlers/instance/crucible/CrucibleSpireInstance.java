@@ -48,7 +48,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -65,7 +64,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler
 	private Race spawnRace;
 	private Map<Integer, StaticDoor> doors;
 	protected boolean isInstanceDestroyed = false;
-	private final FastList<Future<?>> crucibleTask = FastList.newInstance();
+	private final List<Future<?>> crucibleTask = new ArrayList<>();
 
 	private long bossTimerStart;
 	private long bossTimerEnd;
@@ -77,14 +76,14 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler
 		int index = dropItems.size() + 1;
         switch (npcId) {
 			case 247546: //IDInfinity Heal 02.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000530, 1)); //�?�전�?� 탑용 �?명�?� 비약.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000530, 1)); //Ã«?â€žÃ¬Â â€žÃ¬?Ëœ Ã­Æ’â€˜Ã¬Å¡Â© Ã¬Æ’?Ã«Âªâ€¦Ã¬?Ëœ Ã«Â¹â€žÃ¬â€¢Â½.
 		    break;
         }
     }
 	
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
-		storage.decreaseByItemId(164000530, storage.getItemCountByItemId(164000530)); //�?�전�?� 탑용 �?명�?� 비약.
+		storage.decreaseByItemId(164000530, storage.getItemCountByItemId(164000530)); //Ã«?â€žÃ¬Â â€žÃ¬?Ëœ Ã­Æ’â€˜Ã¬Å¡Â© Ã¬Æ’?Ã«Âªâ€¦Ã¬?Ëœ Ã«Â¹â€žÃ¬â€¢Â½.
 	}
 	
 	@Override
@@ -441,7 +440,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler
 				sp(247306, 241.41690f, 1249.6360f, 240.63419f, (byte) 59, 2000, 0, null); //IDInfinity_Normal_39_02.
 			break;
 			case 40: //Floor Named 40 [Final Boss]
-			    sp(247245, 241.05147f, 249.50418f, 971.14140f, (byte) 60, 2000, 0, null); //마녀 그렌달.
+			    sp(247245, 241.05147f, 249.50418f, 971.14140f, (byte) 60, 2000, 0, null); //Ã«Â§Ë†Ã«â€¦â‚¬ ÃªÂ·Â¸Ã«Â Å’Ã«â€¹Â¬.
 				bossTimerStart = System.currentTimeMillis();
 			break;
 		}
@@ -1027,7 +1026,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler
 				}
 			break;
 			//Floor 40
-			case 247245: //마녀 그렌달.
+			case 247245: //Ã«Â§Ë†Ã«â€¦â‚¬ ÃªÂ·Â¸Ã«Â Å’Ã«â€¹Â¬.
 			    despawnNpc(npc);
 			    if (getNpcs(247245).isEmpty()) {
 					sendPacket(player, "Condition_Infinity_THIS_SEASON_Floor_Reward", 100);

@@ -20,17 +20,17 @@ import java.util.Set;
 
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
 
-import javolution.util.FastSet;
+import java.util.LinkedHashSet;
 
 /**
  * @author NB4L1
  */
 public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPeriodicTaskManager {
 
-	private final Set<T> startList = new FastSet<T>();
-	private final Set<T> stopList = new FastSet<T>();
+	private final Set<T> startList = new LinkedHashSet<T>();
+	private final Set<T> stopList = new LinkedHashSet<T>();
 
-	private final FastSet<T> activeTasks = new FastSet<T>();
+	private final Set<T> activeTasks = new LinkedHashSet<T>();
 
 	protected AbstractIterativePeriodicTaskManager(int period) {
 		super(period);
@@ -83,8 +83,7 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 			writeUnlock();
 		}
 
-		for (FastSet.Record r = activeTasks.head(), end = activeTasks.tail(); (r = r.getNext()) != end;) {
-			final T task = activeTasks.valueOf(r);
+		for (final T task : activeTasks) {
 			final long begin = System.nanoTime();
 
 			try {

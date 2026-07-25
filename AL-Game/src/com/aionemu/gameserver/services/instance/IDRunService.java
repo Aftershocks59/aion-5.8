@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.Iterator;
 
 import org.slf4j.Logger;
@@ -31,7 +34,6 @@ import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastList;
 
 /****/
 /**
@@ -41,7 +43,7 @@ import javolution.util.FastList;
 public class IDRunService {
 	private static final Logger log = LoggerFactory.getLogger(IDRunService.class);
 	private boolean registerAvailable;
-	private final FastList<Integer> playersWithCooldown = FastList.newInstance();
+	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 10, capLevel = 76;
 	public static final int maskId = 131;
 
@@ -91,7 +93,7 @@ public class IDRunService {
 				if (instanceMaskId > 0) {
 					PacketSendUtility.sendPacket(player,
 							new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon));
-					// 미지의 섬 전투에 참가할 수 있습니다.
+					// Ã«Â¯Â¸Ã¬Â§â‚¬Ã¬ÂËœ Ã¬â€žÂ¬ Ã¬Â â€žÃ­Ë†Â¬Ã¬â€”Â Ã¬Â°Â¸ÃªÂ°â‚¬Ã­â€¢Â  Ã¬Ë†Ëœ Ã¬Å¾Ë†Ã¬Å ÂµÃ«â€¹Ë†Ã«â€¹Â¤.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_OPEN_IDRun);
 				}
 			}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.properties;
 
+import java.util.Set;
+
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.Summon;

@@ -16,6 +16,9 @@
  */
 package instance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 
@@ -38,7 +41,6 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -54,7 +56,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	private int abyssGateEnhancerKilled;
 	private boolean isStartTimer = false;
 	protected boolean isInstanceDestroyed = false;
-	private final FastList<Future<?>> drakenseerLairTask = FastList.newInstance();
+	private final List<Future<?>> drakenseerLairTask = new ArrayList<>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -67,7 +69,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
                     if (player.isOnline()) {
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166030005, 5)); //Tempering Solution.
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166040001, 1)); //Essence Core Solution.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //�?�계 암룡�?� 무기 �?�?.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //ÃƒÂ¬?Ã‚Â´ÃƒÂªÃ‚Â³Ã¢â‚¬Å¾ ÃƒÂ¬Ã¢â‚¬Â¢Ã¢â‚¬ÂÃƒÂ«Ã‚Â£Ã‚Â¡ÃƒÂ¬?Ã‹Å“ ÃƒÂ«Ã‚Â¬Ã‚Â´ÃƒÂªÃ‚Â¸Ã‚Â° ÃƒÂ¬Ã†â€™?ÃƒÂ¬Ã…Â¾?.
                         switch (Rnd.get(1, 4)) {
 				            case 1:
 				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057624, 1)); //Oracle's Illusion Godstone Bundle.
@@ -199,9 +201,9 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopDrakenseerLairTask() {
-        for (FastList.Node<Future<?>> n = drakenseerLairTask.head(), end = drakenseerLairTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : drakenseerLairTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

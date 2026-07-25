@@ -16,6 +16,8 @@
  */
 package ai.worlds.heiron;
 
+import java.util.Map;
+
 import ai.AggressiveFirstSkillAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;

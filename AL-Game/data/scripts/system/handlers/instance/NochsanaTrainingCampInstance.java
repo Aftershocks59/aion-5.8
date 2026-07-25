@@ -35,7 +35,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastMap;
 
 import java.util.Set;
 
@@ -77,7 +76,7 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 256689: //Nochsana Guard.
 				despawnNpc(npc);
-				sendMsg("<Nochsana General> appear"); // Появился Лорд Насана
+				sendMsg("<Nochsana General> appear"); // ÐŸÐ¾ÑÐ²Ð¸Ð»ÑÑ Ð›Ð¾Ñ€Ð´ ÐÐ°ÑÐ°Ð½Ð°
 				spawn(256693, 331.097f, 269.36f, 384.553f, (byte) 25); //Nochsana General.
 			break;
 			case 256693: //Nochsana General.

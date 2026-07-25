@@ -16,17 +16,19 @@
  */
 package com.aionemu.gameserver.taskmanager.tasks;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
 
-import javolution.util.FastMap;
 
 /**
  * @author ATracer
  */
 public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 
-	private final FastMap<Integer, Creature> movingPlayers = new FastMap<Integer, Creature>().shared();
+	private final Map<Integer, Creature> movingPlayers = new ConcurrentHashMap<Integer, Creature>();
 
 	private PlayerMoveTaskManager() {
 		super(200);
@@ -42,8 +44,7 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 
 	@Override
 	public void run() {
-		for (FastMap.Entry<Integer, Creature> e = movingPlayers.head(),
-				mapEnd = movingPlayers.tail(); (e = e.getNext()) != mapEnd;) {
+		for (Map.Entry<Integer, Creature> e : movingPlayers.entrySet()) {
 			Creature player = e.getValue();
 			player.getMoveController().moveToDestination();
 		}

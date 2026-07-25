@@ -16,6 +16,8 @@
  */
 package instance;
 
+import java.util.LinkedHashMap;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -41,7 +43,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import javolution.util.FastMap;
 
 import java.util.Map;
 import java.util.Set;
@@ -62,7 +63,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	private Future<?> instanceTimer;
 	private Map<Integer, StaticDoor> doors;
 	protected boolean isInstanceDestroyed = false;
-	private FastMap<Integer, VisibleObject> objects = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -75,7 +76,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			case 220540: //Typhon.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //�?�계 암룡�?� 무기 �?�?.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //Ã¬?Â´ÃªÂ³â€ž Ã¬â€¢â€Ã«Â£Â¡Ã¬?Ëœ Ã«Â¬Â´ÃªÂ¸Â° Ã¬Æ’?Ã¬Å¾?.
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055414, 1)); //Cradle Of Eternity Illusion Godstone Bundle.
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055415, 1)); //Cradle Of Eternity Enchant Supplement Bundle.
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055416, 1)); //Cradle Of Eternity Manastone Bundle.
@@ -159,10 +160,10 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 				} else if (covetousFallen == 3) {
 				} else if (covetousFallen == 4) {
 				} else if (covetousFallen == 5) {
-				    //You’ve killed the Cruel Protector.
+				    //YouÃ¢â‚¬â„¢ve killed the Cruel Protector.
 					//There are still Advance unit Magical Soldiers who need help.
 				    sendMsgByRace(1403542, Race.PC_ALL, 0);
-					//You’ve killed all Cruel Protectors.
+					//YouÃ¢â‚¬â„¢ve killed all Cruel Protectors.
 					sendMsgByRace(1403545, Race.PC_ALL, 8000);
 					spawn(281446, 1477.0033f, 774.52344f, 1036.7559f, (byte) 0);
 					spawn(806036, 1477.0033f, 774.52344f, 1036.7559f, (byte) 0); //Geodesic "Walking Path"
@@ -228,9 +229,9 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 					@Override
 					public void run() {
 						deleteNpc(703026);
-						//You’ve removed the pollutants from the library.
+						//YouÃ¢â‚¬â„¢ve removed the pollutants from the library.
 						sendMsgByRace(1403526, Race.PC_ALL, 0);
-						//The library’s pollutants have disappeared.
+						//The libraryÃ¢â‚¬â„¢s pollutants have disappeared.
 						sendMsgByRace(1403527, Race.PC_ALL, 10000);
 					}
 				}, 10000);
@@ -243,7 +244,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 							deleteNpc(834007);
 							deleteNpc(834018);
 							//The Mysterious Waterfall has stopped flowing.
-							//You’ve discovered a hidden entrance.
+							//YouÃ¢â‚¬â„¢ve discovered a hidden entrance.
 							sendMsgByRace(1403522, Race.PC_ALL, 0);
 							//The Rose Quarz of Sun emits a light and starts to float.
 							sendMsgByRace(1403590, Race.PC_ALL, 5000);
@@ -252,7 +253,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 						}
 					}, 5000);
 				} else {
-					//You don’t have a Rose Quarz of Sun to place on the altar.
+					//You donÃ¢â‚¬â„¢t have a Rose Quarz of Sun to place on the altar.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1403448));
 				}
 			break;
@@ -268,11 +269,11 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	@Override
     public void onEnterZone(Player player, ZoneInstance zone) {
 		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("HOLLOW_TEMPLE_301550000")) {
-            //You’ve discovered the Altar of Emptiness.
+            //YouÃ¢â‚¬â„¢ve discovered the Altar of Emptiness.
 			//At the center of the altar is an indentation into which a book would fit.
 			sendMsgByRace(1403505, Race.PC_ALL, 0);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("WALKING_PATH_301550000")) {
-            //You’ve discovered the Altar of Earth.
+            //YouÃ¢â‚¬â„¢ve discovered the Altar of Earth.
 			//Looks like you could place something on it.
 			sendMsgByRace(1403509, Race.PC_ALL, 0);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("SEALED_LIGHT_301550000")) {
@@ -294,16 +295,16 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			//You can fly in this area.
 			sendMsgByRace(1403518, Race.PC_ALL, 10000);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("CORRUPT_LIBRARY_301550000")) {
-            //You’ve discovered the entrance to Vid’s Secret Library.
+            //YouÃ¢â‚¬â„¢ve discovered the entrance to VidÃ¢â‚¬â„¢s Secret Library.
 			sendMsgByRace(1403519, Race.PC_ALL, 0);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("VILE_LIBRARY_301550000")) {
             //If you move the switch, something should activate.
 			sendMsgByRace(1403525, Race.PC_ALL, 0);
 		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("MYSTERIOUS_WATERFALL_301550000")) {
-            //You’ve discovered the Altar of Sun.
+            //YouÃ¢â‚¬â„¢ve discovered the Altar of Sun.
 			//Looks like you could place something on it.
 			sendMsgByRace(1403521, Race.PC_ALL, 0);
-			//You’ve discovered a strange Kisk.
+			//YouÃ¢â‚¬â„¢ve discovered a strange Kisk.
 			sendMsgByRace(1403523, Race.PC_ALL, 10000);
 		}
     }
@@ -437,7 +438,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
         PlayerEffectController effectController = player.getEffectController();
 		effectController.removeEffect(21340); //Sylfae Queens Blessing.
 		effectController.removeEffect(21344); //Beguiling Visions.
-		//The Sylfae Queen’s power has disappeared.
+		//The Sylfae QueenÃ¢â‚¬â„¢s power has disappeared.
 		sendMsgByRace(1403607, Race.PC_ALL, 0);
     }
 	

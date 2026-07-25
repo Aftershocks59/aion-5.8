@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.Map;
+
 import java.util.Iterator;
 import java.util.List;
 

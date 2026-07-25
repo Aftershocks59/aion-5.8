@@ -46,7 +46,7 @@ public class MailRewardData {
 	private TIntObjectHashMap<MailRewardTemplate> templates = new TIntObjectHashMap<MailRewardTemplate>();
 
 	@XmlTransient
-	private Map<Integer, MailRewardTemplate> templatesMap = new HashMap<Integer, MailRewardTemplate>();
+private Map<Integer, MailRewardTemplate> templatesMap = new HashMap<Integer, MailRewardTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MailRewardTemplate template : RewardMail) {

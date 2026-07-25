@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.utils.i18n;
 
+import java.util.LinkedHashMap;
+
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +32,6 @@ import com.aionemu.commons.scripting.scriptmanager.ScriptManager;
 import com.aionemu.gameserver.GameServerError;
 import com.aionemu.gameserver.configs.main.GSConfig;
 
-import javolution.util.FastMap;
 
 /**
  * @author Fennek
@@ -39,7 +40,7 @@ public class LanguageHandler {
 
 	private static final File LANGUAGE_DESCRIPTOR_FILE = new File("./data/scripts/system/languages.xml");
 	private static Logger log = LoggerFactory.getLogger(Language.class);
-	private Map<String, Language> languages = new FastMap<String, Language>();
+	private Map<String, Language> languages = new LinkedHashMap<String, Language>();
 	private Language language;
 	private static final LanguageHandler instance = new LanguageHandler();
 	private ScriptManager sm = new ScriptManager();

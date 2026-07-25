@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +50,6 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
 
-import javolution.util.FastMap;
 
 /**
  * @author (Encom)
@@ -60,10 +62,10 @@ public class PvpService {
 		return SingletonHolder.instance;
 	}
 
-	private FastMap<Integer, KillList> pvpKillLists;
+	private Map<Integer, KillList> pvpKillLists;
 
 	private PvpService() {
-		pvpKillLists = new FastMap<Integer, KillList>();
+		pvpKillLists = new LinkedHashMap<Integer, KillList>();
 	}
 
 	/**

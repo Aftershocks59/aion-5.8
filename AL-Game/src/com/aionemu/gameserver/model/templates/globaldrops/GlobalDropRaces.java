@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.globaldrops;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import java.util.ArrayList;
 import java.util.List;
 

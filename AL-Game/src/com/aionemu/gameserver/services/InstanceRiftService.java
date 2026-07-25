@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +48,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -56,7 +57,7 @@ public class InstanceRiftService {
 	private InstanceSchedule instanceSchedule;
 	private Map<Integer, InstanceRiftLocation> instanceRift;
 	private static final int duration = CustomConfig.INSTANCE_RIFT_DURATION;
-	private final Map<Integer, RiftInstance<?>> activeInstanceRift = new FastMap<Integer, RiftInstance<?>>().shared();
+	private final Map<Integer, RiftInstance<?>> activeInstanceRift = new ConcurrentHashMap<Integer, RiftInstance<?>>();
 	private static final Logger log = LoggerFactory.getLogger(InstanceRiftService.class);
 
 	public void initInstanceLocations() {

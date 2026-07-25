@@ -86,7 +86,6 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.container.LegionContainer;
 import com.aionemu.gameserver.world.container.LegionMemberContainer;
 
-import javolution.util.FastList;
 
 /**
  * This class is designed to do all the work related with loading/storing
@@ -1103,7 +1102,7 @@ public class LegionService {
 		if (legion == null) {
 			return;
 		}
-		FastList<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
+		List<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
 		allItems.addAll(legion.getLegionWarehouse().getDeletedItems());
 		try {
 			/**
@@ -2112,7 +2111,7 @@ public class LegionService {
 	}
 
 	public void handleLegionSearch(Player player, int type, String legionName) {
-		FastList<Legion> matchingLegions = new FastList<Legion>();
+		List<Legion> matchingLegions = new ArrayList<Legion>();
 		switch (type) {
 		case 0:
 			matchingLegions = allCachedLegions.getAllLegions();

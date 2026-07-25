@@ -66,7 +66,7 @@ public class HouseScriptData {
 	protected List<LBox> scriptData;
 
 	@XmlTransient
-	private final Map<Integer, LBox> defaultTemplates;
+private final Map<Integer, LBox> defaultTemplates;
 
 	public HouseScriptData() {
 		defaultTemplates = new HashMap<Integer, LBox>();

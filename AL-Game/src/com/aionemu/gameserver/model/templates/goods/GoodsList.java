@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.goods;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,6 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.limiteditems.LimitedItem;
 
-import javolution.util.FastList;
 
 /**
  * @author ATracer
@@ -59,8 +60,8 @@ public class GoodsList {
 	/**
 	 * return the limitedItems.
 	 */
-	public FastList<LimitedItem> getLimitedItems() {
-		FastList<LimitedItem> limitedItems = new FastList<LimitedItem>();
+	public List<LimitedItem> getLimitedItems() {
+		List<LimitedItem> limitedItems = new ArrayList<LimitedItem>();
 		if (items != null) {
 			for (Item item : items) {
 				if (item.getBuyLimit() != null && item.getSellLimit() != null) {

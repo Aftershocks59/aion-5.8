@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.controllers.attack;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +39,6 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
 
-import javolution.util.FastMap;
 
 /**
  * @author ATracer, KKnD
@@ -45,7 +47,7 @@ import javolution.util.FastMap;
 public class AggroList {
 
 	protected final Creature owner;
-	private FastMap<Integer, AggroInfo> aggroList = new FastMap<Integer, AggroInfo>().shared();
+	private Map<Integer, AggroInfo> aggroList = new ConcurrentHashMap<Integer, AggroInfo>();
 
 	public AggroList(Creature owner) {
 		this.owner = owner;
@@ -199,8 +201,7 @@ public class AggroList {
 		Creature mostHated = null;
 		int maxHate = 0;
 
-		for (FastMap.Entry<Integer, AggroInfo> e = aggroList.head(),
-				mapEnd = aggroList.tail(); (e = e.getNext()) != mapEnd;) {
+		for (Map.Entry<Integer, AggroInfo> e : aggroList.entrySet()) {
 			AggroInfo ai = e.getValue();
 			if (ai == null) {
 				continue;

@@ -16,6 +16,8 @@
  */
 package instance.luna;
 
+import java.util.ArrayList;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.*;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -45,7 +47,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
-import javolution.util.FastList;
 import java.util.concurrent.Future;
 
 /****/
@@ -66,7 +67,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler  {
 	//Duration Instance Time.
 	private final int instanceTimerSeconds = 3600000; //...1 Hr
 	private SecretMunitionsFactoryReward instanceReward;
-	private final FastList<Future<?>> factoryTask2 = FastList.newInstance();
+	private final List<Future<?>> factoryTask2 = new ArrayList<>();
 
 	private final static String FirstPartWalkerId ="FirstPartSecretMunitionsFactory";
 	private Future<?> helperNpcTask;
@@ -85,7 +86,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler  {
 		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
-			case 245185: //Mechaturerk’s Core.
+			case 245185: //MechaturerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Core.
 				switch (Rnd.get(1, 7)) {
 					case 1:
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150000, 2)); //Uncut Crystal.
@@ -103,15 +104,15 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler  {
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150004, 2)); //Flawless Crystal.
 						break;
 					case 6:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150005, 2)); //Luna’s Light.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150005, 2)); //LunaÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Light.
 						break;
 					case 7:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150006, 2)); //Luna’s Blessing.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150006, 2)); //LunaÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Blessing.
 						break;
 				}
 				break;
-			case 834443: //Mechaturerk’s Treasure Box.
-			case 834444: //Mechaturerk’s Special Treasure Box.
+			case 834443: //MechaturerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Treasure Box.
+			case 834444: //MechaturerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Special Treasure Box.
 				break;
 		}
 	}
@@ -407,15 +408,15 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler  {
 
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 244028: // Mechaturerk Gunner
-				despawnNpc(instance.getNpc(243993)); //Mechaturerk’s Cannon.
+				despawnNpc(instance.getNpc(243993)); //MechaturerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Cannon.
    				Npc cannon = (Npc)spawn(833835, 225.14809f, 258.98563f, 191.01645f, (byte) 59); //Mechaturerk's Cannon.
 				Npc gate = instance.getNpc(833869);
 				npc.setTarget(gate); // Factory Gate
 				npc.getController().attackTarget(gate, 2000); // Factory Gate
 
-				//The Gunner’s Footlocker has appeared inside the Munitions Factory.
+				//The GunnerÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403642, Race.PC_ALL, 3000);
-				spawn(703377, 138.77333f, 266.49652f, 191.8727f, (byte) 0); //Gunner’s Footlocker.
+				spawn(703377, 138.77333f, 266.49652f, 191.8727f, (byte) 0); //GunnerÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker.
 			break;
 			case 833869: // Factory Gate
 				despawnNpc(instance.getNpc(833835)); //Mechaturerk's Cannon.
@@ -428,10 +429,10 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler  {
 				killNpc(getNpcs(833896)); //Factory Gate.
 				//The Destruction Golem has appeared!
 				sendMsgByRace(1403649, Race.PC_ALL, 0);
-				//The Machine Monster’s Footlocker has appeared inside the Munitions Factory.
+				//The Machine MonsterÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403645, Race.PC_ALL, 5000);
 
-		        spawn(703380, 138.84042f, 256.166f, 191.8727f, (byte) 0); //Machine Monster’s Footlocker.
+		        spawn(703380, 138.84042f, 256.166f, 191.8727f, (byte) 0); //Machine MonsterÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker.
 
 				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					@Override
@@ -462,25 +463,25 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler  {
 				despawnNpcs(instance.getNpcs(244136));
 				despawnNpcs(instance.getNpcs(836090));
 
-				//The Maintenance Soldier’s Footlocker has appeared inside the Munitions Factory.
+				//The Maintenance SoldierÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403641, Race.PC_ALL, 3000);
-				spawn(703376, 138.75412f, 269.4629f, 191.8727f, (byte) 0); //Maintenance Soldier’s Footlocker.
+				spawn(703376, 138.75412f, 269.4629f, 191.8727f, (byte) 0); //Maintenance SoldierÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker.
 
 				//You killed Mechaturerk!
 				sendMsgByRace(1403653, Race.PC_ALL, 0);
-				//Mechaturerk’s Footlocker has appeared inside the Munitions Factory.
+				//MechaturerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403646, Race.PC_ALL, 5000);
-				//Mechaturerk’s Core has appeared inside the Munitions Factory.
+				//MechaturerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Core has appeared inside the Munitions Factory.
 				sendMsgByRace(1403647, Race.PC_ALL, 10000);
-				//The Destruction Golem’s Footlocker has appeared inside the Munitions Factory.
+				//The Destruction GolemÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403648, Race.PC_ALL, 15000);
 
 				switch (Rnd.get(1, 2)) {
 		            case 1:
-				        spawn(834443, 142.65579f, 260.02966f, 191.8727f, (byte) 0); //Mechaturerk’s Treasure Box.
+				        spawn(834443, 142.65579f, 260.02966f, 191.8727f, (byte) 0); //MechaturerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Treasure Box.
 					break;
 					case 2:
-					    spawn(834444, 142.65579f, 260.02966f, 191.8727f, (byte) 0); //Mechaturerk’s Special Treasure Box.
+					    spawn(834444, 142.65579f, 260.02966f, 191.8727f, (byte) 0); //MechaturerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Special Treasure Box.
 					break;
 				}
 
@@ -498,22 +499,22 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler  {
 			break;
 			case 243968: //Remirunerk.
 			    points = 500;
-			    //Remirunrunerk’s Footlocker has appeared inside the Munitions Factory.
+			    //RemirunrunerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403643, Race.PC_ALL, 3000);
-		        spawn(703378, 138.79507f, 263.1448f, 191.8727f, (byte) 0); //Remirunrunerk’s Footlocker.
+		        spawn(703378, 138.79507f, 263.1448f, 191.8727f, (byte) 0); //RemirunrunerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker.
 			break;
 			case 243969: //Bomirunrunerk.
 			    points = 500;
-			    //Bomirunrunerk’s Footlocker has appeared inside the Munitions Factory.
+			    //BomirunrunerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403644, Race.PC_ALL, 3000);
-		        spawn(703379, 138.76562f, 259.84332f, 191.8727f, (byte) 0); //Bomirunrunerk’s Footlocker.
+		        spawn(703379, 138.76562f, 259.84332f, 191.8727f, (byte) 0); //BomirunrunerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker.
 			break;
 			case 244035: //Damaged Mecha Infantryman.
 			    mechaInfantrymanKilled++;
 				if (mechaInfantrymanKilled == 2) {
-					//The Armored Soldier’s Footlocker has appeared inside the Munitions Factory.
+					//The Armored SoldierÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker has appeared inside the Munitions Factory.
 					sendMsgByRace(1403640, Race.PC_ALL, 3000);
-					spawn(703375, 138.73476f, 272.44095f, 191.8727f, (byte) 0); //Armored Soldier’s Footlocker.
+					spawn(703375, 138.73476f, 272.44095f, 191.8727f, (byte) 0); //Armored SoldierÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Footlocker.
 				}
 			break;
 			case 244135: //Melee Support Destruction Golem.
@@ -584,17 +585,17 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler  {
 				break;
 				case 2: //Rank A
 				    playerReward.setMechaturerkNormalTreasureChest(1);
-					//Mechaturerk’s Normal Treasure Chest.
+					//MechaturerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Normal Treasure Chest.
 					ItemService.addItem(player, 188055647, 1);
 				break;
 				case 3: //Rank B
 				    playerReward.setMechaturerkSpecialTreasureBox(1);
-					//Mechaturerk’s Special Treasure Box.
+					//MechaturerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Special Treasure Box.
 					ItemService.addItem(player, 188055648, 1);
 				break;
 				case 4: //Rank C
 				    playerReward.setMechaturerkSpecialTreasureBox(1);
-					//Mechaturerk’s Special Treasure Box.
+					//MechaturerkÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Special Treasure Box.
 					ItemService.addItem(player, 188055648, 1);
 				break;
 			}
@@ -642,9 +643,9 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler  {
 	}
 
 	private void stopInstanceTask2() {
-        for (FastList.Node<Future<?>> n = factoryTask2.head(), end = factoryTask2.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : factoryTask2) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

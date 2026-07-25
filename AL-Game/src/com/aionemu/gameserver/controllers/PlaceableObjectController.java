@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
@@ -29,10 +32,9 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastMap;
 
 public class PlaceableObjectController<T extends PlaceableHouseObject> extends VisibleObjectController<HouseObject<T>> {
-	FastMap<Integer, ActionObserver> observed = new FastMap<Integer, ActionObserver>().shared();
+	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<Integer, ActionObserver>();
 
 	public void see(VisibleObject object) {
 		Player p = (Player) object;

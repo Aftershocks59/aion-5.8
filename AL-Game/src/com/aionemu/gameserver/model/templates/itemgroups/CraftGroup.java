@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.model.templates.itemgroups;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
+import java.util.Map;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -24,14 +28,16 @@ import org.apache.commons.lang.math.IntRange;
 
 import com.aionemu.gameserver.model.templates.rewards.CraftReward;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rolandas
  */
 public abstract class CraftGroup extends BonusItemGroup {
 
-	private FastMap<Integer, FastMap<IntRange, List<CraftReward>>> dataHolder;
+	// Derived index, built through setDataHolder rather than read from XML. The
+	// enclosing class binds every field, so it has to be excluded explicitly.
+	@XmlTransient
+	private Map<Integer, Map<IntRange, List<CraftReward>>> dataHolder;
 
 	public ItemRaceEntry[] getRewards(Integer skillId) {
 		if (!dataHolder.containsKey(skillId)) {
@@ -59,14 +65,14 @@ public abstract class CraftGroup extends BonusItemGroup {
 	/**
 	 * @return the dataHolder
 	 */
-	public FastMap<Integer, FastMap<IntRange, List<CraftReward>>> getDataHolder() {
+	public Map<Integer, Map<IntRange, List<CraftReward>>> getDataHolder() {
 		return dataHolder;
 	}
 
 	/**
 	 * @param dataHolder the dataHolder to set
 	 */
-	public void setDataHolder(FastMap<Integer, FastMap<IntRange, List<CraftReward>>> dataHolder) {
+	public void setDataHolder(Map<Integer, Map<IntRange, List<CraftReward>>> dataHolder) {
 		this.dataHolder = dataHolder;
 	}
 }

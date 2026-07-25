@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -86,7 +89,6 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
 
 @XmlRootElement(name = "spawns")
 @XmlType(namespace = "", name = "SpawnsData2")
@@ -97,7 +99,7 @@ public class SpawnsData2 {
 	@XmlElement(name = "spawn_map", type = SpawnMap.class)
 	protected List<SpawnMap> templates;
 
-	private TIntObjectHashMap<FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new TIntObjectHashMap<FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
+	private TIntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new TIntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
 	private TIntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
 	private TIntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
 	private TIntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
@@ -128,7 +130,7 @@ public class SpawnsData2 {
 			for (SpawnMap spawnMap : templates) {
 				int mapId = spawnMap.getMapId();
 				if (!allSpawnMaps.containsKey(mapId)) {
-					allSpawnMaps.put(mapId, new FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
+					allSpawnMaps.put(mapId, new LinkedHashMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
 				}
 				for (Spawn spawn : spawnMap.getSpawns()) {
 					if (spawn.isCustom()) {
@@ -143,7 +145,7 @@ public class SpawnsData2 {
 							new SimpleEntry(new SpawnGroup2(mapId, spawn), spawn));
 				}
 				if (!allSpawnMaps.containsKey(mapId)) {
-					allSpawnMaps.put(mapId, new FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
+					allSpawnMaps.put(mapId, new LinkedHashMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
 				}
 				for (SiegeSpawn SiegeSpawn : spawnMap.getSiegeSpawns()) {
 					int siegeId = SiegeSpawn.getSiegeId();

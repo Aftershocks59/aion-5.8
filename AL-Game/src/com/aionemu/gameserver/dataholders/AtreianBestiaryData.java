@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +31,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.atreian_bestiary.AtreianBestiaryTemplate;
 
-import javolution.util.FastMap;
 
 /**
  * @author Ranastic
@@ -39,10 +42,10 @@ public class AtreianBestiaryData {
 	@XmlElement(name = "monster_book", type = AtreianBestiaryTemplate.class)
 	private List<AtreianBestiaryTemplate> templates;
 
-	private final Map<Integer, AtreianBestiaryTemplate> idsHolder = new FastMap<Integer, AtreianBestiaryTemplate>()
-			.shared();
-	private final Map<Integer, AtreianBestiaryTemplate> npcIdsHolder = new FastMap<Integer, AtreianBestiaryTemplate>()
-			.shared();
+	@XmlTransient
+	private final Map<Integer, AtreianBestiaryTemplate> idsHolder = new ConcurrentHashMap<Integer, AtreianBestiaryTemplate>();
+	@XmlTransient
+	private final Map<Integer, AtreianBestiaryTemplate> npcIdsHolder = new ConcurrentHashMap<Integer, AtreianBestiaryTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (AtreianBestiaryTemplate template : templates) {

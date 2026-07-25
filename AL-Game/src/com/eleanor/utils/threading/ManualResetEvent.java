@@ -3,6 +3,8 @@
  */
 package com.eleanor.utils.threading;
 
+import java.util.Set;
+
 public class ManualResetEvent {
 	private final Object monitor = new Object();
 	private volatile boolean open = false;

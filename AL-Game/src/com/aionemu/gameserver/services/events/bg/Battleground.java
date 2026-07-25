@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events.bg;
 
+import java.util.LinkedHashMap;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -69,7 +71,6 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
-import javolution.util.FastMap;
 
 /**
  * @Author Rinzler (Encom)
@@ -109,12 +110,12 @@ public abstract class Battleground {
 	protected boolean isDone = false;
 	protected boolean shouldDisband = true;
 	protected boolean teamBased = false;
-	protected Map<Integer, WorldPosition> previousLocations = new FastMap<Integer, WorldPosition>();
+	protected Map<Integer, WorldPosition> previousLocations = new LinkedHashMap<Integer, WorldPosition>();
 	protected List<Player> _players = Collections.synchronizedList(new ArrayList<Player>());
 	protected List<PlayerGroup> _groups = Collections.synchronizedList(new ArrayList<PlayerGroup>());
 	protected List<PlayerAlliance> _alliances = Collections.synchronizedList(new ArrayList<PlayerAlliance>());
 	protected List<Player> _spectators = Collections.synchronizedList(new ArrayList<Player>());
-	protected Map<Integer, AionObject> _leavers = Collections.synchronizedMap(new FastMap<Integer, AionObject>());
+	protected Map<Integer, AionObject> _leavers = Collections.synchronizedMap(new LinkedHashMap<Integer, AionObject>());
 
 	public abstract void createMatch(List<Integer> players);
 

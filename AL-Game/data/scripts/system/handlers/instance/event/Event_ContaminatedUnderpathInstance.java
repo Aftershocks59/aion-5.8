@@ -16,6 +16,8 @@
  */
 package instance.event;
 
+import java.util.ArrayList;
+
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -44,7 +46,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.Map;
 import java.util.Set;
@@ -79,7 +80,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 1200000; //...20Min
 	private IDEventDefReward instanceReward;
-	private final FastList<Future<?>> IDEventDefTask = FastList.newInstance();
+	private final List<Future<?>> IDEventDefTask = new ArrayList<>();
 	
 	protected IDEventDefPlayerReward getPlayerReward(Integer object) {
 		return (IDEventDefPlayerReward) instanceReward.getPlayerReward(object);
@@ -113,7 +114,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				spawnPrototype();
 				startContaminedUnderPath1();
 				sendMsg("[START]: Wave <1/4>");
-				//제 1 통로 제어 장치가 해제 �?�었습니다.
+				//ÃƒÂ¬Ã‚Â Ã…â€œ 1 ÃƒÂ­Ã¢â‚¬Â Ã‚ÂµÃƒÂ«Ã‚Â¡Ã…â€œ ÃƒÂ¬Ã‚Â Ã…â€œÃƒÂ¬Ã¢â‚¬â€œÃ‚Â´ ÃƒÂ¬Ã…Â¾Ã‚Â¥ÃƒÂ¬Ã‚Â¹Ã‹Å“ÃƒÂªÃ‚Â°Ã¢â€šÂ¬ ÃƒÂ­Ã¢â‚¬Â¢Ã‚Â´ÃƒÂ¬Ã‚Â Ã…â€œ ÃƒÂ«?Ã‹Å“ÃƒÂ¬Ã¢â‚¬â€Ã‹â€ ÃƒÂ¬Ã…Â Ã‚ÂµÃƒÂ«Ã¢â‚¬Â¹Ã‹â€ ÃƒÂ«Ã¢â‚¬Â¹Ã‚Â¤.
 				sendMsgByRace(1404504, Race.PC_ALL, 0);
 			break;
 			case 703474: //IDEVENT_SWSwitch_02a.
@@ -121,7 +122,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			    startContaminedUnderPath2();
 				underpathTaskA1.cancel(true);
 				sendMsg("[START]: Wave <2/4>");
-				//제 2 통로 제어 장치가 해제 �?�었습니다.
+				//ÃƒÂ¬Ã‚Â Ã…â€œ 2 ÃƒÂ­Ã¢â‚¬Â Ã‚ÂµÃƒÂ«Ã‚Â¡Ã…â€œ ÃƒÂ¬Ã‚Â Ã…â€œÃƒÂ¬Ã¢â‚¬â€œÃ‚Â´ ÃƒÂ¬Ã…Â¾Ã‚Â¥ÃƒÂ¬Ã‚Â¹Ã‹Å“ÃƒÂªÃ‚Â°Ã¢â€šÂ¬ ÃƒÂ­Ã¢â‚¬Â¢Ã‚Â´ÃƒÂ¬Ã‚Â Ã…â€œ ÃƒÂ«?Ã‹Å“ÃƒÂ¬Ã¢â‚¬â€Ã‹â€ ÃƒÂ¬Ã…Â Ã‚ÂµÃƒÂ«Ã¢â‚¬Â¹Ã‹â€ ÃƒÂ«Ã¢â‚¬Â¹Ã‚Â¤.
 				sendMsgByRace(1404505, Race.PC_ALL, 0);
 			break;
 			case 703475: //IDEVENT_SWSwitch_03a.
@@ -129,7 +130,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			    startContaminedUnderPath3();
 				underpathTaskA2.cancel(true);
 				sendMsg("[START]: Wave <3/4>");
-				//제 3 통로 제어 장치가 해제 �?�었습니다.
+				//ÃƒÂ¬Ã‚Â Ã…â€œ 3 ÃƒÂ­Ã¢â‚¬Â Ã‚ÂµÃƒÂ«Ã‚Â¡Ã…â€œ ÃƒÂ¬Ã‚Â Ã…â€œÃƒÂ¬Ã¢â‚¬â€œÃ‚Â´ ÃƒÂ¬Ã…Â¾Ã‚Â¥ÃƒÂ¬Ã‚Â¹Ã‹Å“ÃƒÂªÃ‚Â°Ã¢â€šÂ¬ ÃƒÂ­Ã¢â‚¬Â¢Ã‚Â´ÃƒÂ¬Ã‚Â Ã…â€œ ÃƒÂ«?Ã‹Å“ÃƒÂ¬Ã¢â‚¬â€Ã‹â€ ÃƒÂ¬Ã…Â Ã‚ÂµÃƒÂ«Ã¢â‚¬Â¹Ã‹â€ ÃƒÂ«Ã¢â‚¬Â¹Ã‚Â¤.
 				sendMsgByRace(1404506, Race.PC_ALL, 0);
 			break;
 		   /**
@@ -143,14 +144,14 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			    startContaminedUnderPath4();
 				underpathTaskA3.cancel(true);
 				sendMsg("[START]: Wave <4/4>");
-				//시체소�?�? 부�?쉬가 등장하였습니다.
+				//ÃƒÂ¬Ã¢â‚¬Â¹Ã…â€œÃƒÂ¬Ã‚Â²Ã‚Â´ÃƒÂ¬Ã¢â‚¬Â Ã…â€™ÃƒÂ¬Ã†â€™?ÃƒÂ¬Ã…Â¾? ÃƒÂ«Ã‚Â¶Ã¢â€šÂ¬ÃƒÂ«Ã¢â‚¬Ëœ?ÃƒÂ¬Ã¢â‚¬Â°Ã‚Â¬ÃƒÂªÃ‚Â°Ã¢â€šÂ¬ ÃƒÂ«Ã¢â‚¬Å“Ã‚Â±ÃƒÂ¬Ã…Â¾Ã‚Â¥ÃƒÂ­Ã¢â‚¬Â¢Ã‹Å“ÃƒÂ¬Ã‹Å“Ã¢â€šÂ¬ÃƒÂ¬Ã…Â Ã‚ÂµÃƒÂ«Ã¢â‚¬Â¹Ã‹â€ ÃƒÂ«Ã¢â‚¬Â¹Ã‚Â¤.
 				sendMsgByRace(1404507, Race.PC_ALL, 0);
 			break;
 			case 836149: //IDEvent_Def_In_Door.
 				if (player.getInventory().decreaseByItemId(186000495, 1)) {
 					killNpc(getNpcs(836149));
 			    } else {
-					//문�?� 열기 위해선 열쇠가 필요합니다.
+					//ÃƒÂ«Ã‚Â¬Ã‚Â¸ÃƒÂ¬?Ã¢â‚¬Å¾ ÃƒÂ¬Ã¢â‚¬â€Ã‚Â´ÃƒÂªÃ‚Â¸Ã‚Â° ÃƒÂ¬Ã…â€œÃ¢â‚¬Å¾ÃƒÂ­Ã¢â‚¬Â¢Ã‚Â´ÃƒÂ¬Ã¢â‚¬Å¾Ã‚Â  ÃƒÂ¬Ã¢â‚¬â€Ã‚Â´ÃƒÂ¬Ã¢â‚¬Â¡Ã‚Â ÃƒÂªÃ‚Â°Ã¢â€šÂ¬ ÃƒÂ­Ã¢â‚¬Â¢Ã¢â‚¬Å¾ÃƒÂ¬Ã…Â¡Ã¢â‚¬ÂÃƒÂ­Ã¢â‚¬Â¢Ã‚Â©ÃƒÂ«Ã¢â‚¬Â¹Ã‹â€ ÃƒÂ«Ã¢â‚¬Â¹Ã‚Â¤.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404524));
 				}
             break;
@@ -170,7 +171,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					deleteNpc(703473);
 					underpathTaskA1.cancel(true);
 					sendMsg("[START]: Wave 1 End");
-					//제2 통로 제어 장치가 등장하였습니다.
+					//ÃƒÂ¬Ã‚Â Ã…â€œ2 ÃƒÂ­Ã¢â‚¬Â Ã‚ÂµÃƒÂ«Ã‚Â¡Ã…â€œ ÃƒÂ¬Ã‚Â Ã…â€œÃƒÂ¬Ã¢â‚¬â€œÃ‚Â´ ÃƒÂ¬Ã…Â¾Ã‚Â¥ÃƒÂ¬Ã‚Â¹Ã‹Å“ÃƒÂªÃ‚Â°Ã¢â€šÂ¬ ÃƒÂ«Ã¢â‚¬Å“Ã‚Â±ÃƒÂ¬Ã…Â¾Ã‚Â¥ÃƒÂ­Ã¢â‚¬Â¢Ã‹Å“ÃƒÂ¬Ã‹Å“Ã¢â€šÂ¬ÃƒÂ¬Ã…Â Ã‚ÂµÃƒÂ«Ã¢â‚¬Â¹Ã‹â€ ÃƒÂ«Ã¢â‚¬Â¹Ã‚Â¤.
 					sendMsgByRace(1404508, Race.PC_ALL, 0);
 					spawn(703474, 230.04181f, 206.23842f, 160.28148f, (byte) 30);
 				}
@@ -182,7 +183,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					deleteNpc(703474);
 					underpathTaskA2.cancel(true);
 					sendMsg("[START]: Wave 2 End");
-					//제3 통로 제어 장치가 등장하였습니다.
+					//ÃƒÂ¬Ã‚Â Ã…â€œ3 ÃƒÂ­Ã¢â‚¬Â Ã‚ÂµÃƒÂ«Ã‚Â¡Ã…â€œ ÃƒÂ¬Ã‚Â Ã…â€œÃƒÂ¬Ã¢â‚¬â€œÃ‚Â´ ÃƒÂ¬Ã…Â¾Ã‚Â¥ÃƒÂ¬Ã‚Â¹Ã‹Å“ÃƒÂªÃ‚Â°Ã¢â€šÂ¬ ÃƒÂ«Ã¢â‚¬Å“Ã‚Â±ÃƒÂ¬Ã…Â¾Ã‚Â¥ÃƒÂ­Ã¢â‚¬Â¢Ã‹Å“ÃƒÂ¬Ã‹Å“Ã¢â€šÂ¬ÃƒÂ¬Ã…Â Ã‚ÂµÃƒÂ«Ã¢â‚¬Â¹Ã‹â€ ÃƒÂ«Ã¢â‚¬Â¹Ã‚Â¤.
 					sendMsgByRace(1404509, Race.PC_ALL, 0);
 					spawn(703475, 230.04181f, 206.23842f, 160.28148f, (byte) 30);
 				}
@@ -194,7 +195,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					deleteNpc(703475);
 					underpathTaskA3.cancel(true);
 					sendMsg("[START]: Wave 3 End");
-					//제4 통로 제어 장치가 등장하였습니다.
+					//ÃƒÂ¬Ã‚Â Ã…â€œ4 ÃƒÂ­Ã¢â‚¬Â Ã‚ÂµÃƒÂ«Ã‚Â¡Ã…â€œ ÃƒÂ¬Ã‚Â Ã…â€œÃƒÂ¬Ã¢â‚¬â€œÃ‚Â´ ÃƒÂ¬Ã…Â¾Ã‚Â¥ÃƒÂ¬Ã‚Â¹Ã‹Å“ÃƒÂªÃ‚Â°Ã¢â€šÂ¬ ÃƒÂ«Ã¢â‚¬Å“Ã‚Â±ÃƒÂ¬Ã…Â¾Ã‚Â¥ÃƒÂ­Ã¢â‚¬Â¢Ã‹Å“ÃƒÂ¬Ã‹Å“Ã¢â€šÂ¬ÃƒÂ¬Ã…Â Ã‚ÂµÃƒÂ«Ã¢â‚¬Â¹Ã‹â€ ÃƒÂ«Ã¢â‚¬Â¹Ã‚Â¤.
 					sendMsgByRace(1404510, Race.PC_ALL, 0);
 					spawn(703476, 230.04181f, 206.23842f, 160.28148f, (byte) 30);
 				}
@@ -540,19 +541,19 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		* When you click on the entrance, the battle begins, and after a certain time, the monster starts to gather.
 		* If you kill a monster, you can acquire a 'Guardian energy', which can be used to build a turret or to strengthen your skills.
 		*
-		* ■ Tip 1. Let's use 'prison keys' to get items faster.
+		* ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â  Tip 1. Let's use 'prison keys' to get items faster.
 		* After the battle begins, you can use your key to open the prison door between the stairs to kill the contaminated Dog.
 		* It can help you to shorten your attack time because you can acquire 50 points of 'Guardian Power' when you deal with the contaminated Dog.
 		* The 'prison key' will be paid through three surveys.
 		* Additional purchases can be made through a dedicated store if necessary.
-		* ■ Tip 2. Let's get rid of the gangs!
+		* ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â  Tip 2. Let's get rid of the gangs!
 		* Gold stems often appear inside the interior.
 		* At the time of the treatment, you can acquire the 'Power of Suho' at random, so let's do not miss it.
 		*
 		* 4. Enhance Your Skills:
 		* If you click on the stone statue located on the entrance side, you can strengthen your ability by using the power of guardian.
 		*/
-		ItemService.addItem(player, 186000495, 1); //�?옥 열쇠 (Open Door Prison)
+		ItemService.addItem(player, 186000495, 1); //ÃƒÂªÃ‚Â°?ÃƒÂ¬Ã‹Å“Ã‚Â¥ ÃƒÂ¬Ã¢â‚¬â€Ã‚Â´ÃƒÂ¬Ã¢â‚¬Â¡Ã‚Â  (Open Door Prison)
 	   /**
 		* 1. Transformation:
 		* When entering the contaminated underground passage, it automatically transforms into a form of transfer.
@@ -599,7 +600,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
    /**
-	* ■ Major compensation information
+	* ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â  Major compensation information
 	* Major rewards open the "S Rank" treasure box and "A Rank" treasure box, and the following item comes out.
 	*/
 	@Override
@@ -612,17 +613,17 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				case 1: //Rank S
 				    playerReward.setScoreAP(25000);
 					playerReward.setWrapCashIDEventDefLiveSRank(1);
-					ItemService.addItem(player, 188058265, 1); //S랭�?� 보물 �?�?.
+					ItemService.addItem(player, 188058265, 1); //SÃƒÂ«Ã…Â¾Ã‚Â­ÃƒÂ­?Ã‚Â¬ ÃƒÂ«Ã‚Â³Ã‚Â´ÃƒÂ«Ã‚Â¬Ã‚Â¼ ÃƒÂ¬Ã†â€™?ÃƒÂ¬Ã…Â¾?.
 				break;
 				case 2: //Rank A
 				    playerReward.setScoreAP(15000);
 					playerReward.setWrapCashIDEventDefLiveARank(1);
-					ItemService.addItem(player, 188058266, 1); //A랭�?� 보물 �?�?.
+					ItemService.addItem(player, 188058266, 1); //AÃƒÂ«Ã…Â¾Ã‚Â­ÃƒÂ­?Ã‚Â¬ ÃƒÂ«Ã‚Â³Ã‚Â´ÃƒÂ«Ã‚Â¬Ã‚Â¼ ÃƒÂ¬Ã†â€™?ÃƒÂ¬Ã…Â¾?.
 				break;
 				case 3: //Rank B
 				    playerReward.setScoreAP(10000);
 					playerReward.setWrapCashIDEventDefLiveBRank(1);
-					ItemService.addItem(player, 188058267, 1); //B랭�?� 보물 �?�?.
+					ItemService.addItem(player, 188058267, 1); //BÃƒÂ«Ã…Â¾Ã‚Â­ÃƒÂ­?Ã‚Â¬ ÃƒÂ«Ã‚Â³Ã‚Â´ÃƒÂ«Ã‚Â¬Ã‚Â¼ ÃƒÂ¬Ã†â€™?ÃƒÂ¬Ã…Â¾?.
 				break;
 			}
 			AbyssPointsService.addAp(player, playerReward.getScoreAP());
@@ -651,9 +652,9 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = IDEventDefTask.head(), end = IDEventDefTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : IDEventDefTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

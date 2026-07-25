@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.events;
 
+import java.util.Set;
+
 import java.util.ArrayList;
 import java.util.List;
 

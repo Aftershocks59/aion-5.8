@@ -34,7 +34,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastList;
 
 /**
  * @author IceReaper, orfeo087, Avol, AEJTester

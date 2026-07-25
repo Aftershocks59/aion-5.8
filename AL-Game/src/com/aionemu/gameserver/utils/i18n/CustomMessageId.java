@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.utils.i18n;
 
+import java.util.List;
+
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 
 /**

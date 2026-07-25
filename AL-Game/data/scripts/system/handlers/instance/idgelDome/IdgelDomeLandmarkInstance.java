@@ -51,7 +51,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 import org.apache.commons.lang.mutable.MutableInt;
 
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     private boolean isInstanceDestroyed = false;
 	private List<Integer> movies = new ArrayList<Integer>();
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> landMarkTask = FastList.newInstance();
+    private final List<Future<?>> landMarkTask = new ArrayList<>();
     
     protected LandMarkPlayerReward getPlayerReward(Player player) {
         landMarkReward.regPlayerReward(player);
@@ -254,7 +253,7 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 				playerReward.setBrokenSpinel(188100391);
 				playerReward.setBonusReward(186000243);
 				playerReward.setLandMarkBox(188053030);
-				playerReward.setAdditionalReward(188055396); //유�?지 최�?급 보�? �?�?.
+				playerReward.setAdditionalReward(188055396); //Ã¬Å“Â Ã¬Â ?Ã¬Â§â‚¬ Ã¬ÂµÅ“Ã¬Æ’?ÃªÂ¸â€° Ã«Â³Â´Ã¬Æ’? Ã¬Æ’?Ã¬Å¾?.
 			} else {
                 abyssPoint += landMarkReward.AbyssReward(false, false);
                 gloryPoint += landMarkReward.GloryReward(false, false);
@@ -265,7 +264,7 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 				playerReward.setBrokenSpinel(188100391);
 				playerReward.setBonusReward(186000243);
             }
-			ItemService.addItem(player, 188055396, 1); //유�?지 최�?급 보�? �?�?.
+			ItemService.addItem(player, 188055396, 1); //Ã¬Å“Â Ã¬Â ?Ã¬Â§â‚¬ Ã¬ÂµÅ“Ã¬Æ’?ÃªÂ¸â€° Ã«Â³Â´Ã¬Æ’? Ã¬Æ’?Ã¬Å¾?.
             ItemService.addItem(player, 188053030, 1);
             ItemService.addItem(player, 188100391, 750); //5.5
 			ItemService.addItem(player, 186000243, 1);
@@ -591,9 +590,9 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 	}
 	
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = landMarkTask.head(), end = landMarkTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : landMarkTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.model.iu;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +27,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.iu.IuTemplate;
 import com.aionemu.gameserver.services.iuservice.Iu;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -35,7 +37,7 @@ public class IuLocation {
 	protected boolean isActive;
 	protected IuTemplate template;
 	protected Iu<IuLocation> activeIu;
-	protected FastMap<Integer, Player> players = new FastMap<Integer, Player>();
+	protected Map<Integer, Player> players = new LinkedHashMap<Integer, Player>();
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public IuLocation() {
@@ -71,7 +73,7 @@ public class IuLocation {
 		return spawned;
 	}
 
-	public FastMap<Integer, Player> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 }

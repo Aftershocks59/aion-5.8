@@ -37,7 +37,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 
 /**
  * @author Ranastic
@@ -130,8 +129,8 @@ public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerRew
 		return (HallOfTenacityPlayerReward) super.getPlayerReward(object);
 	}
 
-	public FastList<Player> getPlayersInside() {
-		FastList<Player> players = new FastList<Player>();
+	public List<Player> getPlayersInside() {
+		List<Player> players = new ArrayList<Player>();
 		for (Player playerInside : instance.getPlayersInside()) {
 			if (containPlayer(playerInside.getObjectId())) {
 				players.add(playerInside);

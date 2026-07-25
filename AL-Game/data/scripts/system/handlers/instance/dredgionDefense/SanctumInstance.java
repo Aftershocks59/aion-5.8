@@ -43,7 +43,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 	private int surkanaShockCannon;
 	private boolean isInstanceDestroyed;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> sanctumTask = FastList.newInstance();
+	private final List<Future<?>> sanctumTask = new ArrayList<>();
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
@@ -212,7 +211,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 					killNpc(getNpcs(703400));
 					killNpc(getNpcs(220753));
 					killNpc(getNpcs(220754));
-					//The shock cannon at the Captain’s Cabin has been deactivated.
+					//The shock cannon at the CaptainÃ¢â‚¬â„¢s Cabin has been deactivated.
 				    sendMsgByRace(1403955, Race.PC_ALL, 2000);
 				}
 			break;
@@ -425,7 +424,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 			case 834317: //Dredgion Fissure.
 			    if (player.getInventory().decreaseByItemId(185000282, 1)) {
 				    invadeIDLC1Dredgion(player, 1496.732f, 1557.6948f, 2032.4938f, (byte) 30);
-					//The shock cannon at the Captain’s Cabin has been activated!
+					//The shock cannon at the CaptainÃ¢â‚¬â„¢s Cabin has been activated!
 					sendMsgByRace(1403954, Race.PC_ALL, 10000);
 				} else {
 					//Wind Gap Pass required.
@@ -505,7 +504,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		Npc mainModule1 = instance.getNpc(220866); //Dredgion Main Module.
 		if (mainModule1 != null) {
 			if (barrierPowerCore1 == 3) {
-				//Dredgion’s Power Core Barrier.
+				//DredgionÃ¢â‚¬â„¢s Power Core Barrier.
 				mainModule1.getEffectController().removeEffect(18298);
 			}
 		}
@@ -515,7 +514,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		Npc mainModule2 = instance.getNpc(220867); //Dredgion Main Module.
 		if (mainModule2 != null) {
 			if (barrierPowerCore2 == 3) {
-				//Dredgion’s Power Core Barrier.
+				//DredgionÃ¢â‚¬â„¢s Power Core Barrier.
 				mainModule2.getEffectController().removeEffect(18298);
 			}
 		}
@@ -530,7 +529,7 @@ public class SanctumInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 			   /**
-				* ■ 1. Drakan Instructor & Base Defence:
+				* Ã¢â€“Â  1. Drakan Instructor & Base Defence:
 				* Drakan Instructors appear in the "Lyceum, Hall Of Prosperity & Artisans Hall".
 				* After killing each Instructor, friendly NPCs will appear to protect that spot.
 				* At the 5th, 15th, and 20th minute, large scale battle begins at each base.
@@ -554,7 +553,7 @@ public class SanctumInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 			   /**
-				* ■ 2. Drakan Battle Overseer:
+				* Ã¢â€“Â  2. Drakan Battle Overseer:
 				* 3 min after the start, 3 Drakan Battle Overseers will appear in 3/5 random locations.
 				* They will re-appear 3 min after being killed in a random position.
 				*/
@@ -603,10 +602,10 @@ public class SanctumInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 			   /**
-				* ■ 3. Unfair Battle:
+				* Ã¢â€“Â  3. Unfair Battle:
 				* 5 min or 20 min after the start, unfair aerial battle with a Dredgion starts.
 				* Use the teleporter at the bottom of the map to join the fight.
-				* ■ Non-Combat Method:
+				* Ã¢â€“Â  Non-Combat Method:
 				* After arriving at the sight, mouth all the turrets.
 				* You can also fly up to attack the Dredgion directly.
 				* Destroy 4 Dredgion generators (2 on each side) to win the battle.
@@ -623,21 +622,21 @@ public class SanctumInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 			   /**
-				* ■ 4. Dredgion Infiltration:
+				* Ã¢â€“Â  4. Dredgion Infiltration:
 				* 5 min or 20 min after the start, a Dredgion will appear over the city.
 				* A Shugo that can take you to the ship will appear near the "Hall Of Prosperity".
 				* Buy a ticket before proceeding.
 				* - The Shugo is directly connected to the Dredgion.
 				* - Once on the Shugo Ship, you can purchase 2 items that will help you infiltrate the Dredgion.
-				* ■ Dredgion Infiltration:
+				* Ã¢â€“Â  Dredgion Infiltration:
 				* - Inside the Dredgion, your objective is to kill the captain.
 				* Neutralize the cannons next to the boss before attacking.
 				* - Destroying Surkanas will disable each cannon for a while, surkanas will reappear after a minute.
 				* - The Observer is to be feared.
 				* Use bombs or hiding shield to deal with it.
-				* ■ TIP1: Divide your force into 3 groups.
+				* Ã¢â€“Â  TIP1: Divide your force into 3 groups.
 				* (Ex: 2 groups for the Captain & 2 group for Surkanas)
-				* ■ TIP2: Destroying both Surkanas at the same time will make it easier to kill the captain.
+				* Ã¢â€“Â  TIP2: Destroying both Surkanas at the same time will make it easier to kill the captain.
 				*/
 				spawn(834317, 971.33301f, 756.68567f, 2210.9631f, (byte) 0, 17); //Dredgion Fissure.
 				spawn(834318, 1436.2812f, 1460.8816f, 572.87805f, (byte) 1); //Cayrunerk.
@@ -650,16 +649,16 @@ public class SanctumInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 			   /**
-				* ■ 5. Turret Battle:
+				* Ã¢â€“Â  5. Turret Battle:
 				* 20 min after the start, Turret Battle will begin and 2 Transport Tanks will appear in the "Lyceum".
 				* Talk to a Shugo behind each Tank to make them start moving to each Turret.
-				* ■ How to Proceed:
+				* Ã¢â€“Â  How to Proceed:
 				* 1. Escorting Transport Tanks:
 				* - First of all, you need to take care of Balaurs that are currently attacking the Turrets.
 				* - Talk to a Shugo behind each tank to make them start moving to the area where the Defense Turrets are.
 				* - On their way, the tank will be attacked multiple times by the Balaur. Protect them at all cost.
 				* - Once the tank is destroyed it will re-appear in the Temple of Artisans.
-				* ■ 2. Ammo:
+				* Ã¢â€“Â  2. Ammo:
 				* - Each time you click on the Tank, you will receive one Energy Source.
 				* - On each side of the Turret, there is a generator.
 				* It can be fueled with the Energy Source you have just obtained.
@@ -667,10 +666,10 @@ public class SanctumInstance extends GeneralInstanceHandler
 				* - The Turret must be activated twice to destroy the Dredgion.
 				* - The Balaur will continue to attack the Turret and the Generators.
 				* - When a Generator is destroyed, it will re-appear after a while completely empty.
-				* ■ 3. Turret Cooling:
+				* Ã¢â€“Â  3. Turret Cooling:
 				* - Each turret can not be used for a while after firing a shot.
-				* - A Réfrigérant can be purchased from a Shugo that appears near the Defense Turret.
-				* - A Réfrigérant can be used to shorten the overheating time. 
+				* - A RÃƒÂ©frigÃƒÂ©rant can be purchased from a Shugo that appears near the Defense Turret.
+				* - A RÃƒÂ©frigÃƒÂ©rant can be used to shorten the overheating time. 
 				*/
 				//Resources available at the defense turret. Escort the transport there to collect them.
 				sendMsgByRace(1403708, Race.PC_ALL, 0);
@@ -687,7 +686,7 @@ public class SanctumInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 			   /**
-				* ■ 5. Commander Zedas:
+				* Ã¢â€“Â  5. Commander Zedas:
 				* After 30min, Commander Zedas will appear in the "Elyos Square"
 				* The final rank is calculated when Commander Zedas is dead or 5 min have passed.
 				*/
@@ -740,10 +739,10 @@ public class SanctumInstance extends GeneralInstanceHandler
             @Override
             public void run() {
 			   /**
-				* ■ 6. Final Dredgion Battle:
+				* Ã¢â€“Â  6. Final Dredgion Battle:
 				* After 35min, a windstream will appear near the "Elyos Square"
 				* Use the windstream to participate in the final battle.
-				* ■ How to Progress:
+				* Ã¢â€“Â  How to Progress:
 				* - During the final Dredgion battle, you can fly freely.
 				* - If you destroy all Power Generators within 10min, you will destroy the last remaining Dredgion.
 				* - Each Dredgion Power Generator is protected by a shield.
@@ -774,19 +773,19 @@ public class SanctumInstance extends GeneralInstanceHandler
 	
    /**
 	* Rewards:
-    * ■
+    * Ã¢â€“Â 
 	* Premium Frigida Legion Loot Box (3 Generators destroyed)
 	* Major Frigida Legion Loot Box (2 Generators destroyed)
-	* ■
+	* Ã¢â€“Â 
 	* Major Frigida Legion Supply Box
 	* Greater Frigida Legion Loot Box
-	* ■
+	* Ã¢â€“Â 
 	* Greater Frigida Legion Supply Box
 	* Lesser Frigida Legion Loot Box
-	* ■
+	* Ã¢â€“Â 
 	* Lesser Frigida Legion Supply Box
 	* Minor Frigida Legion Loot Box
-	* ■
+	* Ã¢â€“Â 
 	* Minor Frigida Legion Supply Box
 	*/
 	@Override
@@ -857,9 +856,9 @@ public class SanctumInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = sanctumTask.head(), end = sanctumTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : sanctumTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }
@@ -956,8 +955,8 @@ public class SanctumInstance extends GeneralInstanceHandler
 	
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
-		effectController.removeEffect(18290); //�?�탑 탑승.
-		effectController.removeEffect(18300); //�?�탑 탑승.
+		effectController.removeEffect(18290); //Ã­?Â¬Ã­Æ’â€˜ Ã­Æ’â€˜Ã¬Å Â¹.
+		effectController.removeEffect(18300); //Ã­?Â¬Ã­Æ’â€˜ Ã­Æ’â€˜Ã¬Å Â¹.
 	}
 	
 	private void sendMsg(final String str) {

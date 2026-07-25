@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.account;
 
+import java.util.List;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.utils.chathandlers;
 
+import java.util.LinkedHashMap;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -35,7 +37,6 @@ import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
-import javolution.util.FastMap;
 
 /**
  * @author KID
@@ -45,8 +46,8 @@ public class ChatProcessor implements GameEngine {
 
 	private static final Logger log = LoggerFactory.getLogger("ADMINAUDIT_LOG");
 	private static ChatProcessor instance = new ChatProcessor();
-	private Map<String, ChatCommand> commands = new FastMap<String, ChatCommand>();
-	private Map<String, Byte> accessLevel = new FastMap<String, Byte>();
+	private Map<String, ChatCommand> commands = new LinkedHashMap<String, ChatCommand>();
+	private Map<String, Byte> accessLevel = new LinkedHashMap<String, Byte>();
 	private ScriptManager sm = new ScriptManager();
 	private Exception loadException = null;
 
@@ -133,7 +134,7 @@ public class ChatProcessor implements GameEngine {
 	public void reload() {
 		ScriptManager tmpSM;
 		final ChatProcessor adminCP;
-		Map<String, ChatCommand> backupCommands = new FastMap<String, ChatCommand>(commands);
+		Map<String, ChatCommand> backupCommands = new LinkedHashMap<String, ChatCommand>(commands);
 		commands.clear();
 		loadException = null;
 

@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.services.vortexservice;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Kisk;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -31,12 +35,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
 
 public class Invasion extends DimensionalVortex<VortexLocation> {
 	PlayerAlliance invAlliance, defAlliance;
-	protected FastMap<Integer, Player> invaders = new FastMap<Integer, Player>();
-	protected FastMap<Integer, Player> defenders = new FastMap<Integer, Player>();
+	protected Map<Integer, Player> invaders = new LinkedHashMap<Integer, Player>();
+	protected Map<Integer, Player> defenders = new LinkedHashMap<Integer, Player>();
 
 	public Invasion(VortexLocation vortex) {
 		super(vortex);
@@ -69,7 +72,7 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 
 	@Override
 	public void addPlayer(Player player, boolean isInvader) {
-		FastMap<Integer, Player> list = isInvader ? invaders : defenders;
+		Map<Integer, Player> list = isInvader ? invaders : defenders;
 		PlayerAlliance alliance = isInvader ? invAlliance : defAlliance;
 		if (alliance != null && alliance.size() > 0) {
 			PlayerAllianceService.addPlayer(alliance, player);
@@ -93,12 +96,12 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 				kickPlayer(player, isInvader);
 			}
 		}
-		list.putEntry(player.getObjectId(), player);
+		list.put(player.getObjectId(), player);
 	}
 
 	@Override
 	public void kickPlayer(Player player, boolean isInvader) {
-		FastMap<Integer, Player> list = isInvader ? invaders : defenders;
+		Map<Integer, Player> list = isInvader ? invaders : defenders;
 		PlayerAlliance alliance = isInvader ? invAlliance : defAlliance;
 		list.remove(player.getObjectId());
 		if (alliance != null && alliance.hasMember(player.getObjectId())) {
@@ -174,12 +177,12 @@ public class Invasion extends DimensionalVortex<VortexLocation> {
 	}
 
 	@Override
-	public FastMap<Integer, Player> getInvaders() {
+	public Map<Integer, Player> getInvaders() {
 		return invaders;
 	}
 
 	@Override
-	public FastMap<Integer, Player> getDefenders() {
+	public Map<Integer, Player> getDefenders() {
 		return defenders;
 	}
 }

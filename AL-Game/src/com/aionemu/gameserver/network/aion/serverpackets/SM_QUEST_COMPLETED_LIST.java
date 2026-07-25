@@ -16,16 +16,17 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import java.util.List;
+
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 
-import javolution.util.FastList;
 
 public class SM_QUEST_COMPLETED_LIST extends AionServerPacket {
-	private FastList<QuestState> questState;
+	private List<QuestState> questState;
 
-	public SM_QUEST_COMPLETED_LIST(FastList<QuestState> questState) {
+	public SM_QUEST_COMPLETED_LIST(List<QuestState> questState) {
 		this.questState = questState;
 	}
 
@@ -40,7 +41,6 @@ public class SM_QUEST_COMPLETED_LIST extends AionServerPacket {
 			writeH(0x01);// unk 5.3
 			writeD(0x01);// unk 5.3
 		}
-		FastList.recycle(questState);
 		questState = null;
 	}
 }

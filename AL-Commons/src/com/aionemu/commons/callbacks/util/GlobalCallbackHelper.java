@@ -29,6 +29,8 @@
  */
 package com.aionemu.commons.callbacks.util;
 
+import java.util.List;
+
 import com.aionemu.commons.callbacks.Callback;
 import com.aionemu.commons.callbacks.CallbackResult;
 import com.aionemu.commons.utils.ClassUtils;

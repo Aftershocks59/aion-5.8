@@ -39,7 +39,7 @@ public class PetFeedData {
 	protected List<PetFlavour> flavours;
 
 	@XmlTransient
-	private Map<Integer, PetFlavour> petFlavoursById = new HashMap<Integer, PetFlavour>();
+private Map<Integer, PetFlavour> petFlavoursById = new HashMap<Integer, PetFlavour>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (flavours == null) {

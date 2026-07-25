@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -28,7 +31,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.agent.AgentLocation;
 import com.aionemu.gameserver.model.templates.agent.AgentTemplate;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +43,7 @@ public class AgentData {
 	private List<AgentTemplate> agentTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, AgentLocation> agent = new FastMap<Integer, AgentLocation>();
+private Map<Integer, AgentLocation> agent = new LinkedHashMap<Integer, AgentLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (AgentTemplate template : agentTemplates) {
@@ -53,7 +55,7 @@ public class AgentData {
 		return agent.size();
 	}
 
-	public FastMap<Integer, AgentLocation> getAgentLocations() {
+	public Map<Integer, AgentLocation> getAgentLocations() {
 		return agent;
 	}
 }

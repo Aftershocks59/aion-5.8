@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.model.templates.itemgroups;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
+import java.util.Set;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.model.team2.group;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+
 import java.util.Collection;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,7 +26,6 @@ import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
-import javolution.util.FastMap;
 
 public class PlayerGroup extends TemporaryPlayerTeam<PlayerGroupMember> {
 	private TeamType type;
@@ -31,7 +33,7 @@ public class PlayerGroup extends TemporaryPlayerTeam<PlayerGroupMember> {
 	private int killCount = 0;
 	private int buffId = 0;
 	private final PlayerGroupStats playerGroupStats;
-	private FastMap<Integer, Player> groupMembers = new FastMap<Integer, Player>().shared();
+	private Map<Integer, Player> groupMembers = new ConcurrentHashMap<Integer, Player>();
 
 	public PlayerGroup(PlayerGroupMember leader, TeamType type) {
 		super(IDFactory.getInstance().nextId());

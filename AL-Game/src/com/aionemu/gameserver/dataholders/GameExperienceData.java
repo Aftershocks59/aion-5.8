@@ -45,7 +45,7 @@ public class GameExperienceData {
 	private TIntObjectHashMap<GameExperience> experienceData = new TIntObjectHashMap<GameExperience>();
 
 	@XmlTransient
-	private Map<Integer, GameExperience> experienceDataMap = new HashMap<Integer, GameExperience>(1);
+private Map<Integer, GameExperience> experienceDataMap = new HashMap<Integer, GameExperience>(1);
 
 	void afterUnmarshal(Unmarshaller paramUnmarshaller, Object paramObject) {
 		for (GameExperience gameExperience : glist) {

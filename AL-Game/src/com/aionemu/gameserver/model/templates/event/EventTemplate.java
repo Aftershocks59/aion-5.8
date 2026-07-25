@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.event;
 
+import java.util.Map;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -87,7 +89,7 @@ public class EventTemplate {
 	private String theme;
 
 	@XmlTransient
-	protected List<VisibleObject> spawnedObjects;
+protected List<VisibleObject> spawnedObjects;
 
 	@XmlTransient
 	private Future<?> invDropTask = null;

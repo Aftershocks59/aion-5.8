@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.itemset;
 
+import java.util.Set;
+
 import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;

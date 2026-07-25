@@ -45,7 +45,7 @@ public class AbyssOpData {
 	private TIntObjectHashMap<AbyssOp> opData = new TIntObjectHashMap<AbyssOp>();
 
 	@XmlTransient
-	private Map<Integer, AbyssOp> opDataMap = new HashMap<Integer, AbyssOp>(1);
+private Map<Integer, AbyssOp> opDataMap = new HashMap<Integer, AbyssOp>(1);
 
 	void afterUnmarshal(Unmarshaller paramUnmarshaller, Object paramObject) {
 		for (AbyssOp abyssOp : aolist) {

@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -28,7 +31,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.templates.zorshivdredgion.ZorshivDredgionTemplate;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +43,7 @@ public class ZorshivDredgionData {
 	private List<ZorshivDredgionTemplate> zorshivDredgionTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, ZorshivDredgionLocation> zorshivDredgion = new FastMap<Integer, ZorshivDredgionLocation>();
+private Map<Integer, ZorshivDredgionLocation> zorshivDredgion = new LinkedHashMap<Integer, ZorshivDredgionLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (ZorshivDredgionTemplate template : zorshivDredgionTemplates) {
@@ -53,7 +55,7 @@ public class ZorshivDredgionData {
 		return zorshivDredgion.size();
 	}
 
-	public FastMap<Integer, ZorshivDredgionLocation> getZorshivDredgionLocations() {
+	public Map<Integer, ZorshivDredgionLocation> getZorshivDredgionLocations() {
 		return zorshivDredgion;
 	}
 }

@@ -29,6 +29,8 @@
  */
 package com.aionemu.commons.objects.filter;
 
+import java.util.List;
+
 /**
  * Object filter interface.
  * <p/>

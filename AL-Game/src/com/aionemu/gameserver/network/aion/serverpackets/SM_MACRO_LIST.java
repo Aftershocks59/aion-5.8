@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import java.util.List;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;

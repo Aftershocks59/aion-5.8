@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import java.util.Map;
+
 import java.util.HashMap;
 
 import org.slf4j.Logger;

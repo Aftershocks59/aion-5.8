@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.properties;
 
+import java.util.Set;
+
 import java.util.Iterator;
 import java.util.List;
 

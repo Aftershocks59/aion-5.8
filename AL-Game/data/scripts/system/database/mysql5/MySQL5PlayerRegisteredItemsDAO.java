@@ -32,7 +32,6 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -218,8 +217,8 @@ public class MySQL5PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO
 	
     @Override
     public boolean store(HouseRegistry registry, int playerId) {
-        FastList<HouseObject<?>> objects = registry.getObjects();
-        FastList<HouseDecoration> decors = registry.getAllParts();
+        List<HouseObject<?>> objects = registry.getObjects();
+        List<HouseDecoration> decors = registry.getAllParts();
         Collection<HouseObject<?>> objectsToAdd = Collections2.filter(objects, objectsToAddPredicate);
         Collection<HouseObject<?>> objectsToUpdate = Collections2.filter(objects, objectsToUpdatePredicate);
         Collection<HouseObject<?>> objectsToDelete = Collections2.filter(objects, objectsToDeletePredicate);

@@ -16,6 +16,9 @@
  */
 package instance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.commons.utils.Rnd;
 
 import com.aionemu.gameserver.ai2.AIState;
@@ -45,7 +48,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.Map;
 import java.util.Set;
@@ -84,11 +86,11 @@ public class StonespearReachInstance extends GeneralInstanceHandler
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 1800000; //...30Min
 	private StonespearReachReward instanceReward;
-	private final FastList<Future<?>> stonespearTask1 = FastList.newInstance();
-	private final FastList<Future<?>> stonespearTask2 = FastList.newInstance();
-	private final FastList<Future<?>> stonespearTask3 = FastList.newInstance();
-	private final FastList<Future<?>> stonespearTask4 = FastList.newInstance();
-	private final FastList<Future<?>> stonespearTask5 = FastList.newInstance();
+	private final List<Future<?>> stonespearTask1 = new ArrayList<>();
+	private final List<Future<?>> stonespearTask2 = new ArrayList<>();
+	private final List<Future<?>> stonespearTask3 = new ArrayList<>();
+	private final List<Future<?>> stonespearTask4 = new ArrayList<>();
+	private final List<Future<?>> stonespearTask5 = new ArrayList<>();
 	
 	protected StonespearReachPlayerReward getPlayerReward(Integer object) {
 		return (StonespearReachPlayerReward) instanceReward.getPlayerReward(object);
@@ -4487,37 +4489,37 @@ public class StonespearReachInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask1() {
-        for (FastList.Node<Future<?>> n = stonespearTask1.head(), end = stonespearTask1.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : stonespearTask1) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }
 	private void stopInstanceTask2() {
-        for (FastList.Node<Future<?>> n = stonespearTask2.head(), end = stonespearTask2.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : stonespearTask2) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }
 	private void stopInstanceTask3() {
-        for (FastList.Node<Future<?>> n = stonespearTask3.head(), end = stonespearTask3.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : stonespearTask3) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }
 	private void stopInstanceTask4() {
-        for (FastList.Node<Future<?>> n = stonespearTask4.head(), end = stonespearTask4.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : stonespearTask4) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }
 	private void stopInstanceTask5() {
-        for (FastList.Node<Future<?>> n = stonespearTask5.head(), end = stonespearTask5.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : stonespearTask5) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

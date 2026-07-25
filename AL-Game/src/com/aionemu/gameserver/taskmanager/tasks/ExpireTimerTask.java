@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.taskmanager.tasks;
 
+import java.util.LinkedHashMap;
+
 import java.util.Iterator;
 import java.util.Map;
 
@@ -23,10 +25,9 @@ import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
 
-import javolution.util.FastMap;
 
 public class ExpireTimerTask extends AbstractPeriodicTaskManager {
-	private FastMap<IExpirable, Player> expirables = new FastMap<IExpirable, Player>();
+	private Map<IExpirable, Player> expirables = new LinkedHashMap<IExpirable, Player>();
 
 	public ExpireTimerTask() {
 		super(1000);

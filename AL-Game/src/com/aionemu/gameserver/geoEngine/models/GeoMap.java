@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.geoEngine.models;
 
+import java.util.LinkedHashMap;
+import java.util.Set;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -35,7 +38,6 @@ import com.aionemu.gameserver.geoEngine.scene.Node;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.geoEngine.scene.mesh.DoorGeometry;
 
-import javolution.util.FastMap;
 
 /**
  * @author Mr. Poke
@@ -44,7 +46,7 @@ public class GeoMap extends Node {
 
 	private short[] terrainData;
 	private List<BoundingBox> tmpBox = new ArrayList<BoundingBox>();
-	private Map<String, DoorGeometry> doors = new FastMap<String, DoorGeometry>();
+	private Map<String, DoorGeometry> doors = new LinkedHashMap<String, DoorGeometry>();
 
 	/**
 	 * @param name

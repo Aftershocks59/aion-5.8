@@ -16,6 +16,8 @@
  */
 package playercommands;
 
+import java.util.Set;
+
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;

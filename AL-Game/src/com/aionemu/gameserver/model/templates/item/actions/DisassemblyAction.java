@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.administration.DeveloperConfig;
 import com.aionemu.gameserver.configs.main.EnchantsConfig;

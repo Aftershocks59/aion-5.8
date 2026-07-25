@@ -1,10 +1,12 @@
 package mysql5;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.MySQL5DAOUtils;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,8 +59,8 @@ public class MySQL5RewardServiceDAO extends RewardServiceDAO
     }
 	
     @Override
-    public FastList<RewardEntryItem> getAvailable(int playerId) {
-        FastList<RewardEntryItem> list = FastList.newInstance();
+    public List<RewardEntryItem> getAvailable(int playerId) {
+        List<RewardEntryItem> list = new ArrayList<>();
         Connection con = null;
         try {
             con = DatabaseFactory.getConnection();
@@ -82,7 +84,7 @@ public class MySQL5RewardServiceDAO extends RewardServiceDAO
     }
 	
     @Override
-    public void uncheckAvailable(FastList<Integer> ids) {
+    public void uncheckAvailable(List<Integer> ids) {
         Connection con = null;
         try {
             con = DatabaseFactory.getConnection();

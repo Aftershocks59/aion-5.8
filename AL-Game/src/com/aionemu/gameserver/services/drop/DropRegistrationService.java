@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.drop;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -68,14 +70,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.DropRewardEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 public class DropRegistrationService {
 
-	private Map<Integer, Set<DropItem>> currentDropMap = new FastMap<Integer, Set<DropItem>>().shared();
-	private Map<Integer, DropNpc> dropRegistrationMap = new FastMap<Integer, DropNpc>().shared();
-	private FastList<Integer> noReductionMaps;
+	private Map<Integer, Set<DropItem>> currentDropMap = new ConcurrentHashMap<Integer, Set<DropItem>>();
+	private Map<Integer, DropNpc> dropRegistrationMap = new ConcurrentHashMap<Integer, DropNpc>();
+	private List<Integer> noReductionMaps;
 
 	Logger log = LoggerFactory.getLogger(DropRegistrationService.class);
 
@@ -85,7 +85,7 @@ public class DropRegistrationService {
 
 	private DropRegistrationService() {
 		init();
-		noReductionMaps = new FastList<Integer>();
+		noReductionMaps = new ArrayList<Integer>();
 		for (String zone : DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES.split(",")) {
 			noReductionMaps.add(Integer.parseInt(zone));
 		}

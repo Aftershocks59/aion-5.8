@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.model.house;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Date;
@@ -39,15 +42,14 @@ import com.aionemu.gameserver.taskmanager.AbstractCronTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastList;
 
 public class MaintenanceTask extends AbstractCronTask {
 	private static final Logger log = LoggerFactory.getLogger(MaintenanceTask.class);
-	private static final FastList<House> maintainedHouses;
+	private static final List<House> maintainedHouses;
 	private static MaintenanceTask instance;
 
 	static {
-		maintainedHouses = FastList.newInstance();
+		maintainedHouses = new ArrayList<>();
 		try {
 			instance = new MaintenanceTask(HousingConfig.HOUSE_MAINTENANCE_TIME);
 		} catch (ParseException pe) {
@@ -101,7 +103,7 @@ public class MaintenanceTask extends AbstractCronTask {
 			return;
 		}
 		Date now = new Date();
-		FastList<House> houses = HousingService.getInstance().getCustomHouses();
+		List<House> houses = HousingService.getInstance().getCustomHouses();
 		for (House house : houses) {
 			if (house.getStatus() == HouseStatus.INACTIVE) {
 				continue;

@@ -16,6 +16,9 @@
  */
 package instance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -43,7 +46,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -85,7 +87,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 900000; //...15Min
 	private SealedArgentManorReward instanceReward;
-	private final FastList<Future<?>> sealedTask = FastList.newInstance();
+	private final List<Future<?>> sealedTask = new ArrayList<>();
 	
 	protected SealedArgentManorPlayerReward getPlayerReward(Integer object) {
 		return (SealedArgentManorPlayerReward) instanceReward.getPlayerReward(object);
@@ -455,9 +457,9 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = sealedTask.head(), end = sealedTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : sealedTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

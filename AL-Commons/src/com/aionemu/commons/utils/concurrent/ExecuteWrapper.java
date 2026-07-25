@@ -30,7 +30,6 @@
 package com.aionemu.commons.utils.concurrent;
 
 import com.aionemu.commons.configs.CommonsConfig;
-import javolution.text.TextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +66,7 @@ public class ExecuteWrapper implements Executor {
 
             long runtimeInMillisec = TimeUnit.NANOSECONDS.toMillis(runtimeInNanosec);
             if (runtimeInMillisec > maximumRuntimeInMillisecWithoutWarning) {
-                TextBuilder tb = TextBuilder.newInstance();
+                StringBuilder tb = new StringBuilder();
                 tb.append(clazz);
                 tb.append(" - execution time: ");
                 tb.append(runtimeInMillisec);

@@ -16,13 +16,15 @@
  */
 package ai.housing;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.controllers.observer.GaleCycloneObserver;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.SkillEngine;
-import javolution.util.FastMap;
 
 /****/
 /** Author (Encom)
@@ -32,7 +34,7 @@ import javolution.util.FastMap;
 public class GaleCycloneAI2 extends NpcAI2
 {
     private boolean blocked;
-	private FastMap<Integer, GaleCycloneObserver> observed = new FastMap<Integer, GaleCycloneObserver>().shared();
+	private Map<Integer, GaleCycloneObserver> observed = new ConcurrentHashMap<Integer, GaleCycloneObserver>();
     
 	@Override
 	protected void handleCreatureSee(Creature creature) {

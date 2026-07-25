@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -139,7 +141,8 @@ public class PlayerInitialData {
 		}
 		// public static class ShortcutType
 		// {
-		// public List<Shortcut> shortcuts;
+		// @XmlTransient
+ // public List<Shortcut> shortcuts;
 		// }
 	}
 

@@ -29,8 +29,9 @@
  */
 package com.aionemu.commons.services;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.aionemu.commons.scripting.scriptmanager.ScriptManager;
-import javolution.util.FastMap;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +57,7 @@ public class ScriptService {
     /**
      * Container for ScriptManagers, sorted by file
      */
-    private final Map<File, ScriptManager> map = new FastMap<File, ScriptManager>().shared();
+    private final Map<File, ScriptManager> map = new ConcurrentHashMap<File, ScriptManager>();
 
     /**
      * Loads script descriptor from given directory or file

@@ -16,6 +16,9 @@
  */
 package ai.instance.anguishedDragonLordRefuge;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -25,7 +28,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import javolution.util.FastMap;
 
 /****/
 /** Author (Encom)
@@ -34,7 +36,7 @@ import javolution.util.FastMap;
 @AIName("kahrun3")
 public class IDTiamat2HardKahrunAI2 extends NpcAI2
 {
-	private FastMap<Integer, VisibleObject> portal = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> portal = new LinkedHashMap<Integer, VisibleObject>();
 	
 	@Override
 	protected void handleDialogStart(Player player) {

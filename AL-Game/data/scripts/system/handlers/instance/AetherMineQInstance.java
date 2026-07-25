@@ -16,6 +16,9 @@
  */
 package instance;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.EmotionType;
@@ -33,7 +36,6 @@ import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import javolution.util.FastMap;
 
 /****/
 /** Author (Encom)
@@ -43,7 +45,7 @@ import javolution.util.FastMap;
 public class AetherMineQInstance extends GeneralInstanceHandler
 {
 	private Race spawnRace;
-	private FastMap<Integer, VisibleObject> objects = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	@Override
 	public void onEnterInstance(Player player) {

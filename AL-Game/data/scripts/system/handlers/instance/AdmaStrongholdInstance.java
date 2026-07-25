@@ -16,6 +16,9 @@
  */
 package instance;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -40,7 +43,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +59,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	private boolean isStartTimer = false;
 	private Future<?> suspiciousPotTask;
 	private List<Npc> suspiciousPot = new ArrayList<Npc>();
-	private FastMap<Integer, VisibleObject> objects = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());

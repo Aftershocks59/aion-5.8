@@ -1,11 +1,6 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load the following classes:
- *  javolution.context.ObjectFactory
- *  javolution.lang.Reusable
- */
 package com.aionemu.gameserver.geoEngine.math;
+
+import java.util.Set;
 
 import java.nio.FloatBuffer;
 import java.util.logging.Logger;
@@ -13,17 +8,9 @@ import java.util.logging.Logger;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 
-import javolution.context.ObjectFactory;
-import javolution.lang.Reusable;
 
-public final class Matrix3f implements Cloneable, Reusable {
+public final class Matrix3f implements Cloneable {
 	private static final Logger logger = Logger.getLogger(Matrix3f.class.getName());
-	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
-
-		public Object create() {
-			return new Matrix3f();
-		}
-	};
 	protected float m00;
 	protected float m01;
 	protected float m02;
@@ -900,17 +887,10 @@ public final class Matrix3f implements Cloneable, Reusable {
 	}
 
 	public static Matrix3f newInstance() {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			return (Matrix3f) FACTORY.object();
-		}
 		return new Matrix3f();
 	}
 
 	public static void recycle(Matrix3f instance) {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			FACTORY.recycle((Object) instance);
-		} else {
-			instance = null;
-		}
+		// Kept for call sites: the garbage collector reclaims the instance.
 	}
 }

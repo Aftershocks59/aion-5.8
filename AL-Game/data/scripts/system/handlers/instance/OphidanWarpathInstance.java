@@ -57,7 +57,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import javolution.util.FastList;
 import org.apache.commons.lang.mutable.MutableInt;
 
 import java.util.ArrayList;
@@ -82,7 +81,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
     private float loosingGroupMultiplier = 1;
     private boolean isInstanceDestroyed = false;
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> warpathTask = FastList.newInstance();
+    private final List<Future<?>> warpathTask = new ArrayList<>();
 	
     protected EngulfedOphidanBridgePlayerReward getPlayerReward(Player player) {
         engulfedOphidanBridgeReward.regPlayerReward(player);
@@ -760,9 +759,9 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         }
 		Race race = mostPlayerDamage.getRace();
 		switch (npc.getObjectTemplate().getTemplateId()) {
-			case 243962: //눈길 고개 페슬롯.
-			case 243963: //눈길 고개 만�?리.
-			case 243964: //난�?�한 눈길 고개 만�?리.
+			case 243962: //Ã«Ë†Ë†ÃªÂ¸Â¸ ÃªÂ³Â ÃªÂ°Å“ Ã­Å½ËœÃ¬Å Â¬Ã«Â¡Â¯.
+			case 243963: //Ã«Ë†Ë†ÃªÂ¸Â¸ ÃªÂ³Â ÃªÂ°Å“ Ã«Â§Å’Ã«â€˜?Ã«Â¦Â¬.
+			case 243964: //Ã«â€šÅ“Ã­?Â­Ã­â€¢Å“ Ã«Ë†Ë†ÃªÂ¸Â¸ ÃªÂ³Â ÃªÂ°Å“ Ã«Â§Å’Ã«â€˜?Ã«Â¦Â¬.
 			    point = 25;
 				despawnNpc(npc);
             break;
@@ -782,7 +781,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 			case 701950: //Asmodians Field Gun.
                 SkillEngine.getInstance().getSkill(npc, 21066, 1, player).useNoAnimationSkill();
             break;
-			case 833935: //브리트�?�군 �?�력 장치.
+			case 833935: //Ã«Â¸Å’Ã«Â¦Â¬Ã­Å Â¸Ã«?Â¼ÃªÂµÂ° Ã«?â„¢Ã«Â Â¥ Ã¬Å¾Â¥Ã¬Â¹Ëœ.
 				point = 1000;
 				despawnNpc(npc);
 				deleteNpc(806425);
@@ -809,7 +808,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				//The device is close to being overloaded and cannot be charged anymore.
 				sendMsgByRace(1403453, Race.PC_ALL, 5000);
 			break;
-			case 833936: //브리트�?�군 �?�력 장치.
+			case 833936: //Ã«Â¸Å’Ã«Â¦Â¬Ã­Å Â¸Ã«?Â¼ÃªÂµÂ° Ã«?â„¢Ã«Â Â¥ Ã¬Å¾Â¥Ã¬Â¹Ëœ.
 				point = 1000;
 				despawnNpc(npc);
 				deleteNpc(806425);
@@ -840,7 +839,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 			case 833960: //Mechanical Weapon Test Part.
                 point = 200;
 				despawnNpc(npc);
-				//You’ve retrieved the Mechanical Weapon Test Parts from the Odd Ophidan Advanced Route.
+				//YouÃ¢â‚¬â„¢ve retrieved the Mechanical Weapon Test Parts from the Odd Ophidan Advanced Route.
 				sendMsgByRace(1403555, Race.PC_ALL, 0);
             break;
 			case 833951: //Mechanical Weapon Test Part Box.
@@ -945,9 +944,9 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 	}
 	
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = warpathTask.head(), end = warpathTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : warpathTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

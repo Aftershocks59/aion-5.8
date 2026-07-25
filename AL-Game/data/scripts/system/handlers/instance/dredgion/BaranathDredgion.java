@@ -54,7 +54,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 import org.apache.commons.lang.mutable.MutableInt;
 
 import java.util.ArrayList;
@@ -80,7 +79,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	private float loosingGroupMultiplier = 1;
 	private boolean isInstanceDestroyed = false;
 	protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-	private final FastList<Future<?>> baranathTask = FastList.newInstance();
+	private final List<Future<?>> baranathTask = new ArrayList<>();
 	
 	protected DredgionPlayerReward getPlayerReward(Player player) {
 		Integer object = player.getObjectId();
@@ -347,7 +346,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 				sendMsgByRace(1400231, Race.PC_ALL, 0);
 			break;
 		   /**
-			* Captain’s Cabin Teleport Device:
+			* CaptainÃ¢â‚¬â„¢s Cabin Teleport Device:
 			* This teleporter activates when "Supervisor Lakhane" is defeated in the Barracks.
 			* Only the race that defeated "Supervisor Lakhane" can use this teleporter.
 			*/
@@ -377,9 +376,9 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			* Defense Shield Generator:
 			* When the Defense Shield Generator on the Weapons Deck or Lower Weapons deck is demolished, a shield appears in Ready Room 1 or 2.
 			* This shield blocks access to the center of the Baranath Dredgion.
-			* The Ready Room is the shortest route to the center of the Dredgion, and the quickest route to the opposing race’s area.
-			* Different tactics can be used in this area to maximize the Group’s accumulation of points.
-			* For example, if one Group decides to destroy the opposing Group’s Shield Generator, it will make it difficult for the opposing Group to reach the center of the Dredgion.
+			* The Ready Room is the shortest route to the center of the Dredgion, and the quickest route to the opposing raceÃ¢â‚¬â„¢s area.
+			* Different tactics can be used in this area to maximize the GroupÃ¢â‚¬â„¢s accumulation of points.
+			* For example, if one Group decides to destroy the opposing GroupÃ¢â‚¬â„¢s Shield Generator, it will make it difficult for the opposing Group to reach the center of the Dredgion.
 			* In some cases, it might wiser for one Group to destroy their own Defense Shield Generator, and delay engagement with the opposing race in order to accumulate more points.
 			*/
 			case 700501: //Portside Defense Shield.
@@ -401,7 +400,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			* These shields are activated by the Baranath Churl when first encountered at the beginning of the battle.
 			* These shields block the entrance from the Armories to Gravity Control, and can be demolished with attacks, but also have a significant amount of health.
 			* Groups often opt to move around the shields instead of demolishing them.
-			* It’s worth noting that after a certain amount of time has passed, Technician Sarpa spawns in the Gravity Control room, and gives 1,000 points when defeated.
+			* ItÃ¢â‚¬â„¢s worth noting that after a certain amount of time has passed, Technician Sarpa spawns in the Gravity Control room, and gives 1,000 points when defeated.
 			* There is also a chance that Adjutant Kalanadi, a Hero grade Named Monster, will spawn.
 			* Adjutant Kalanadi has a chance to drop Fabled and Heroic accessories. 
 			*/
@@ -712,9 +711,9 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = baranathTask.head(), end = baranathTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : baranathTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

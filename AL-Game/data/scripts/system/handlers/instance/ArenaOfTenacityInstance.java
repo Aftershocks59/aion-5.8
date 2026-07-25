@@ -16,6 +16,9 @@
  */
 package instance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -42,7 +45,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 
 /****/
 /** Author (Encom)
@@ -55,7 +57,7 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 	private Map<Integer, StaticDoor> doors;
 	protected HallOfTenacityReward instanceReward;
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> hotTask = FastList.newInstance();
+    private final List<Future<?>> hotTask = new ArrayList<>();
     
     protected HallOfTenacityPlayerReward getPlayerReward(Integer object) {
 		instanceReward.regPlayerReward(object);
@@ -166,9 +168,9 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     }
     
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = hotTask.head(), end = hotTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : hotTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

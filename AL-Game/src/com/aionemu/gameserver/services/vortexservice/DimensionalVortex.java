@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.vortexservice;
 
+import java.util.Map;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.commons.callbacks.EnhancedObject;
@@ -27,7 +29,6 @@ import com.aionemu.gameserver.model.vortex.VortexLocation;
 import com.aionemu.gameserver.model.vortex.VortexStateType;
 import com.aionemu.gameserver.services.VortexService;
 
-import javolution.util.FastMap;
 
 public abstract class DimensionalVortex<VL extends VortexLocation> {
 	private final VL vortexLocation;
@@ -49,9 +50,9 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 
 	public abstract void updateInvaders(Player invader);
 
-	public abstract FastMap<Integer, Player> getDefenders();
+	public abstract Map<Integer, Player> getDefenders();
 
-	public abstract FastMap<Integer, Player> getInvaders();
+	public abstract Map<Integer, Player> getInvaders();
 
 	public DimensionalVortex(VL vortexLocation) {
 		this.vortexLocation = vortexLocation;

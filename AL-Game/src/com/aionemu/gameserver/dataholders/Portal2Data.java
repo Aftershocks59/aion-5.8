@@ -57,7 +57,7 @@ public class Portal2Data {
 	private TIntObjectHashMap<PortalDialog> portalDialogs = new TIntObjectHashMap<PortalDialog>();
 
 	@XmlTransient
-	private Map<String, PortalScroll> portalScrolls = new HashMap<String, PortalScroll>();
+private Map<String, PortalScroll> portalScrolls = new HashMap<String, PortalScroll>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		if (portalUse != null) {

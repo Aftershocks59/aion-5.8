@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
+
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -62,15 +66,13 @@ import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapInstanceFactory;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 public class AutoGroupService {
 
 	private Logger log = LoggerFactory.getLogger(AutoGroupService.class);
-	private FastMap<Integer, LookingForParty> searchers = new FastMap<Integer, LookingForParty>().shared();
-	private FastMap<Integer, AutoInstance> autoInstances = new FastMap<Integer, AutoInstance>().shared();
-	private Collection<Integer> penaltys = new FastList<Integer>().shared();
+	private Map<Integer, LookingForParty> searchers = new ConcurrentHashMap<Integer, LookingForParty>();
+	private Map<Integer, AutoInstance> autoInstances = new ConcurrentHashMap<Integer, AutoInstance>();
+	private Collection<Integer> penaltys = new CopyOnWriteArrayList<Integer>();
 	private Lock lock = new ReentrantLock();
 
 	private AutoGroupService() {

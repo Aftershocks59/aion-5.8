@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.condition;
 
+import java.util.Set;
+
 import java.util.ArrayList;
 import java.util.List;
 

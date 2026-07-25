@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +45,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -52,7 +53,7 @@ import javolution.util.FastMap;
 public class IdianDepthsService {
 	private Map<Integer, IdianDepthsLocation> idianDepths;
 	private static final int duration = CustomConfig.IDIAN_DEPTHS_DURATION;
-	private final Map<Integer, IdianDepths<?>> activeIdianDepths = new FastMap<Integer, IdianDepths<?>>().shared();
+	private final Map<Integer, IdianDepths<?>> activeIdianDepths = new ConcurrentHashMap<Integer, IdianDepths<?>>();
 	private static Logger log = LoggerFactory.getLogger(IdianDepthsService.class);
 
 	public void initIdianDepthsLocations() {

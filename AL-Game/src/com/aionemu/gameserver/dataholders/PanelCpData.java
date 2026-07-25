@@ -45,7 +45,7 @@ public class PanelCpData {
 	private TIntObjectHashMap<PanelCp> cpData = new TIntObjectHashMap<PanelCp>();
 
 	@XmlTransient
-	private Map<Integer, PanelCp> cpDataMap = new HashMap<Integer, PanelCp>(1);
+private Map<Integer, PanelCp> cpDataMap = new HashMap<Integer, PanelCp>(1);
 
 	void afterUnmarshal(Unmarshaller paramUnmarshaller, Object paramObject) {
 		for (PanelCp panelCp : pclist) {

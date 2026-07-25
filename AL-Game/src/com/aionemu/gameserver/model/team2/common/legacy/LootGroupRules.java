@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.model.team2.common.legacy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.Collection;
 
 import com.aionemu.gameserver.model.actions.PlayerMode;
@@ -26,7 +29,6 @@ import com.aionemu.gameserver.model.templates.item.ItemQuality;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
-import javolution.util.FastList;
 
 /**
  * @author ATracer, xTz
@@ -43,7 +45,7 @@ public class LootGroupRules {
 	private int misc;
 	private int nrMisc;
 	private int nrRoundRobin;
-	private FastList<DropItem> itemsToBeDistributed = new FastList<DropItem>();
+	private List<DropItem> itemsToBeDistributed = new ArrayList<DropItem>();
 
 	public LootGroupRules() {
 		lootRule = LootRuleType.ROUNDROBIN;
@@ -220,7 +222,7 @@ public class LootGroupRules {
 		itemsToBeDistributed.remove(dropItem);
 	}
 
-	public FastList<DropItem> getItemsToBeDistributed() {
+	public List<DropItem> getItemsToBeDistributed() {
 		return itemsToBeDistributed;
 	}
 }

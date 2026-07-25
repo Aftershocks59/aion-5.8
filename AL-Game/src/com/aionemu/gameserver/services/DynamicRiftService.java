@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +46,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -53,7 +54,7 @@ import javolution.util.FastMap;
 public class DynamicRiftService {
 	private Map<Integer, DynamicRiftLocation> dynamicRift;
 	private static final int duration = CustomConfig.DYNAMIC_RIFT_DURATION;
-	private final Map<Integer, DynamicRift<?>> activeDynamicRift = new FastMap<Integer, DynamicRift<?>>().shared();
+	private final Map<Integer, DynamicRift<?>> activeDynamicRift = new ConcurrentHashMap<Integer, DynamicRift<?>>();
 	private static final Logger log = LoggerFactory.getLogger(DynamicRiftService.class);
 
 	public void initDynamicRiftLocations() {

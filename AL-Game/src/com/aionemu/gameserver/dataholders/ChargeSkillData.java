@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +32,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.skillengine.model.ChargeSkillTemplate;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
 
 /**
  * @author Dr.Nism [Ranastic]
@@ -41,7 +44,8 @@ public class ChargeSkillData {
 	private List<ChargeSkillTemplate> chargeSkills;
 
 	private TIntObjectHashMap<ChargeSkillTemplate> ids = new TIntObjectHashMap<ChargeSkillTemplate>();
-	private final Map<String, ChargeSkillTemplate> setName = new FastMap<String, ChargeSkillTemplate>().shared();
+	@XmlTransient
+	private final Map<String, ChargeSkillTemplate> setName = new ConcurrentHashMap<String, ChargeSkillTemplate>();
 	private TIntObjectHashMap<ChargeSkillTemplate> firstTemplates = new TIntObjectHashMap<ChargeSkillTemplate>();
 	private TIntObjectHashMap<ChargeSkillTemplate> totalTemplates = new TIntObjectHashMap<ChargeSkillTemplate>();
 

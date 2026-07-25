@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -28,7 +31,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.instancerift.InstanceRiftLocation;
 import com.aionemu.gameserver.model.templates.instancerift.InstanceRiftTemplate;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +43,7 @@ public class InstanceRiftData {
 	private List<InstanceRiftTemplate> instanceRiftTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, InstanceRiftLocation> instanceRift = new FastMap<Integer, InstanceRiftLocation>();
+private Map<Integer, InstanceRiftLocation> instanceRift = new LinkedHashMap<Integer, InstanceRiftLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (InstanceRiftTemplate template : instanceRiftTemplates) {
@@ -53,7 +55,7 @@ public class InstanceRiftData {
 		return instanceRift.size();
 	}
 
-	public FastMap<Integer, InstanceRiftLocation> getInstanceRiftLocations() {
+	public Map<Integer, InstanceRiftLocation> getInstanceRiftLocations() {
 		return instanceRift;
 	}
 }

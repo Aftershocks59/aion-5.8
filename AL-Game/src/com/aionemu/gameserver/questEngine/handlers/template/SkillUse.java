@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
+import java.util.Map;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,16 +29,15 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-import javolution.util.FastMap;
 
 public class SkillUse extends QuestHandler {
 
 	private final int questId;
 	private final int startNpc;
 	private final int endNpc;
-	private final FastMap<List<Integer>, QuestSkillData> qsd;
+	private final Map<List<Integer>, QuestSkillData> qsd;
 
-	public SkillUse(int questId, int startNpc, int endNpc, FastMap<List<Integer>, QuestSkillData> qsd) {
+	public SkillUse(int questId, int startNpc, int endNpc, Map<List<Integer>, QuestSkillData> qsd) {
 		super(questId);
 		this.questId = questId;
 		this.startNpc = startNpc;

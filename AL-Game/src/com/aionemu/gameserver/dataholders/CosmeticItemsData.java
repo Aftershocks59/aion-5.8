@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +31,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.cosmeticitems.CosmeticItemTemplate;
 
-import javolution.util.FastMap;
 
 /**
  *
@@ -38,8 +41,8 @@ import javolution.util.FastMap;
 public class CosmeticItemsData {
 	@XmlElement(name = "cosmetic_item", type = CosmeticItemTemplate.class)
 	private List<CosmeticItemTemplate> templates;
-	private final Map<String, CosmeticItemTemplate> cosmeticItemTemplates = new FastMap<String, CosmeticItemTemplate>()
-			.shared();
+	@XmlTransient
+	private final Map<String, CosmeticItemTemplate> cosmeticItemTemplates = new ConcurrentHashMap<String, CosmeticItemTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (CosmeticItemTemplate template : templates) {

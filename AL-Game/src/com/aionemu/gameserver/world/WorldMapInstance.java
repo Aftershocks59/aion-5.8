@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.world;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,8 +55,6 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.gameserver.world.zone.ZoneService;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 /**
  * World map instance object.
@@ -83,14 +83,14 @@ public abstract class WorldMapInstance {
 	/**
 	 * All objects spawned in this world map instance
 	 */
-	private final Map<Integer, VisibleObject> worldMapObjects = new FastMap<Integer, VisibleObject>().shared();
+	private final Map<Integer, VisibleObject> worldMapObjects = new ConcurrentHashMap<Integer, VisibleObject>();
 
 	/**
 	 * All players spawned in this world map instance
 	 */
-	private final FastMap<Integer, Player> worldMapPlayers = new FastMap<Integer, Player>().shared();
+	private final Map<Integer, Player> worldMapPlayers = new ConcurrentHashMap<Integer, Player>();
 
-	private final Set<Integer> registeredObjects = Collections.newSetFromMap(new FastMap<Integer, Boolean>().shared());
+	private final Set<Integer> registeredObjects = Collections.newSetFromMap(new ConcurrentHashMap<Integer, Boolean>());
 
 	private PlayerGroup registeredGroup = null;
 
@@ -101,7 +101,7 @@ public abstract class WorldMapInstance {
 	 */
 	private int instanceId;
 
-	private final FastList<Integer> questIds = new FastList<Integer>();
+	private final List<Integer> questIds = new ArrayList<Integer>();
 
 	private InstanceHandler instanceHandler;
 
@@ -307,7 +307,7 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * @return List<트랩>
+	 * @return List<Ã­Å Â¸Ã«Å¾Â©>
 	 */
 	public List<Trap> getTraps(Creature p) {
 		List<Trap> traps = new ArrayList<Trap>();
@@ -434,7 +434,7 @@ public abstract class WorldMapInstance {
 		return worldMapPlayers.size();
 	}
 
-	public FastList<Integer> getQuestIds() {
+	public List<Integer> getQuestIds() {
 		return questIds;
 	}
 

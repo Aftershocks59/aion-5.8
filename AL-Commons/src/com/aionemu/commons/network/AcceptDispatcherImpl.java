@@ -29,6 +29,8 @@
  */
 package com.aionemu.commons.network;
 
+import java.util.Set;
+
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.util.Iterator;

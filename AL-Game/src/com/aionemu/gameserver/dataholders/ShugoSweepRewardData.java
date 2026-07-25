@@ -41,7 +41,7 @@ public class ShugoSweepRewardData {
 	protected List<ShugoSweepReward> ShugoSweepRewardData;
 
 	@XmlTransient
-	protected List<ShugoSweepReward> ShugoSweepRewardList = new ArrayList<ShugoSweepReward>();
+protected List<ShugoSweepReward> ShugoSweepRewardList = new ArrayList<ShugoSweepReward>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (ShugoSweepReward reward : ShugoSweepRewardData) {

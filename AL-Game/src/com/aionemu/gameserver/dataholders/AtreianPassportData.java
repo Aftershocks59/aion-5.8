@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,7 @@ public class AtreianPassportData {
 	 * A map containing all teleport location templates
 	 */
 	private TIntObjectHashMap<AtreianPassport> passportData = new TIntObjectHashMap<AtreianPassport>();
+	@XmlTransient
 	private Map<Integer, AtreianPassport> passportDataMap = new HashMap<Integer, AtreianPassport>(1);
 
 	/**

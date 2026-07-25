@@ -18,7 +18,9 @@
 
 package com.aionemu.loginserver.utils;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 
 import com.aionemu.loginserver.configs.Config;
 
@@ -28,7 +30,7 @@ import com.aionemu.loginserver.configs.Config;
  */
 public class BruteForceProtector {
 
-    private FastMap<String, FailedLoginInfo> failedConnections = new FastMap<String, FailedLoginInfo>();
+    private Map<String, FailedLoginInfo> failedConnections = new LinkedHashMap<String, FailedLoginInfo>();
 
     class FailedLoginInfo {
 

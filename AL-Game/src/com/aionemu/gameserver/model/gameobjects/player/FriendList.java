@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import java.util.List;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Queue;

@@ -16,6 +16,8 @@
  */
 package quest.heiron;
 
+import java.util.Map;
+
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;

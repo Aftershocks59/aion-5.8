@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -28,7 +31,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.outpost.OutpostLocation;
 import com.aionemu.gameserver.model.templates.outpost.OutpostTemplate;
 
-import javolution.util.FastMap;
 
 /**
  * Created by Wnkrz on 27/08/2017.
@@ -40,7 +42,7 @@ public class OutpostData {
 	@XmlElement(name = "outpost_location")
 	private List<OutpostTemplate> outpostTemplates;
 	@XmlTransient
-	private FastMap<Integer, OutpostLocation> out = new FastMap<Integer, OutpostLocation>();
+private Map<Integer, OutpostLocation> out = new LinkedHashMap<Integer, OutpostLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (OutpostTemplate template : outpostTemplates) {
@@ -52,7 +54,7 @@ public class OutpostData {
 		return out.size();
 	}
 
-	public FastMap<Integer, OutpostLocation> getOutpostLocations() {
+	public Map<Integer, OutpostLocation> getOutpostLocations() {
 		return out;
 	}
 }

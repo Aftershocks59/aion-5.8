@@ -46,7 +46,6 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +90,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	private boolean isInstanceDestroyed;
 	private Map<Integer, StaticDoor> doors;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> bastionTask = FastList.newInstance();
+	private final List<Future<?>> bastionTask = new ArrayList<>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -104,7 +103,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			case 835486: //Ornate Bastion Of Souls Treasure Chest.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058413, 1)); //�?�계 암룡�?� 무기 �?�?.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058413, 1)); //Ã¬?Â´ÃªÂ³â€ž Ã¬â€¢â€Ã«Â£Â¡Ã¬?Ëœ Ã«Â¬Â´ÃªÂ¸Â° Ã¬Æ’?Ã¬Å¾?.
 				        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 152012766, 4)); //material_idere_evolution_01.
 				        switch (Rnd.get(1, 4)) {
 					        case 1:
@@ -1318,9 +1317,9 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = bastionTask.head(), end = bastionTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : bastionTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.drop;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;

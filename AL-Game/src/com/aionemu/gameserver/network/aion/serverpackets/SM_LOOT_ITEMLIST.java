@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.Set;
 
 import org.slf4j.LoggerFactory;
@@ -28,15 +31,14 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
-import javolution.util.FastList;
 
 public class SM_LOOT_ITEMLIST extends AionServerPacket {
 	private int targetObjectId;
-	private FastList<DropItem> dropItems;
+	private List<DropItem> dropItems;
 
 	public SM_LOOT_ITEMLIST(int targetObjectId, Set<DropItem> setItems, Player player) {
 		this.targetObjectId = targetObjectId;
-		this.dropItems = new FastList<DropItem>();
+		this.dropItems = new ArrayList<DropItem>();
 		if (setItems == null) {
 			LoggerFactory.getLogger(SM_LOOT_ITEMLIST.class).warn("null Set<DropItem>, skip");
 			return;
@@ -65,6 +67,5 @@ public class SM_LOOT_ITEMLIST extends AionServerPacket {
 			ItemTemplate template = drop.getItemTemplate();
 			writeC(!template.getCategory().equals(ItemCategory.QUEST) && !template.isTradeable() ? 1 : 0);
 		}
-		FastList.recycle(dropItems);
 	}
 }

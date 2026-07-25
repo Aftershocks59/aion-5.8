@@ -16,11 +16,13 @@
  */
 package mysql5;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.InGameShopDAO;
 import com.aionemu.gameserver.dao.MySQL5DAOUtils;
 import com.aionemu.gameserver.model.ingameshop.IGItem;
-import javolution.util.FastMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +43,8 @@ public class MySQL5inGameShopDAO extends InGameShopDAO {
 	public static final String UPDATE_SALES_QUERY = "UPDATE `ingameshop` SET `sales_ranking`=? WHERE `object_id`=?";
 	
 	@Override
-	public FastMap<Byte, List<IGItem>> loadInGameShopItems() {
-		FastMap<Byte, List<IGItem>> items = FastMap.newInstance();
+	public Map<Byte, List<IGItem>> loadInGameShopItems() {
+		Map<Byte, List<IGItem>> items = new LinkedHashMap<>();
 		Connection con = null;
 		try {
 			con = DatabaseFactory.getConnection();

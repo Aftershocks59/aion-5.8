@@ -16,23 +16,25 @@
  */
 package com.aionemu.gameserver.controllers.attack;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import com.aionemu.gameserver.configs.main.PvPConfig;
 
-import javolution.util.FastMap;
 
 /**
  * @author Sarynth
  */
 public class KillList {
 
-	private FastMap<Integer, List<Long>> killList;
+	private Map<Integer, List<Long>> killList;
 
 	public KillList() {
-		killList = new FastMap<Integer, List<Long>>();
+		killList = new LinkedHashMap<Integer, List<Long>>();
 	}
 
 	/**

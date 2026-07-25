@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.model;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -58,7 +60,6 @@ import com.aionemu.gameserver.skillengine.periodicaction.PeriodicActions;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
-import javolution.util.FastMap;
 
 public class Effect implements StatOwner {
 
@@ -136,7 +137,7 @@ public class Effect implements StatOwner {
 	private boolean isNoResurrectPenalty;
 	private int tauntHate;
 	private int effectHate;
-	private Map<Integer, EffectTemplate> successEffects = new FastMap<Integer, EffectTemplate>().shared();
+	private Map<Integer, EffectTemplate> successEffects = new ConcurrentHashMap<Integer, EffectTemplate>();
 	private int carvedSignet = 0;
 	private int signetBurstedCount = 0;
 	protected int abnormals;

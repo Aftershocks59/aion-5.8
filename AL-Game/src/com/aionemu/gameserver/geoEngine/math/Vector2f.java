@@ -3,6 +3,8 @@
  */
 package com.aionemu.gameserver.geoEngine.math;
 
+import java.util.Set;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;

@@ -1,27 +1,14 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load the following classes:
- *  javolution.context.ObjectFactory
- *  javolution.lang.Reusable
- */
 package com.aionemu.gameserver.geoEngine.math;
+
+import java.util.Set;
 
 import java.util.logging.Logger;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 
-import javolution.context.ObjectFactory;
-import javolution.lang.Reusable;
 
-public final class Vector3f implements Cloneable, Reusable {
+public final class Vector3f implements Cloneable {
 	private static final Logger logger = Logger.getLogger(Vector3f.class.getName());
-	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
-
-		public Object create() {
-			return new Vector3f();
-		}
-	};
 	public static final Vector3f ZERO = new Vector3f(0.0f, 0.0f, 0.0f);
 	public static final Vector3f NAN = new Vector3f(Float.NaN, Float.NaN, Float.NaN);
 	public static final Vector3f UNIT_X = new Vector3f(1.0f, 0.0f, 0.0f);
@@ -516,21 +503,10 @@ public final class Vector3f implements Cloneable, Reusable {
 	}
 
 	public static Vector3f newInstance() {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			Vector3f vector3f = (Vector3f) FACTORY.object();
-			vector3f.z = 0.0f;
-			vector3f.y = 0.0f;
-			vector3f.x = 0.0f;
-			return vector3f;
-		}
 		return new Vector3f();
 	}
 
 	public static void recycle(Vector3f instance) {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			FACTORY.recycle((Object) instance);
-		} else {
-			instance = null;
-		}
+		// Kept for call sites: the garbage collector reclaims the instance.
 	}
 }

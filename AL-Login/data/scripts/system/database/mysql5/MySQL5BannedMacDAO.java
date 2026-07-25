@@ -18,12 +18,13 @@
 
 package mysql5;
 
+import java.util.LinkedHashMap;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
-import javolution.util.FastMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class MySQL5BannedMacDAO extends BannedMacDAO {
 
 	@Override
 	public Map<String, BannedMacEntry> load() {
-		Map<String, BannedMacEntry> map = new FastMap<String, BannedMacEntry>();
+		Map<String, BannedMacEntry> map = new LinkedHashMap<String, BannedMacEntry>();
 		PreparedStatement ps = DB.prepareStatement("SELECT `address`,`time`,`details` FROM `banned_mac`");
 		try {
 			ResultSet rs = ps.executeQuery();

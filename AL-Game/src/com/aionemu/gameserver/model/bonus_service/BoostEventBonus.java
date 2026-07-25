@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.model.bonus_service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 
 /**

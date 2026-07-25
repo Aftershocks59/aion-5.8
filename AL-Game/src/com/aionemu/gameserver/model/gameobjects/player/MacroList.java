@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import java.util.List;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.utils.audit;
 
+import java.util.LinkedHashMap;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,14 +34,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastMap;
 
 public class GMService {
 	public static final GMService getInstance() {
 		return SingletonHolder.instance;
 	}
 
-	private Map<Integer, Player> gms = new FastMap<Integer, Player>();
+	private Map<Integer, Player> gms = new LinkedHashMap<Integer, Player>();
 	private boolean announceAny = false;
 	private List<Byte> announceList;
 

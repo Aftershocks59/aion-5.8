@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
+import java.util.Map;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,20 +35,19 @@ import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.RiftService;
 import com.aionemu.gameserver.services.VortexService;
 
-import javolution.util.FastMap;
 
 public class MonsterHunt extends QuestHandler {
 	private final int questId;
 	private final Set<Integer> startNpcs = new HashSet<Integer>();
 	private final Set<Integer> endNpcs = new HashSet<Integer>();
-	private final FastMap<Monster, Set<Integer>> monsters;
+	private final Map<Monster, Set<Integer>> monsters;
 	private final int startDialog;
 	private final int endDialog;
 	private final Set<Integer> aggroNpcs = new HashSet<Integer>();
 	private final int invasionWorldId;
 
 	public MonsterHunt(int questId, List<Integer> startNpcIds, List<Integer> endNpcIds,
-			FastMap<Monster, Set<Integer>> monsters, int startDialog, int endDialog, List<Integer> aggroNpcs,
+			Map<Monster, Set<Integer>> monsters, int startDialog, int endDialog, List<Integer> aggroNpcs,
 			int invasionWorld) {
 		super(questId);
 		this.questId = questId;

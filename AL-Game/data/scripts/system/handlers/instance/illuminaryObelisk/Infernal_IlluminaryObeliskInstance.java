@@ -39,7 +39,6 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,10 +93,10 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	private Map<Integer, StaticDoor> doors;
 	protected boolean isInstanceDestroyed = false;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> illuminaryTask1 = FastList.newInstance();
-	private final FastList<Future<?>> illuminaryTask2 = FastList.newInstance();
-	private final FastList<Future<?>> illuminaryTask3 = FastList.newInstance();
-	private final FastList<Future<?>> illuminaryTask4 = FastList.newInstance();
+	private final List<Future<?>> illuminaryTask1 = new ArrayList<>();
+	private final List<Future<?>> illuminaryTask2 = new ArrayList<>();
+	private final List<Future<?>> illuminaryTask3 = new ArrayList<>();
+	private final List<Future<?>> illuminaryTask4 = new ArrayList<>();
 	
    /**
 	* Reward:
@@ -1195,30 +1194,30 @@ public class Infernal_IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask1() {
-        for (FastList.Node<Future<?>> n = illuminaryTask1.head(), end = illuminaryTask1.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : illuminaryTask1) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }
 	private void stopInstanceTask2() {
-        for (FastList.Node<Future<?>> n = illuminaryTask2.head(), end = illuminaryTask2.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : illuminaryTask2) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }
 	private void stopInstanceTask3() {
-        for (FastList.Node<Future<?>> n = illuminaryTask3.head(), end = illuminaryTask3.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : illuminaryTask3) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }
 	private void stopInstanceTask4() {
-        for (FastList.Node<Future<?>> n = illuminaryTask4.head(), end = illuminaryTask4.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : illuminaryTask4) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

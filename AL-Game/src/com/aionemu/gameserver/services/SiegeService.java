@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.LinkedHashMap;
+
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -77,14 +80,13 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import javolution.util.FastMap;
 
 public class SiegeService {
 	private static final Logger log = LoggerFactory.getLogger("SIEGE_LOG");
 
 	private static final String SIEGE_LOCATION_STATUS_BROADCAST_SCHEDULE = "0 0 * ? * *";
 	private static final SiegeService instance = new SiegeService();
-	private final Map<Integer, Siege<?>> activeSieges = new FastMap<Integer, Siege<?>>().shared();
+	private final Map<Integer, Siege<?>> activeSieges = new ConcurrentHashMap<Integer, Siege<?>>();
 	private SiegeSchedule siegeSchedule;
 	private Map<Integer, ArtifactLocation> artifacts;
 	private Map<Integer, FortressLocation> fortresses;
@@ -341,7 +343,7 @@ public class SiegeService {
 	}
 
 	public Map<Integer, SiegeLocation> getSiegeLocations(int worldId) {
-		Map<Integer, SiegeLocation> mapLocations = new FastMap<Integer, SiegeLocation>();
+		Map<Integer, SiegeLocation> mapLocations = new LinkedHashMap<Integer, SiegeLocation>();
 		for (SiegeLocation location : getSiegeLocations().values()) {
 			if (location.getWorldId() == worldId) {
 				mapLocations.put(location.getLocationId(), location);
@@ -465,8 +467,8 @@ public class SiegeService {
 	}
 
 	public void onEnterSiegeWorld(Player player) {
-		FastMap<Integer, SiegeLocation> worldLocations = new FastMap<Integer, SiegeLocation>();
-		FastMap<Integer, ArtifactLocation> worldArtifacts = new FastMap<Integer, ArtifactLocation>();
+		Map<Integer, SiegeLocation> worldLocations = new LinkedHashMap<Integer, SiegeLocation>();
+		Map<Integer, ArtifactLocation> worldArtifacts = new LinkedHashMap<Integer, ArtifactLocation>();
 		for (SiegeLocation location : getSiegeLocations().values()) {
 			if (location.getWorldId() == player.getWorldId()) {
 				worldLocations.put(location.getLocationId(), location);

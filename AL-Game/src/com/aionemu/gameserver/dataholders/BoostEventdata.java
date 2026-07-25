@@ -45,7 +45,7 @@ public class BoostEventdata {
 	private TIntObjectHashMap<BoostEvents> templates = new TIntObjectHashMap<BoostEvents>();
 
 	@XmlTransient
-	private Map<Integer, BoostEvents> templatesMap = new HashMap<Integer, BoostEvents>();
+private Map<Integer, BoostEvents> templatesMap = new HashMap<Integer, BoostEvents>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (BoostEvents template : bonusServiceBonusattr) {

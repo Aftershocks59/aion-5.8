@@ -16,16 +16,18 @@
  */
 package com.aionemu.gameserver.taskmanager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.Collection;
 
-import javolution.util.FastList;
 
 /**
  * @author NB4L1
  */
 public abstract class FIFOSimpleExecutableQueue<T> extends FIFOExecutableQueue {
 
-	private final FastList<T> queue = new FastList<T>();
+	private final List<T> queue = new ArrayList<T>();
 
 	public final void execute(T t) {
 		synchronized (queue) {

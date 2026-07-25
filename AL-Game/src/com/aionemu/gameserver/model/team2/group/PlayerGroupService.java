@@ -57,13 +57,12 @@ import com.aionemu.gameserver.utils.TimeUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 
-import javolution.util.FastMap;
 
 public class PlayerGroupService {
 	private static final Logger log = LoggerFactory.getLogger(PlayerGroupService.class);
 	private static final Map<Integer, PlayerGroup> groups = new ConcurrentHashMap<Integer, PlayerGroup>();
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
-	private static FastMap<Integer, PlayerGroup> groupMembers;
+	private static Map<Integer, PlayerGroup> groupMembers;
 
 	public static final void inviteToGroup(final Player inviter, final Player invited) {
 		if (canInvite(inviter, invited)) {

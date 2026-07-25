@@ -37,7 +37,7 @@ public class ChallengeData {
 	protected List<ChallengeTaskTemplate> task;
 
 	@XmlTransient
-	protected Map<Integer, ChallengeTaskTemplate> tasksById = new HashMap<Integer, ChallengeTaskTemplate>();
+protected Map<Integer, ChallengeTaskTemplate> tasksById = new HashMap<Integer, ChallengeTaskTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (ChallengeTaskTemplate t : task) {

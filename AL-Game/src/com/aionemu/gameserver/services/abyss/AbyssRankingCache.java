@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import java.util.LinkedHashMap;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,13 +37,12 @@ import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
 
 public class AbyssRankingCache {
 	private static final Logger log = LoggerFactory.getLogger(AbyssRankingCache.class);
 	private int lastUpdate;
-	private final FastMap<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = new FastMap<Race, List<SM_ABYSS_RANKING_PLAYERS>>();
-	private final FastMap<Race, SM_ABYSS_RANKING_LEGIONS> legions = new FastMap<Race, SM_ABYSS_RANKING_LEGIONS>();
+	private final Map<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = new LinkedHashMap<Race, List<SM_ABYSS_RANKING_PLAYERS>>();
+	private final Map<Race, SM_ABYSS_RANKING_LEGIONS> legions = new LinkedHashMap<Race, SM_ABYSS_RANKING_LEGIONS>();
 
 	public void reloadRankings() {
 		log.info("Updating abyss ranking cache");

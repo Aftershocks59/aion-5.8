@@ -41,10 +41,10 @@ public class EventQuestList {
 	protected String maintainable;
 
 	@XmlTransient
-	private List<Integer> startQuests;
+private List<Integer> startQuests;
 
 	@XmlTransient
-	private List<Integer> maintainQuests;
+private List<Integer> maintainQuests;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (startable != null) {

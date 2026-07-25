@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.item.upgrade;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;

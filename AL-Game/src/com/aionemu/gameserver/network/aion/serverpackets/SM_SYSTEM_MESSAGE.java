@@ -1,5 +1,9 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -19920,7 +19924,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	// You can advance to level 10 only after you have completed the class change
 	// quest.
 	public static final SM_SYSTEM_MESSAGE STR_LEVEL_LIMIT_QUEST_NOT_FINISHED1 = new SM_SYSTEM_MESSAGE(1400545);
-	// You’ve reached the level where you can join a legion.
+	// Youâ€™ve reached the level where you can join a legion.
 	// Use the legion search to find the legion you want.
 	public static final SM_SYSTEM_MESSAGE STR_MSG_GUILD_CAN_JOIN_LEVEL = new SM_SYSTEM_MESSAGE(1403389);
 	// You can become a Daeva through the class change mission. Once you complete
@@ -24828,7 +24832,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_CANT_ENCHANT_EQUIPED = new SM_SYSTEM_MESSAGE(1403358);
 
 	/**
-	 * Кастомные сообщения в Игре - Чтобы сообщения были на разном языке (L10n)
+	 * ÐšÐ°ÑÑ‚Ð¾Ð¼Ð½Ñ‹Ðµ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ Ð² Ð˜Ð³Ñ€Ðµ - Ð§Ñ‚Ð¾Ð±Ñ‹ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ Ð±Ñ‹Ð»Ð¸ Ð½Ð° Ñ€Ð°Ð·Ð½Ð¾Ð¼ ÑÐ·Ñ‹ÐºÐµ (L10n)
 	 */
 	public static final SM_SYSTEM_MESSAGE STR_MSG_Sunayaka_Spawn_v1 = new SM_SYSTEM_MESSAGE(1404567);
 	public static final SM_SYSTEM_MESSAGE STR_MSG_Sunayaka_DeSpawn_v1 = new SM_SYSTEM_MESSAGE(1404568);
@@ -24845,7 +24849,7 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_MSG_Haramel_FinishInstance_v1 = new SM_SYSTEM_MESSAGE(1404579);
 
 	/**
-	 * Кастомные сообщения в Игре - Чтобы сообщения были на разном языке (L10n)
+	 * ÐšÐ°ÑÑ‚Ð¾Ð¼Ð½Ñ‹Ðµ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ Ð² Ð˜Ð³Ñ€Ðµ - Ð§Ñ‚Ð¾Ð±Ñ‹ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ Ð±Ñ‹Ð»Ð¸ Ð½Ð° Ñ€Ð°Ð·Ð½Ð¾Ð¼ ÑÐ·Ñ‹ÐºÐµ (L10n)
 	 */
 
 	private final int code;

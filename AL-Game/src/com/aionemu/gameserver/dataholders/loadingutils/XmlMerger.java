@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.dataholders.loadingutils;
 
+import java.util.Set;
+
 import static org.apache.commons.io.filefilter.FileFilterUtils.andFileFilter;
 import static org.apache.commons.io.filefilter.FileFilterUtils.makeSVNAware;
 import static org.apache.commons.io.filefilter.FileFilterUtils.notFileFilter;

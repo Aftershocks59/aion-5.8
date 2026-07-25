@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +51,6 @@ import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import javolution.util.FastMap;
 
 public abstract class Creature extends VisibleObject {
 	private static final Logger log = LoggerFactory.getLogger(Creature.class);
@@ -62,8 +64,8 @@ public abstract class Creature extends VisibleObject {
 	private int visualState = CreatureVisualState.VISIBLE.getId();
 	private int seeState = CreatureSeeState.NORMAL.getId();
 	private Skill castingSkill;
-	private FastMap<Integer, Long> skillCoolDowns;
-	private FastMap<Integer, Long> skillCoolDownsBase;
+	private Map<Integer, Long> skillCoolDowns;
+	private Map<Integer, Long> skillCoolDownsBase;
 	private ObserveController observeController;
 	private TransformModel transformModel;
 	private final AggroList aggroList;
@@ -636,7 +638,7 @@ public abstract class Creature extends VisibleObject {
 		}
 
 		if (skillCoolDowns == null) {
-			skillCoolDowns = new FastMap<Integer, Long>().shared();
+			skillCoolDowns = new ConcurrentHashMap<Integer, Long>();
 		}
 		skillCoolDowns.put(delayId, time);
 	}
@@ -644,7 +646,7 @@ public abstract class Creature extends VisibleObject {
 	/**
 	 * @return the skillCoolDowns
 	 */
-	public FastMap<Integer, Long> getSkillCoolDowns() {
+	public Map<Integer, Long> getSkillCoolDowns() {
 		return skillCoolDowns;
 	}
 
@@ -675,7 +677,7 @@ public abstract class Creature extends VisibleObject {
 		}
 
 		if (skillCoolDownsBase == null) {
-			skillCoolDownsBase = new FastMap<Integer, Long>().shared();
+			skillCoolDownsBase = new ConcurrentHashMap<Integer, Long>();
 		}
 		skillCoolDownsBase.put(delayId, baseTime);
 	}

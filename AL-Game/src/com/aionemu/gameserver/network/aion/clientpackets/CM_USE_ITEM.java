@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import java.util.List;
+
 import java.util.ArrayList;
 
 import com.aionemu.gameserver.model.Race;

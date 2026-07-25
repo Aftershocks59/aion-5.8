@@ -1,5 +1,8 @@
 package instance.luna;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -31,7 +34,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.Map;
 import java.util.Set;
@@ -70,10 +72,10 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	private Future<?> underpathTaskA17;
 	private boolean isInstanceDestroyed;
 	private Map<Integer, StaticDoor> doors;
-	private int prepareTimerSeconds = 180000; // Красное время. Ожидание начала данжа 3 минуты.
-	private int instanceTimerSeconds = 3600000; // Длительность данжа. 1 час.
+	private int prepareTimerSeconds = 180000; // ÃƒÂÃ…Â¡Ãƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚Â°Ãƒâ€˜Ã‚ÂÃƒÂÃ‚Â½ÃƒÂÃ‚Â¾ÃƒÂÃ‚Âµ ÃƒÂÃ‚Â²Ãƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚ÂµÃƒÂÃ‚Â¼Ãƒâ€˜Ã‚Â. ÃƒÂÃ…Â¾ÃƒÂÃ‚Â¶ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â´ÃƒÂÃ‚Â°ÃƒÂÃ‚Â½ÃƒÂÃ‚Â¸ÃƒÂÃ‚Âµ ÃƒÂÃ‚Â½ÃƒÂÃ‚Â°Ãƒâ€˜Ã¢â‚¬Â¡ÃƒÂÃ‚Â°ÃƒÂÃ‚Â»ÃƒÂÃ‚Â° ÃƒÂÃ‚Â´ÃƒÂÃ‚Â°ÃƒÂÃ‚Â½ÃƒÂÃ‚Â¶ÃƒÂÃ‚Â° 3 ÃƒÂÃ‚Â¼ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½Ãƒâ€˜Ã†â€™Ãƒâ€˜Ã¢â‚¬Å¡Ãƒâ€˜Ã¢â‚¬Â¹.
+	private int instanceTimerSeconds = 3600000; // ÃƒÂÃ¢â‚¬ÂÃƒÂÃ‚Â»ÃƒÂÃ‚Â¸Ãƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚ÂµÃƒÂÃ‚Â»Ãƒâ€˜Ã…â€™ÃƒÂÃ‚Â½ÃƒÂÃ‚Â¾Ãƒâ€˜Ã‚ÂÃƒâ€˜Ã¢â‚¬Å¡Ãƒâ€˜Ã…â€™ ÃƒÂÃ‚Â´ÃƒÂÃ‚Â°ÃƒÂÃ‚Â½ÃƒÂÃ‚Â¶ÃƒÂÃ‚Â°. 1 Ãƒâ€˜Ã¢â‚¬Â¡ÃƒÂÃ‚Â°Ãƒâ€˜Ã‚Â.
 	private ContaminatedUnderpathReward instanceReward;
-	private final FastList<Future<?>> contaminedTask = FastList.newInstance();
+	private final List<Future<?>> contaminedTask = new ArrayList<>();
 	
 	protected ContaminatedUnderpathPlayerReward getPlayerReward(Integer object) {
 		return (ContaminatedUnderpathPlayerReward) instanceReward.getPlayerReward(object);
@@ -788,7 +790,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403628, Race.PC_ALL, 0);
             }
 			
-        }, 30000)); // 30 Секунд после старта времени первая волна
+        }, 30000)); // 30 ÃƒÂÃ‚Â¡ÃƒÂÃ‚ÂµÃƒÂÃ‚ÂºÃƒâ€˜Ã†â€™ÃƒÂÃ‚Â½ÃƒÂÃ‚Â´ ÃƒÂÃ‚Â¿ÃƒÂÃ‚Â¾Ãƒâ€˜Ã‚ÂÃƒÂÃ‚Â»ÃƒÂÃ‚Âµ Ãƒâ€˜Ã‚ÂÃƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â°Ãƒâ€˜Ã¢â€šÂ¬Ãƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â° ÃƒÂÃ‚Â²Ãƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚ÂµÃƒÂÃ‚Â¼ÃƒÂÃ‚ÂµÃƒÂÃ‚Â½ÃƒÂÃ‚Â¸ ÃƒÂÃ‚Â¿ÃƒÂÃ‚ÂµÃƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚Â²ÃƒÂÃ‚Â°Ãƒâ€˜Ã‚Â ÃƒÂÃ‚Â²ÃƒÂÃ‚Â¾ÃƒÂÃ‚Â»ÃƒÂÃ‚Â½ÃƒÂÃ‚Â°
 		contaminedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
@@ -796,7 +798,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA1.cancel(true);
 				sendMsgByRace(1403657, Race.PC_ALL, 0);
             }
-        }, 60000)); // Через 1 минуту вторая волна
+        }, 60000)); // ÃƒÂÃ‚Â§ÃƒÂÃ‚ÂµÃƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚ÂµÃƒÂÃ‚Â· 1 ÃƒÂÃ‚Â¼ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½Ãƒâ€˜Ã†â€™Ãƒâ€˜Ã¢â‚¬Å¡Ãƒâ€˜Ã†â€™ ÃƒÂÃ‚Â²Ãƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â¾Ãƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚Â°Ãƒâ€˜Ã‚Â ÃƒÂÃ‚Â²ÃƒÂÃ‚Â¾ÃƒÂÃ‚Â»ÃƒÂÃ‚Â½ÃƒÂÃ‚Â°
 		contaminedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
@@ -804,7 +806,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA2.cancel(true);
 				sendMsgByRace(1403655, Race.PC_ALL, 0);
             }
-        }, 90000)); // 1.5 минуты после старта
+        }, 90000)); // 1.5 ÃƒÂÃ‚Â¼ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½Ãƒâ€˜Ã†â€™Ãƒâ€˜Ã¢â‚¬Å¡Ãƒâ€˜Ã¢â‚¬Â¹ ÃƒÂÃ‚Â¿ÃƒÂÃ‚Â¾Ãƒâ€˜Ã‚ÂÃƒÂÃ‚Â»ÃƒÂÃ‚Âµ Ãƒâ€˜Ã‚ÂÃƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â°Ãƒâ€˜Ã¢â€šÂ¬Ãƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â°
 		contaminedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
@@ -812,7 +814,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA3.cancel(true);
 				sendMsgByRace(1403662, Race.PC_ALL, 0);
             }
-        }, 120000)); // 2 минуты после старта
+        }, 120000)); // 2 ÃƒÂÃ‚Â¼ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½Ãƒâ€˜Ã†â€™Ãƒâ€˜Ã¢â‚¬Å¡Ãƒâ€˜Ã¢â‚¬Â¹ ÃƒÂÃ‚Â¿ÃƒÂÃ‚Â¾Ãƒâ€˜Ã‚ÂÃƒÂÃ‚Â»ÃƒÂÃ‚Âµ Ãƒâ€˜Ã‚ÂÃƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â°Ãƒâ€˜Ã¢â€šÂ¬Ãƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â°
 		contaminedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
@@ -820,7 +822,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA4.cancel(true);
 				sendMsgByRace(1403656, Race.PC_ALL, 0);
             }
-        }, 150000)); // 2.5 минуты
+        }, 150000)); // 2.5 ÃƒÂÃ‚Â¼ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½Ãƒâ€˜Ã†â€™Ãƒâ€˜Ã¢â‚¬Å¡Ãƒâ€˜Ã¢â‚¬Â¹
 		contaminedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
@@ -828,7 +830,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA5.cancel(true);
 				sendMsgByRace(1403661, Race.PC_ALL, 0);
             }
-        }, 180000)); // 3 минуты
+        }, 180000)); // 3 ÃƒÂÃ‚Â¼ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½Ãƒâ€˜Ã†â€™Ãƒâ€˜Ã¢â‚¬Å¡Ãƒâ€˜Ã¢â‚¬Â¹
 		contaminedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
@@ -844,7 +846,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA7.cancel(true);
 				sendMsgByRace(1403660, Race.PC_ALL, 0);
             }
-        }, 240000)); //4 минуты
+        }, 240000)); //4 ÃƒÂÃ‚Â¼ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½Ãƒâ€˜Ã†â€™Ãƒâ€˜Ã¢â‚¬Å¡Ãƒâ€˜Ã¢â‚¬Â¹
 		contaminedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
@@ -852,7 +854,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA8.cancel(true);
 				sendMsgByRace(1403657, Race.PC_ALL, 0);
             }
-        }, 300000)); // 5 минута
+        }, 300000)); // 5 ÃƒÂÃ‚Â¼ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½Ãƒâ€˜Ã†â€™Ãƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â°
 		contaminedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
@@ -866,10 +868,10 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
             public void run() {
 				startContaminedUnderPath11();
 				underpathTaskA10.cancel(true);
-				//Волна с РБ
+				//ÃƒÂÃ¢â‚¬â„¢ÃƒÂÃ‚Â¾ÃƒÂÃ‚Â»ÃƒÂÃ‚Â½ÃƒÂÃ‚Â° Ãƒâ€˜Ã‚Â ÃƒÂÃ‚Â ÃƒÂÃ¢â‚¬Ëœ
 				sendMsgByRace(1403658, Race.PC_ALL, 0);
             }
-        }, 360000)); // 6 минут
+        }, 360000)); // 6 ÃƒÂÃ‚Â¼ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½Ãƒâ€˜Ã†â€™Ãƒâ€˜Ã¢â‚¬Å¡
 		contaminedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
@@ -877,7 +879,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA11.cancel(true);
 				sendMsgByRace(1403659, Race.PC_ALL, 0);
             }
-        }, 420000)); //...7 мин
+        }, 420000)); //...7 ÃƒÂÃ‚Â¼ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½
 		contaminedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
@@ -909,7 +911,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA15.cancel(true);
 				sendMsgByRace(1403655, Race.PC_ALL, 0);
             }
-        }, 660000)); //...11 мин
+        }, 660000)); //...11 ÃƒÂÃ‚Â¼ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½
 		contaminedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             @Override
             public void run() {
@@ -917,7 +919,7 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				underpathTaskA16.cancel(true);
 				sendMsgByRace(1403656, Race.PC_ALL, 0);
             }
-        }, 720000)); //... 12 Минут
+        }, 720000)); //... 12 ÃƒÂÃ…â€œÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½Ãƒâ€˜Ã†â€™Ãƒâ€˜Ã¢â‚¬Å¡
     }
 	
 	@Override
@@ -926,9 +928,9 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			startInstanceTask();
 			doors.get(28).setOpen(true);
 			sendMsgByRace(1403696, Race.PC_ALL, 0);
-			// Остановка таймера при преждивременном открытии двери
+			// ÃƒÂÃ…Â¾Ãƒâ€˜Ã‚ÂÃƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â°ÃƒÂÃ‚Â½ÃƒÂÃ‚Â¾ÃƒÂÃ‚Â²ÃƒÂÃ‚ÂºÃƒÂÃ‚Â° Ãƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â°ÃƒÂÃ‚Â¹ÃƒÂÃ‚Â¼ÃƒÂÃ‚ÂµÃƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚Â° ÃƒÂÃ‚Â¿Ãƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚Â¸ ÃƒÂÃ‚Â¿Ãƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚ÂµÃƒÂÃ‚Â¶ÃƒÂÃ‚Â´ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â²Ãƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚ÂµÃƒÂÃ‚Â¼ÃƒÂÃ‚ÂµÃƒÂÃ‚Â½ÃƒÂÃ‚Â½ÃƒÂÃ‚Â¾ÃƒÂÃ‚Â¼ ÃƒÂÃ‚Â¾Ãƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚ÂºÃƒâ€˜Ã¢â€šÂ¬Ãƒâ€˜Ã¢â‚¬Â¹Ãƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â¸ ÃƒÂÃ‚Â´ÃƒÂÃ‚Â²ÃƒÂÃ‚ÂµÃƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚Â¸
 			if ((timerPrepare != null) && (!timerPrepare.isDone() || !timerPrepare.isCancelled())) {
-				//	Запуск основного таймера инстанса
+				//	ÃƒÂÃ¢â‚¬â€ÃƒÂÃ‚Â°ÃƒÂÃ‚Â¿Ãƒâ€˜Ã†â€™Ãƒâ€˜Ã‚ÂÃƒÂÃ‚Âº ÃƒÂÃ‚Â¾Ãƒâ€˜Ã‚ÂÃƒÂÃ‚Â½ÃƒÂÃ‚Â¾ÃƒÂÃ‚Â²ÃƒÂÃ‚Â½ÃƒÂÃ‚Â¾ÃƒÂÃ‚Â³ÃƒÂÃ‚Â¾ Ãƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â°ÃƒÂÃ‚Â¹ÃƒÂÃ‚Â¼ÃƒÂÃ‚ÂµÃƒâ€˜Ã¢â€šÂ¬ÃƒÂÃ‚Â° ÃƒÂÃ‚Â¸ÃƒÂÃ‚Â½Ãƒâ€˜Ã‚ÂÃƒâ€˜Ã¢â‚¬Å¡ÃƒÂÃ‚Â°ÃƒÂÃ‚Â½Ãƒâ€˜Ã‚ÂÃƒÂÃ‚Â°
 				startMainInstanceTimer();
 			}
 		}
@@ -1046,9 +1048,9 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = contaminedTask.head(), end = contaminedTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : contaminedTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

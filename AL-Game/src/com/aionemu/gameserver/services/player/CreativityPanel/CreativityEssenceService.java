@@ -16,6 +16,7 @@
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.List;
 
 import com.aionemu.gameserver.dataholders.PanelCpData;
@@ -27,7 +28,6 @@ import com.aionemu.gameserver.model.templates.panel_cp.PanelCpType;
 import com.aionemu.gameserver.model.templates.panel_cp.StoneCP;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import javolution.util.FastMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +57,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class CreativityEssenceService {
 	Logger log = LoggerFactory.getLogger(CreativityEssenceService.class);
 
-	public void onReiceveData(Player player, FastMap<Integer, Integer> values, int maximum) {
+	public void onReiceveData(Player player, Map<Integer, Integer> values, int maximum) {
 		List<CreativityEntry> stats = new ArrayList<>();
 		List<CreativityEntry> learn = new ArrayList<>();
 		List<CreativityEntry> enchant = new ArrayList<>();

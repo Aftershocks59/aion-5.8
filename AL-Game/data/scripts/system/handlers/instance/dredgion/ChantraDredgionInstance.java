@@ -54,7 +54,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 import org.apache.commons.lang.mutable.MutableInt;
 
 import java.util.ArrayList;
@@ -80,7 +79,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	private float loosingGroupMultiplier = 1;
 	private boolean isInstanceDestroyed = false;
 	protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-	private final FastList<Future<?>> chantraTask = FastList.newInstance();
+	private final List<Future<?>> chantraTask = new ArrayList<>();
 	
 	protected DredgionPlayerReward getPlayerReward(Player player) {
 		Integer object = player.getObjectId();
@@ -181,8 +180,8 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				}
 			break;
 		   /**
-			* Obtain the Captain’s Key by killing Gatekeeper Sarta.
-			* The Captain’s Key opens the door to the Captain’s Cabin.
+			* Obtain the CaptainÃ¢â‚¬â„¢s Key by killing Gatekeeper Sarta.
+			* The CaptainÃ¢â‚¬â„¢s Key opens the door to the CaptainÃ¢â‚¬â„¢s Cabin.
 			*/
 			case 217037: //Gatekeeper Sarta.
 				for (Player player: instance.getPlayersInside()) {
@@ -347,12 +346,12 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				onDieSurkan(npc, mostPlayerDamage, 1100);
 			break;
 		   /**
-			* Captain’s Cabin Passage:
-			* There are paths to the left and right of the Captain’s Cabin’s on the second floor, but the doors are blocked.
+			* CaptainÃ¢â‚¬â„¢s Cabin Passage:
+			* There are paths to the left and right of the CaptainÃ¢â‚¬â„¢s CabinÃ¢â‚¬â„¢s on the second floor, but the doors are blocked.
 			* These doors cannot be demolished, and can only be opened with a key dropped by a specific Named Monster.
-			* Groups desiring the Captain’s Cabin Passage Key will need to defeat "Sahadena The Abettor" in the center of the Dredgion.
+			* Groups desiring the CaptainÃ¢â‚¬â„¢s Cabin Passage Key will need to defeat "Sahadena The Abettor" in the center of the Dredgion.
 			* Only one Group can loot the key.
-			* The Captain’s Cabin Teleport Device is located just beyond the Barracks, and can make reaching Captain Zanata much easier.
+			* The CaptainÃ¢â‚¬â„¢s Cabin Teleport Device is located just beyond the Barracks, and can make reaching Captain Zanata much easier.
 			*/
 			case 216882: //Sahadena The Abettor.
 				if (race.equals(Race.ELYOS)) {
@@ -386,9 +385,9 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			* Defense Shield Generator:
 			* When the Defense Shield Generator on the Weapons Deck or Lower Weapons deck is demolished, a shield appears in Ready Room 1 or 2.
 			* This shield blocks access to the center of the Chantra Dredgion.
-			* The Ready Room is the shortest route to the center of the Dredgion, and the quickest route to the opposing race’s area.
-			* Different tactics can be used in this area to maximize the Group’s accumulation of points.
-			* For example, if one Group decides to destroy the opposing Group’s Shield Generator, it will make it difficult for the opposing Group to reach the center of the Dredgion.
+			* The Ready Room is the shortest route to the center of the Dredgion, and the quickest route to the opposing raceÃ¢â‚¬â„¢s area.
+			* Different tactics can be used in this area to maximize the GroupÃ¢â‚¬â„¢s accumulation of points.
+			* For example, if one Group decides to destroy the opposing GroupÃ¢â‚¬â„¢s Shield Generator, it will make it difficult for the opposing Group to reach the center of the Dredgion.
 			* In some cases, it might wiser for one Group to destroy their own Defense Shield Generator, and delay engagement with the opposing race in order to accumulate more points.
 			*/
 			case 730345: //Portside Defense Shield.
@@ -410,7 +409,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			* These shields are activated by the Chantra Sentinel when first encountered at the beginning of the battle.
 			* These shields block the entrance from the Armories to Gravity Control, and can be demolished with attacks, but also have a significant amount of health.
 			* Groups often opt to move around the shields instead of demolishing them.
-			* It’s worth noting that after a certain amount of time has passed, Officer Kamanya spawns in the Gravity Control room, and gives 1,000 points when defeated.
+			* ItÃ¢â‚¬â„¢s worth noting that after a certain amount of time has passed, Officer Kamanya spawns in the Gravity Control room, and gives 1,000 points when defeated.
 			* There is also a chance that Rajaya the Inquisitor, a Hero grade Named Monster, will spawn.
 			* Rajaya the Inquisitor has a chance to drop Fabled and Heroic accessories. 
 			*/
@@ -725,9 +724,9 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = chantraTask.head(), end = chantraTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : chantraTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player.motion;
 
+import java.util.LinkedHashMap;
+
 import java.util.Collections;
 import java.util.Map;
 
@@ -26,7 +28,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
 
 public class MotionList {
 	private Player owner;
@@ -53,7 +54,7 @@ public class MotionList {
 
 	public void add(Motion motion, boolean persist) {
 		if (motions == null) {
-			motions = new FastMap<Integer, Motion>();
+			motions = new LinkedHashMap<Integer, Motion>();
 		}
 		if (motions.containsKey(motion.getId()) && motion.getExpireTime() == 0) {
 			remove(motion.getId());
@@ -61,7 +62,7 @@ public class MotionList {
 		motions.put(motion.getId(), motion);
 		if (motion.isActive()) {
 			if (activeMotions == null) {
-				activeMotions = new FastMap<Integer, Motion>();
+				activeMotions = new LinkedHashMap<Integer, Motion>();
 			}
 			Motion old = activeMotions.put(Motion.motionType.get(motion.getId()), motion);
 			if (old != null) {
@@ -97,7 +98,7 @@ public class MotionList {
 				return;
 			}
 			if (activeMotions == null) {
-				activeMotions = new FastMap<Integer, Motion>();
+				activeMotions = new LinkedHashMap<Integer, Motion>();
 			}
 			Motion old = activeMotions.put(motionType, motion);
 			if (old != null) {

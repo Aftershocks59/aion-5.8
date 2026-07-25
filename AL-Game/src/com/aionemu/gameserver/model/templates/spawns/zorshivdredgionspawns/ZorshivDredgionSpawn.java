@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.spawns.zorshivdredgionspawns;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;

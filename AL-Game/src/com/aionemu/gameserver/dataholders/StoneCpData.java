@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +45,7 @@ public class StoneCpData {
 	private TIntObjectHashMap<StoneCP> stoneData = new TIntObjectHashMap<StoneCP>();
 
 	@XmlTransient
-	private Map<Integer, StoneCP> stoneDataMap = new HashMap<Integer, StoneCP>(1);
+private Map<Integer, StoneCP> stoneDataMap = new HashMap<Integer, StoneCP>(1);
 
 	void afterUnmarshal(Unmarshaller paramUnmarshaller, Object paramObject) {
 		for (StoneCP stoneCp : stonelist) {

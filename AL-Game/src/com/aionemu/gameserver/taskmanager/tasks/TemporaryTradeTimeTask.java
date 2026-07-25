@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.taskmanager.tasks;
 
+import java.util.LinkedHashMap;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -26,15 +28,14 @@ import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastMap;
 
 /**
  * @author Mr. Poke
  */
 public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 
-	private final FastMap<Item, Collection<Integer>> items = new FastMap<Item, Collection<Integer>>();
-	private final FastMap<Integer, Item> itemById = new FastMap<Integer, Item>();
+	private final Map<Item, Collection<Integer>> items = new LinkedHashMap<Item, Collection<Integer>>();
+	private final Map<Integer, Item> itemById = new LinkedHashMap<Integer, Item>();
 
 	/**
 	 * @param period

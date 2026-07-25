@@ -38,11 +38,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 
 public class PvPArenaReward extends InstanceReward<PvPArenaPlayerReward> {
 	private Map<Integer, Boolean> positions = new HashMap<Integer, Boolean>();
-	private FastList<Integer> zones = new FastList<Integer>();
+	private List<Integer> zones = new ArrayList<Integer>();
 	private int round = 1;
 	private Integer zone;
 	private int bonusTime;

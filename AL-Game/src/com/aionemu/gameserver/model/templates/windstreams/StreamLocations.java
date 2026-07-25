@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.model.templates.windstreams;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
+import java.util.ArrayList;
+
 import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -23,7 +27,6 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
-import javolution.util.FastList;
 
 /**
  * @author LokiReborn
@@ -38,7 +41,7 @@ public class StreamLocations {
 	public List<Location2D> getLocation() {
 
 		if (location == null) {
-			location = FastList.newInstance();
+			location = new ArrayList<>();
 		}
 		return this.location;
 	}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.utils.collections.cachemap;
 
+import java.util.Map;
+
 /**
  * This interface represents a Map structure for cache usage.
  * 

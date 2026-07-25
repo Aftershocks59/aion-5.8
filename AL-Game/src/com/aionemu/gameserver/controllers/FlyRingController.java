@@ -16,19 +16,21 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+
 import com.aionemu.gameserver.controllers.observer.FlyRingObserver;
 import com.aionemu.gameserver.model.flyring.FlyRing;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
-import javolution.util.FastMap;
 
 /**
  * @author xavier
  */
 public class FlyRingController extends VisibleObjectController<FlyRing> {
 
-	FastMap<Integer, FlyRingObserver> observed = new FastMap<Integer, FlyRingObserver>().shared();
+	Map<Integer, FlyRingObserver> observed = new ConcurrentHashMap<Integer, FlyRingObserver>();
 
 	@Override
 	public void see(VisibleObject object) {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.dao;
 
+import java.util.List;
+
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.TreeMap;
@@ -26,7 +28,6 @@ import com.aionemu.gameserver.model.team.legion.LegionHistory;
 import com.aionemu.gameserver.model.team.legion.LegionJoinRequest;
 import com.aionemu.gameserver.model.team.legion.LegionWarehouse;
 
-import javolution.util.FastList;
 
 public abstract class LegionDAO implements IDFactoryAwareDAO {
 	public abstract boolean isNameUsed(String name);
@@ -66,7 +67,7 @@ public abstract class LegionDAO implements IDFactoryAwareDAO {
 
 	public abstract void storeLegionJoinRequest(LegionJoinRequest legionJoinRequest);
 
-	public abstract FastList<LegionJoinRequest> loadLegionJoinRequests(int legionId);
+	public abstract List<LegionJoinRequest> loadLegionJoinRequests(int legionId);
 
 	public abstract void deleteLegionJoinRequest(int legionId, int playerId);
 

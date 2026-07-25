@@ -42,7 +42,7 @@ public class SysMail {
 	private String name;
 
 	@XmlTransient
-	private Map<String, List<MailTemplate>> mailCaseTemplates = new HashMap<String, List<MailTemplate>>();
+private Map<String, List<MailTemplate>> mailCaseTemplates = new HashMap<String, List<MailTemplate>>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MailTemplate template : templates) {

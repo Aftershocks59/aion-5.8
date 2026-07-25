@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -50,7 +54,6 @@ import com.aionemu.gameserver.skillengine.model.Times;
 import com.aionemu.gameserver.skillengine.model.WeaponTypeWrapper;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
 
 /**
  * @author kecimis
@@ -59,7 +62,7 @@ public class MotionLoggingService {
 
 	private static Logger log = LoggerFactory.getLogger(MotionLoggingService.class);
 
-	private FastMap<String, MotionLog> motionsMap = new FastMap<String, MotionLog>().shared();
+	private Map<String, MotionLog> motionsMap = new ConcurrentHashMap<String, MotionLog>();
 
 	private boolean advancedLog = false;
 
@@ -518,9 +521,9 @@ public class MotionLoggingService {
 	}
 
 	private class MotionLog {
-		private FastMap<WeaponTypeWrapper, List<SkillTime>> motionsForWeapons = new FastMap<WeaponTypeWrapper, List<SkillTime>>();
+		private Map<WeaponTypeWrapper, List<SkillTime>> motionsForWeapons = new LinkedHashMap<WeaponTypeWrapper, List<SkillTime>>();
 
-		public FastMap<WeaponTypeWrapper, List<SkillTime>> getMotionLog() {
+		public Map<WeaponTypeWrapper, List<SkillTime>> getMotionLog() {
 			return this.motionsForWeapons;
 		}
 

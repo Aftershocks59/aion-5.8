@@ -16,6 +16,8 @@
  */
 package mysql5;
 
+import java.util.List;
+
 import com.aionemu.commons.database.DB;
 import com.aionemu.commons.database.IUStH;
 import com.aionemu.commons.database.ParamReadStH;
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.team.legion.*;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -629,8 +630,8 @@ public class MySQL5LegionDAO extends LegionDAO {
     }
     
     @Override
-    public FastList<LegionJoinRequest> loadLegionJoinRequests(final int legionId) {
-        final FastList<LegionJoinRequest> requestList = new FastList<LegionJoinRequest>();
+    public List<LegionJoinRequest> loadLegionJoinRequests(final int legionId) {
+        final List<LegionJoinRequest> requestList = new ArrayList<LegionJoinRequest>();
         DB.select(SELECT_RECRUIT_LIST_QUERY, new ParamReadStH() {
             @Override
             public void setParams(PreparedStatement stmt) throws SQLException {

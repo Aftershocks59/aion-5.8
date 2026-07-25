@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.dao;
 
+import java.util.Set;
+
 import java.util.Map;
 
 import com.aionemu.commons.database.dao.DAO;

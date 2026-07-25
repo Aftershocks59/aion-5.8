@@ -16,6 +16,9 @@
  */
 package instance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -44,7 +47,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -69,7 +71,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	private int prepareTimerSeconds = 60000; //...1Min
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 600000; //...10Min
-	private final FastList<Future<?>> smolderingTask = FastList.newInstance();
+	private final List<Future<?>> smolderingTask = new ArrayList<>();
 	
 	protected SmolderingPlayerReward getPlayerReward(Integer object) {
 		return (SmolderingPlayerReward) instanceReward.getPlayerReward(object);
@@ -97,12 +99,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 			case 244435: //Potion Chest.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002085, 2)); //Hero GM’s Secret Remedy Of Recovery.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002086, 2)); //Hero GM’s Quality Secret Remedy Of Recovery.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002087, 2)); //Hero GM’s Secret Remedy Of DP Recovery.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002088, 2)); //Hero GM’s Quality Secret Remedy Of DP Recovery.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002089, 2)); //Hero GM’s Secret Remedy Of Recovery.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002090, 2)); //Hero GM’s Quality Secret Remedy Of Recovery.
+					    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002085, 2)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Secret Remedy Of Recovery.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002086, 2)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Quality Secret Remedy Of Recovery.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002087, 2)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Secret Remedy Of DP Recovery.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002088, 2)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Quality Secret Remedy Of DP Recovery.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002089, 2)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Secret Remedy Of Recovery.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002090, 2)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Quality Secret Remedy Of Recovery.
 					}
 				}
 			break;
@@ -131,12 +133,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(185000270, storage.getItemCountByItemId(185000270)); //Nostalgic Fire Temple Treasure Chest Key.
-		storage.decreaseByItemId(162002031, storage.getItemCountByItemId(162002085)); //Hero GM’s Secret Remedy Of Recovery.
-		storage.decreaseByItemId(162002032, storage.getItemCountByItemId(162002086)); //Hero GM’s Quality Secret Remedy Of Recovery.
-		storage.decreaseByItemId(162002033, storage.getItemCountByItemId(162002087)); //Hero GM’s Secret Remedy Of DP Recovery.
-		storage.decreaseByItemId(162002034, storage.getItemCountByItemId(162002088)); //Hero GM’s Quality Secret Remedy Of DP Recovery.
-		storage.decreaseByItemId(162002035, storage.getItemCountByItemId(162002089)); //Hero GM’s Secret Remedy Of Recovery.
-		storage.decreaseByItemId(162002036, storage.getItemCountByItemId(162002090)); //Hero GM’s Quality Secret Remedy Of Recovery.
+		storage.decreaseByItemId(162002031, storage.getItemCountByItemId(162002085)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Secret Remedy Of Recovery.
+		storage.decreaseByItemId(162002032, storage.getItemCountByItemId(162002086)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Quality Secret Remedy Of Recovery.
+		storage.decreaseByItemId(162002033, storage.getItemCountByItemId(162002087)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Secret Remedy Of DP Recovery.
+		storage.decreaseByItemId(162002034, storage.getItemCountByItemId(162002088)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Quality Secret Remedy Of DP Recovery.
+		storage.decreaseByItemId(162002035, storage.getItemCountByItemId(162002089)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Secret Remedy Of Recovery.
+		storage.decreaseByItemId(162002036, storage.getItemCountByItemId(162002090)); //Hero GMÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s Quality Secret Remedy Of Recovery.
 	}
 	
 	@Override
@@ -447,9 +449,9 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = smolderingTask.head(), end = smolderingTask.tail(); (n = n.getNext()) != end;) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : smolderingTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

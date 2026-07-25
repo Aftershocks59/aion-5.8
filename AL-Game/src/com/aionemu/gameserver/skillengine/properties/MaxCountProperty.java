@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.properties;
 
+import java.util.Set;
+
 import java.util.SortedMap;
 import java.util.TreeMap;
 

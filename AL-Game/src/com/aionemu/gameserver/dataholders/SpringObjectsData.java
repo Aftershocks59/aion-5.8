@@ -42,7 +42,7 @@ public class SpringObjectsData {
 	protected List<SpringTemplate> springObject;
 
 	@XmlTransient
-	private List<SpringTemplate> springObjects = new ArrayList<SpringTemplate>();
+private List<SpringTemplate> springObjects = new ArrayList<SpringTemplate>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (SpringTemplate template : springObject)

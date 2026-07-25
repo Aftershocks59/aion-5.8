@@ -18,11 +18,13 @@
 
 package mysql5;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javolution.util.FastList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +42,8 @@ public class MySQL5PlayerTransferDAO extends PlayerTransferDAO {
 	private static final Logger log = LoggerFactory.getLogger(MySQL5PlayerTransferDAO.class);
 
 	@Override
-	public FastList<PlayerTransferTask> getNew() {
-		FastList<PlayerTransferTask> list = FastList.newInstance();
+	public List<PlayerTransferTask> getNew() {
+		List<PlayerTransferTask> list = new ArrayList<>();
 		PreparedStatement st = DB.prepareStatement("SELECT * FROM player_transfers WHERE `status` = ?");
 		try {
 			st.setInt(1, 0);

@@ -16,19 +16,20 @@
  */
 package com.aionemu.gameserver.utils.i18n;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 /**
  * @author blakawk
  */
 public class Language {
 
-	private final List<String> supportedLanguages = new FastList<String>();
-	private final Map<CustomMessageId, String> translatedMessages = new FastMap<CustomMessageId, String>();
+	private final List<String> supportedLanguages = new ArrayList<String>();
+	private final Map<CustomMessageId, String> translatedMessages = new LinkedHashMap<CustomMessageId, String>();
 
 	public Language() {
 	}

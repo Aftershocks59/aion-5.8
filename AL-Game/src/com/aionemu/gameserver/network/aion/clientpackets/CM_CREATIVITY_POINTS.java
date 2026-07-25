@@ -16,7 +16,9 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +53,7 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 
 	private int maximum = -1;
 
-	private FastMap<Integer, Integer> values = new FastMap<>();
+	private Map<Integer, Integer> values = new LinkedHashMap<>();
 
 	public CM_CREATIVITY_POINTS(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);

@@ -37,7 +37,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.*;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -53,7 +52,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	private Race spawnRace;
 	private Future<?> anuhartTaskA1;
 	protected boolean isInstanceDestroyed = false;
-	private final FastList<Future<?>> fallenTask = FastList.newInstance();
+	private final List<Future<?>> fallenTask = new ArrayList<>();
 	
 	@Override
 	public void onEnterInstance(Player player) {
@@ -74,7 +73,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		sendMsgByRace(1403415, Race.PC_ALL, 10000);
 		//Lieutenant Anuhart will appear shortly.
 		sendMsgByRace(1403417, Race.PC_ALL, 20000);
-		//Use the Thorn Tentacle Traps and skills to reduce Lieutenant Anuhart’s movement speed.
+		//Use the Thorn Tentacle Traps and skills to reduce Lieutenant AnuhartÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s movement speed.
 		sendMsgByRace(1403416, Race.PC_ALL, 30000);
 		//Lieutenant Anuhart is guarding the iron fence, burning any enemies who approach.
 		sendMsgByRace(1403414, Race.PC_ALL, 50000);
@@ -96,7 +95,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			case 703373: //Kroban's Treasure Chest.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //�?�계 암룡�?� 무기 �?�?.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //ÃƒÂ¬?Ã‚Â´ÃƒÂªÃ‚Â³Ã¢â‚¬Å¾ ÃƒÂ¬Ã¢â‚¬Â¢Ã¢â‚¬ÂÃƒÂ«Ã‚Â£Ã‚Â¡ÃƒÂ¬?Ã‹Å“ ÃƒÂ«Ã‚Â¬Ã‚Â´ÃƒÂªÃ‚Â¸Ã‚Â° ÃƒÂ¬Ã†â€™?ÃƒÂ¬Ã…Â¾?.
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166040001, 1)); //Essence Core Solution.
 						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188057622, 1)); //Base Major Enchant Supplement Bundle.
 						switch (Rnd.get(1, 5)) {
@@ -104,13 +103,13 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057623, 1)); //Kroban's Accessory Box.
 				            break;
 							case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055385, 1)); //Kroban’s Treasure.
+				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055385, 1)); //KrobanÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Treasure.
 				            break;
 					        case 3:
 				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055389, 1)); //Kroban's Illusion Godstone Bundle.
 				            break;
 							case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055390, 1)); //Kroban’s Conditioning Bundle.
+				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055390, 1)); //KrobanÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Conditioning Bundle.
 				            break;
 							case 5:
 				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053783, 1)); //Stigma Sack.
@@ -163,7 +162,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 			    deleteNpc(833843); //Animar.
 				deleteNpc(833844); //Kantil.
-				//A teleport device for Kroban’s Burning Base was created.
+				//A teleport device for KrobanÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Burning Base was created.
 				sendMsgByRace(1403559, Race.PC_ALL, 0);
 				//The Dark Spore Road has turned into a sea of flames.
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
@@ -180,7 +179,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 			    deleteNpc(833854); //Animar.
 				deleteNpc(833858); //Kantil.
-				//A teleport device for Kroban’s Burning Base was created.
+				//A teleport device for KrobanÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Burning Base was created.
 				sendMsgByRace(1403559, Race.PC_ALL, 0);
 				//The Dark Spore Road has turned into a sea of flames.
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
@@ -197,7 +196,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 			    deleteNpc(833855); //Animar.
 				deleteNpc(833859); //Kantil.
-				//A teleport device for Kroban’s Burning Base was created.
+				//A teleport device for KrobanÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Burning Base was created.
 				sendMsgByRace(1403559, Race.PC_ALL, 0);
 				//The Dark Spore Road has turned into a sea of flames.
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
@@ -215,7 +214,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			    deleteNpc(833856); //Animar.
 				deleteNpc(833860); //Kantil.
 				stopInstance(player);
-				//A teleport device for Kroban’s Burning Base was created.
+				//A teleport device for KrobanÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Burning Base was created.
 				sendMsgByRace(1403559, Race.PC_ALL, 0);
 				//The Dark Spore Road has turned into a sea of flames.
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
@@ -231,7 +230,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			case 243683: //Brigade General Tahabata.
 				despawnNpc(npc);
 				spawn(703372, npc.getX(), npc.getY(), npc.getZ(), (byte) 0); //Tahabata's Treasure Chest.
-				spawn(833853, 230.84657f, 333.07785f, 132.64389f, (byte) 48); //Teleport Device Of Kroban’s Burning Base.
+				spawn(833853, 230.84657f, 333.07785f, 132.64389f, (byte) 48); //Teleport Device Of KrobanÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s Burning Base.
 			break;
 			case 243684: //Artifact Overlord Kroban.
 				despawnNpc(npc);
@@ -608,9 +607,9 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = fallenTask.head(), end = fallenTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : fallenTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

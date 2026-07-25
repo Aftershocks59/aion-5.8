@@ -38,7 +38,7 @@ public class AssemblyItemsData {
 	protected List<AssemblyItem> item;
 
 	@XmlTransient
-	private List<AssemblyItem> items = new ArrayList<AssemblyItem>();
+private List<AssemblyItem> items = new ArrayList<AssemblyItem>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (AssemblyItem template : item) {

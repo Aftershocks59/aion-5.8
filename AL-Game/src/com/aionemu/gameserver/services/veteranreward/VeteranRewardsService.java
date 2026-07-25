@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.services.veteranreward;
 
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import java.util.LinkedHashSet;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Collection;
@@ -50,7 +54,6 @@ import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastSet;
 
 public class VeteranRewardsService {
 
@@ -100,7 +103,7 @@ public class VeteranRewardsService {
 			veteran_rewards.clear();
 		}
 
-		veteran_rewards = new FastSet<VeteranRewards>(getDAO().getVeteranReward()).shared();
+		veteran_rewards = new CopyOnWriteArraySet<VeteranRewards>(getDAO().getVeteranReward());
 
 		if (veteran_rewards.size() > 0) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {

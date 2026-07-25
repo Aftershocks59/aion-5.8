@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.questEngine.handlers.models;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +33,6 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.template.MonsterHunt;
 
-import javolution.util.FastMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "MonsterHuntData", propOrder = { "monster" })
@@ -59,7 +61,7 @@ public class MonsterHuntData extends XMLQuest {
 
 	@Override
 	public void register(QuestEngine questEngine) {
-		FastMap<Monster, Set<Integer>> monsterNpcs = new FastMap<Monster, Set<Integer>>();
+		Map<Monster, Set<Integer>> monsterNpcs = new LinkedHashMap<Monster, Set<Integer>>();
 		for (Monster m : monster) {
 			monsterNpcs.put(m, new HashSet<Integer>(m.getNpcIds()));
 		}

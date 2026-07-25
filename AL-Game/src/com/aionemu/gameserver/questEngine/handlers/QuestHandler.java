@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.questEngine.handlers;
 
+import java.util.List;
+
 import java.util.Collections;
 
 import com.aionemu.gameserver.ai2.event.AIEventType;

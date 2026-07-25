@@ -16,6 +16,8 @@
  */
 package mysql5;
 
+import java.util.List;
+
 import com.aionemu.commons.database.DB;
 import com.aionemu.commons.database.IUStH;
 import com.aionemu.commons.database.ParamReadStH;

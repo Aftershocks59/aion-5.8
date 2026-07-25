@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import java.util.LinkedHashMap;
+
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +38,6 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -48,7 +49,7 @@ public class EventWindowService {
 	private Map<Integer, EventsWindow> allEvents = DataManager.EVENTS_WINDOW.getAllEvents();
 	private HashMap<Integer, EventsWindow> activeEvents = new HashMap<Integer, EventsWindow>();
 	private HashMap<Integer, EventsWindow> activeEventsForPlayer = new HashMap<Integer, EventsWindow>();
-	private final FastMap<Integer, EventsWindow> sendActiveEventsForPlayer = new FastMap<>();
+	private final Map<Integer, EventsWindow> sendActiveEventsForPlayer = new LinkedHashMap<>();
 	private long tStart = 0; // Start Time.
 	private long tEnd = 0; // End Time.
 

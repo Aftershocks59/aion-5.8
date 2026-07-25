@@ -45,7 +45,7 @@ public class TowerRewardData {
 	private TIntObjectHashMap<TowerStageRewardTemplate> templates = new TIntObjectHashMap<TowerStageRewardTemplate>();
 
 	@XmlTransient
-	private Map<Integer, TowerStageRewardTemplate> templatesMap = new HashMap<Integer, TowerStageRewardTemplate>();
+private Map<Integer, TowerStageRewardTemplate> templatesMap = new HashMap<Integer, TowerStageRewardTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (TowerStageRewardTemplate template : TowerReward) {

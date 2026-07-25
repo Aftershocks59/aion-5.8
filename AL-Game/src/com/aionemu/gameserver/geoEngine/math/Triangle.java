@@ -1,24 +1,11 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load the following classes:
- *  javolution.context.ObjectFactory
- *  javolution.lang.Reusable
- */
 package com.aionemu.gameserver.geoEngine.math;
+
+import java.util.Set;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 
-import javolution.context.ObjectFactory;
-import javolution.lang.Reusable;
 
-public class Triangle extends AbstractTriangle implements Reusable {
-	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
-
-		public Object create() {
-			return new Triangle();
-		}
-	};
+public class Triangle extends AbstractTriangle {
 	private Vector3f pointa = new Vector3f();
 	private Vector3f pointb = new Vector3f();
 	private Vector3f pointc = new Vector3f();
@@ -212,17 +199,10 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	}
 
 	public static Triangle newInstance() {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			return (Triangle) FACTORY.object();
-		}
 		return new Triangle();
 	}
 
 	public static void recycle(Triangle instance) {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			FACTORY.recycle((Object) instance);
-		} else {
-			instance = null;
-		}
+		// Kept for call sites: the garbage collector reclaims the instance.
 	}
 }

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.abyss_bonus;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import java.util.Collections;
 import java.util.List;
 

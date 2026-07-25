@@ -48,7 +48,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +69,7 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	private boolean isInstanceDestroyed;
 	private Map<Integer, StaticDoor> doors;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> aturamSkyFortressTask = FastList.newInstance();
+	private final List<Future<?>> aturamSkyFortressTask = new ArrayList<>();
 	
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
@@ -241,7 +240,7 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 			break;
 			case 218577: //Marabata Watchman.
 				/**
-				 * ■ At home in the Aturam Sky Fortress Command Center
+				 * Ã¢â€“Â  At home in the Aturam Sky Fortress Command Center
 				 * The Commander appears when many "Command Area Drakan" are killed.
 				 */
 				despawnNpc(npc);
@@ -463,9 +462,9 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = aturamSkyFortressTask.head(), end = aturamSkyFortressTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : aturamSkyFortressTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

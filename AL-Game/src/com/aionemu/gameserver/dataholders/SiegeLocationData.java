@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -30,7 +33,6 @@ import com.aionemu.gameserver.model.siege.FortressLocation;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.templates.siegelocation.SiegeLocationTemplate;
 
-import javolution.util.FastMap;
 
 @XmlRootElement(name = "siege_locations")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -39,11 +41,11 @@ public class SiegeLocationData {
 	private List<SiegeLocationTemplate> siegeLocationTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, ArtifactLocation> artifactLocations = new FastMap<Integer, ArtifactLocation>();
+private Map<Integer, ArtifactLocation> artifactLocations = new LinkedHashMap<Integer, ArtifactLocation>();
 	@XmlTransient
-	private FastMap<Integer, FortressLocation> fortressLocations = new FastMap<Integer, FortressLocation>();
+private Map<Integer, FortressLocation> fortressLocations = new LinkedHashMap<Integer, FortressLocation>();
 	@XmlTransient
-	private FastMap<Integer, SiegeLocation> siegeLocations = new FastMap<Integer, SiegeLocation>();
+private Map<Integer, SiegeLocation> siegeLocations = new LinkedHashMap<Integer, SiegeLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		artifactLocations.clear();
@@ -72,15 +74,15 @@ public class SiegeLocationData {
 		return siegeLocations.size();
 	}
 
-	public FastMap<Integer, ArtifactLocation> getArtifacts() {
+	public Map<Integer, ArtifactLocation> getArtifacts() {
 		return artifactLocations;
 	}
 
-	public FastMap<Integer, FortressLocation> getFortress() {
+	public Map<Integer, FortressLocation> getFortress() {
 		return fortressLocations;
 	}
 
-	public FastMap<Integer, SiegeLocation> getSiegeLocations() {
+	public Map<Integer, SiegeLocation> getSiegeLocations() {
 		return siegeLocations;
 	}
 }

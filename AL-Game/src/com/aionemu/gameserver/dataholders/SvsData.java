@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -28,7 +31,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.svs.SvsLocation;
 import com.aionemu.gameserver.model.templates.svs.SvsTemplate;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +43,7 @@ public class SvsData {
 	private List<SvsTemplate> svsTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, SvsLocation> svs = new FastMap<Integer, SvsLocation>();
+private Map<Integer, SvsLocation> svs = new LinkedHashMap<Integer, SvsLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (SvsTemplate template : svsTemplates) {
@@ -53,7 +55,7 @@ public class SvsData {
 		return svs.size();
 	}
 
-	public FastMap<Integer, SvsLocation> getSvsLocations() {
+	public Map<Integer, SvsLocation> getSvsLocations() {
 		return svs;
 	}
 }

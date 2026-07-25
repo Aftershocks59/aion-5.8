@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import java.util.LinkedHashMap;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +52,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -60,8 +61,8 @@ public class LadderService {
 	private List<AionObject> eventQueueList = new ArrayList<AionObject>();
 	private List<AionObject> normalQueueList = new ArrayList<AionObject>();
 	private List<AionObject> soloQueueList = new ArrayList<AionObject>();
-	private Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new FastMap<Integer, Battleground>());
-	private Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new FastMap<Integer, Event>());
+	private Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Battleground>());
+	private Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Event>());
 	private Battleground eventBg = null;
 	private ScheduledFuture<?> eventTask = null;
 	private ScheduledFuture<?> normalTask = null;

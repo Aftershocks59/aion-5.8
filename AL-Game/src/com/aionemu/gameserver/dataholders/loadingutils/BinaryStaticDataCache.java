@@ -13,6 +13,9 @@
  */
 package com.aionemu.gameserver.dataholders.loadingutils;
 
+import java.util.List;
+import java.util.Set;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,9 +55,6 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.map.hash.TShortObjectHashMap;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
 
 /**
  * Stores the parsed static data graph as a binary snapshot, and restores it
@@ -80,7 +80,7 @@ public final class BinaryStaticDataCache {
 	 * the data holder classes changes, so an old snapshot is discarded instead of
 	 * being read back into incompatible classes.
 	 */
-	private static final int FORMAT_VERSION = 8;
+	private static final int FORMAT_VERSION = 9;
 
 	/** Sizes the streaming buffers. The graph is large, so read and write in bulk. */
 	private static final int BUFFER_SIZE = 1 << 20;
@@ -230,13 +230,6 @@ public final class BinaryStaticDataCache {
 		// count, which surfaces far away as an ArrayIndexOutOfBoundsException.
 		kryo.addDefaultSerializer(THash.class, new TroveSerializerFactory());
 		kryo.addDefaultSerializer(TIntArrayList.class, new TIntArrayListSerializer());
-
-		// Serialise the javolution collections through their Map and Collection
-		// contracts. Reflecting over their fields would capture the internal entry
-		// pool, which does not survive a round trip.
-		kryo.register(FastMap.class, new MapSerializer<FastMap<?, ?>>());
-		kryo.register(FastList.class, new CollectionSerializer<FastList<?>>());
-		kryo.register(FastSet.class, new CollectionSerializer<FastSet<?>>());
 
 		// JAXB maps xs:date and xs:dateTime onto XMLGregorianCalendar, whose only
 		// implementation lives inside the java.xml module. That module opens nothing

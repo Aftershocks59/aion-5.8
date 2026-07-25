@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -37,13 +39,11 @@ import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice
 import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice.SpecialLanding;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 
-import javolution.util.FastMap;
 
 public class AbyssLandingSpecialService {
 	private static Logger log = LoggerFactory.getLogger(AbyssLandingService.class);
 	private static Map<Integer, LandingSpecialLocation> abyssSpecialLanding;
-	private final Map<Integer, SpecialLanding<?>> activeSpecialLanding = new FastMap<Integer, SpecialLanding<?>>()
-			.shared();
+	private final Map<Integer, SpecialLanding<?>> activeSpecialLanding = new ConcurrentHashMap<Integer, SpecialLanding<?>>();
 
 	public void initLandingSpecialLocations() {
 		abyssSpecialLanding = DataManager.LANDING_SPECIAL_LOCATION_DATA.getLandingSpecialLocations();

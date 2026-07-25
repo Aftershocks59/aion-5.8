@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.LinkedHashMap;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -64,23 +66,22 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 
-import javolution.util.FastMap;
 
 public class HousingBidService extends AbstractCronTask {
 	private static final Logger log = LoggerFactory.getLogger("HOUSE_AUCTION_LOG");
 	private static final String registerEndExpression = HousingConfig.HOUSE_REGISTER_END;
 	private static CronExpression registerDateExpr;
-	private static final FastMap<Integer, HouseBidEntry> houseBids;
-	private static final FastMap<Integer, HouseBidEntry> playerBids;
-	private static final FastMap<Integer, HouseBidEntry> bidsByIndex;
+	private static final Map<Integer, HouseBidEntry> houseBids;
+	private static final Map<Integer, HouseBidEntry> playerBids;
+	private static final Map<Integer, HouseBidEntry> bidsByIndex;
 	private static int timeProlonged = 0;
 	private static boolean isDataLoaded = false;
 	private static HousingBidService instance;
 
 	static {
-		houseBids = FastMap.newInstance();
-		playerBids = FastMap.newInstance();
-		bidsByIndex = FastMap.newInstance();
+		houseBids = new LinkedHashMap<>();
+		playerBids = new LinkedHashMap<>();
+		bidsByIndex = new LinkedHashMap<>();
 		try {
 			instance = new HousingBidService(HousingConfig.HOUSE_AUCTION_TIME);
 		} catch (ParseException pe) {
@@ -200,7 +201,7 @@ public class HousingBidService extends AbstractCronTask {
 		Set<PlayerHouseBid> playerBidData = DAOManager.getDAO(HouseBidsDAO.class).loadBids();
 		List<PlayerHouseBid> sortedBids = new ArrayList<PlayerHouseBid>(playerBidData);
 		Collections.sort(sortedBids);
-		FastMap<Integer, House> housesById = FastMap.newInstance();
+		Map<Integer, House> housesById = new LinkedHashMap<>();
 		for (House house : HousingService.getInstance().getCustomHouses()) {
 			housesById.put(house.getObjectId(), house);
 		}
@@ -492,7 +493,7 @@ public class HousingBidService extends AbstractCronTask {
 				}
 			}
 			bidEntry = new HouseBidEntry(house, ++maxIndex, initialPrice);
-			bidsByIndex.putEntry(maxIndex, bidEntry);
+			bidsByIndex.put(maxIndex, bidEntry);
 		}
 		synchronized (houseBids) {
 			houseBids.put(house.getObjectId(), bidEntry);

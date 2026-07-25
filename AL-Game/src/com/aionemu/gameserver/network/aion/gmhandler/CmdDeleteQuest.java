@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.gmhandler;
 
+import java.util.List;
+
 import com.aionemu.gameserver.configs.administration.PanelConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;

@@ -16,12 +16,13 @@
  */
 package mysql5;
 
+import java.util.LinkedHashMap;
+
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.MySQL5DAOUtils;
 import com.aionemu.gameserver.dao.PortalCooldownsDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PortalCooldownItem;
-import javolution.util.FastMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,7 @@ public class MySQL5PortalCooldownsDAO extends PortalCooldownsDAO {
 	@Override
 	public void loadPortalCooldowns(final Player player) {
 		Connection con = null;
-		FastMap<Integer, PortalCooldownItem> portalCoolDowns = new FastMap<Integer, PortalCooldownItem>();
+		Map<Integer, PortalCooldownItem> portalCoolDowns = new LinkedHashMap<Integer, PortalCooldownItem>();
 		PreparedStatement stmt = null;
 		try {
 			con = DatabaseFactory.getConnection();

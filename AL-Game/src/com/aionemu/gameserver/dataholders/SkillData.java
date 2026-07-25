@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
+import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +34,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
 
 @XmlRootElement(name = "skill_data")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +46,8 @@ public class SkillData {
 
 	private TIntObjectHashMap<SkillTemplate> skillData = new TIntObjectHashMap<SkillTemplate>();
 
-	private final Map<String, SkillTemplate> skillGroup = new FastMap<String, SkillTemplate>().shared();
+	@XmlTransient
+	private final Map<String, SkillTemplate> skillGroup = new ConcurrentHashMap<String, SkillTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		skillData.clear();

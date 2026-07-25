@@ -144,7 +144,6 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 
 public final class PlayerEnterWorldService {
 
@@ -344,8 +343,8 @@ public final class PlayerEnterWorldService {
 			if (EventsConfig.ENABLE_EVENT_ARCADE) {
 				ArcadeUpgradeService.getInstance().onEnterWorld(player);
 			}
-			FastList<QuestState> questList = FastList.newInstance();
-			FastList<QuestState> completeQuestList = FastList.newInstance();
+			List<QuestState> questList = new ArrayList<>();
+			List<QuestState> completeQuestList = new ArrayList<>();
 			for (QuestState qs : player.getQuestStateList().getAllQuestState()) {
 				if (qs.getStatus() == QuestStatus.NONE && qs.getCompleteCount() == 0) {
 					continue;
@@ -812,31 +811,31 @@ public final class PlayerEnterWorldService {
 		float pvpDefensePhyscRatio = player.getGameStats().getStat(StatEnum.PVP_DEFEND_RATIO_PHYSICAL, 0).getCurrent();
 		float pvpDefenseMagicRatio = player.getGameStats().getStat(StatEnum.PVP_DEFEND_RATIO_MAGICAL, 0).getCurrent();
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564, "============================"));
-		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564, "[color:Info：;0 1 0] Welcome to Aion 5.8"));
+		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564, "[color:Infoï¼š;0 1 0] Welcome to Aion 5.8"));
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564, "============================"));
 		PacketSendUtility.sendPacket(player,
-				new SM_SYSTEM_MESSAGE(1300564, "[color:Info：;0 1 0] Aion Account Information"));
+				new SM_SYSTEM_MESSAGE(1300564, "[color:Infoï¼š;0 1 0] Aion Account Information"));
 		PacketSendUtility.sendPacket(player,
-				new SM_SYSTEM_MESSAGE(1300564, "[color:Info：;0 1 0][color:Toll Points：;0 1 0] "
+				new SM_SYSTEM_MESSAGE(1300564, "[color:Infoï¼š;0 1 0][color:Toll Pointsï¼š;0 1 0] "
 						+ player.getClientConnection().getAccount().getToll()));
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564,
-				"[color:Info：;0 1 0][color:Luna Points：;0 1 0] " + player.getLunaAccount()));
+				"[color:Infoï¼š;0 1 0][color:Luna Pointsï¼š;0 1 0] " + player.getLunaAccount()));
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564, "============================"));
 		PacketSendUtility.sendPacket(player,
-				new SM_SYSTEM_MESSAGE(1300564, "[color:Info：;0 1 0][color:Player Name：;0 1 0] " + player.getName()));
+				new SM_SYSTEM_MESSAGE(1300564, "[color:Infoï¼š;0 1 0][color:Player Nameï¼š;0 1 0] " + player.getName()));
 		if (player.getAccessLevel() > 0) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564,
-					"[color:Info：;0 1 0][color:PvP Attack Ratio：;0 1 0] " + pvpAttackRatio * 0.01f + "%"));
+					"[color:Infoï¼š;0 1 0][color:PvP Attack Ratioï¼š;0 1 0] " + pvpAttackRatio * 0.01f + "%"));
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564,
-					"[color:Info：;0 1 0][color:PvP Defense Ratio：;0 1 0] " + pvpDefenseRatio * 0.01f + "%"));
+					"[color:Infoï¼š;0 1 0][color:PvP Defense Ratioï¼š;0 1 0] " + pvpDefenseRatio * 0.01f + "%"));
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564,
-					"[color:Info：;0 1 0][color:PvP Physc Attack Ratio：;0 1 0] " + pvpAttackPhyscRatio * 0.1f + "%"));
+					"[color:Infoï¼š;0 1 0][color:PvP Physc Attack Ratioï¼š;0 1 0] " + pvpAttackPhyscRatio * 0.1f + "%"));
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564,
-					"[color:Info：;0 1 0][color:PvP Magic Attack Ratio：;0 1 0] " + pvpAttackMagicRatio * 0.1f + "%"));
+					"[color:Infoï¼š;0 1 0][color:PvP Magic Attack Ratioï¼š;0 1 0] " + pvpAttackMagicRatio * 0.1f + "%"));
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564,
-					"[color:Info：;0 1 0][color:PvP Physc Defend Ratio：;0 1 0] " + pvpDefensePhyscRatio * 0.1f + "%"));
+					"[color:Infoï¼š;0 1 0][color:PvP Physc Defend Ratioï¼š;0 1 0] " + pvpDefensePhyscRatio * 0.1f + "%"));
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300564,
-					"[color:Info：;0 1 0][color:PvP Magic Defend Ratio：;0 1 0] " + pvpDefenseMagicRatio * 0.1f + "%"));
+					"[color:Infoï¼š;0 1 0][color:PvP Magic Defend Ratioï¼š;0 1 0] " + pvpDefenseMagicRatio * 0.1f + "%"));
 		}
 	}
 }

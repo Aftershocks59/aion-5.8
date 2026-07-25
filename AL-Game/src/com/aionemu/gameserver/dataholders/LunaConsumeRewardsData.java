@@ -48,7 +48,7 @@ public class LunaConsumeRewardsData {
 	private TIntObjectHashMap<LunaConsumeRewardsTemplate> lunaConsumeCountData = new TIntObjectHashMap<LunaConsumeRewardsTemplate>();
 
 	@XmlTransient
-	private Map<Integer, LunaConsumeRewardsTemplate> lunaDataMap = new HashMap<Integer, LunaConsumeRewardsTemplate>(1);
+private Map<Integer, LunaConsumeRewardsTemplate> lunaDataMap = new HashMap<Integer, LunaConsumeRewardsTemplate>(1);
 
 	void afterUnmarshal(Unmarshaller paramUnmarshaller, Object paramObject) {
 		for (LunaConsumeRewardsTemplate lunaConsume : lunaList) {

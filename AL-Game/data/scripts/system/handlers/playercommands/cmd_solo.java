@@ -16,9 +16,10 @@
  */
 package playercommands;
 
+import java.util.LinkedHashMap;
+
 import java.util.Map;
 
-import javolution.util.FastMap;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.events.*;
@@ -27,7 +28,7 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 public class cmd_solo extends PlayerCommand
 {
-    private static Map<Integer, Long> nextUse = new FastMap<Integer, Long>();
+    private static Map<Integer, Long> nextUse = new LinkedHashMap<Integer, Long>();
     private static final int REGISTRATION_DELAY = 8 * 60 * 1000;
     
 	public cmd_solo() {

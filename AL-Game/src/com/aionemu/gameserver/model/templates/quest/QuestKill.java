@@ -40,7 +40,7 @@ public class QuestKill {
 	private List<Integer> npcIds;
 
 	@XmlTransient
-	private Set<Integer> npcIdSet;
+private Set<Integer> npcIdSet;
 
 	/**
 	 * @return the seq

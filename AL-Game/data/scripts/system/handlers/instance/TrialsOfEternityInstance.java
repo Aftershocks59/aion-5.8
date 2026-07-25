@@ -16,8 +16,8 @@
  */
 package instance;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,8 +86,8 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	private Future<?> trialsOfEternityTaskA8;
 	private List<Integer> movies = new ArrayList<Integer>();
 	private List<Npc> ScatteredEnergyBook = new ArrayList<Npc>();
-	private final FastList<Future<?>> trialsOfEternityTask = FastList.newInstance();
-	private FastMap<Integer, VisibleObject> trialsShield = new FastMap<Integer, VisibleObject>();
+	private final List<Future<?>> trialsOfEternityTask = new ArrayList<>();
+	private Map<Integer, VisibleObject> trialsShield = new LinkedHashMap<Integer, VisibleObject>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -128,22 +128,22 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				    if (player.isOnline()) {
 						switch (Rnd.get(1, 6)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 110000064, 1)); //우아한 공작 깃털 �?�?�.
+				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 110000064, 1)); //ÃƒÂ¬Ã…Â¡Ã‚Â°ÃƒÂ¬Ã¢â‚¬Â¢Ã¢â‚¬Å¾ÃƒÂ­Ã¢â‚¬Â¢Ã…â€œ ÃƒÂªÃ‚Â³Ã‚ÂµÃƒÂ¬Ã…Â¾Ã¢â‚¬Ëœ ÃƒÂªÃ‚Â¹Ã†â€™ÃƒÂ­Ã¢â‚¬Å¾Ã‚Â¸ ÃƒÂ¬Ã†â€™?ÃƒÂ¬?Ã‹Å“.
 				            break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 111000105, 1)); //우아한 공작 깃털 장갑.
+							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 111000105, 1)); //ÃƒÂ¬Ã…Â¡Ã‚Â°ÃƒÂ¬Ã¢â‚¬Â¢Ã¢â‚¬Å¾ÃƒÂ­Ã¢â‚¬Â¢Ã…â€œ ÃƒÂªÃ‚Â³Ã‚ÂµÃƒÂ¬Ã…Â¾Ã¢â‚¬Ëœ ÃƒÂªÃ‚Â¹Ã†â€™ÃƒÂ­Ã¢â‚¬Å¾Ã‚Â¸ ÃƒÂ¬Ã…Â¾Ã‚Â¥ÃƒÂªÃ‚Â°Ã¢â‚¬Ëœ.
 							break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 112000066, 1)); //우아한 공작 깃털 견갑.
+							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 112000066, 1)); //ÃƒÂ¬Ã…Â¡Ã‚Â°ÃƒÂ¬Ã¢â‚¬Â¢Ã¢â‚¬Å¾ÃƒÂ­Ã¢â‚¬Â¢Ã…â€œ ÃƒÂªÃ‚Â³Ã‚ÂµÃƒÂ¬Ã…Â¾Ã¢â‚¬Ëœ ÃƒÂªÃ‚Â¹Ã†â€™ÃƒÂ­Ã¢â‚¬Å¾Ã‚Â¸ ÃƒÂªÃ‚Â²Ã‚Â¬ÃƒÂªÃ‚Â°Ã¢â‚¬Ëœ.
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 113000069, 1)); //우아한 공작 깃털 하�?�.
+							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 113000069, 1)); //ÃƒÂ¬Ã…Â¡Ã‚Â°ÃƒÂ¬Ã¢â‚¬Â¢Ã¢â‚¬Å¾ÃƒÂ­Ã¢â‚¬Â¢Ã…â€œ ÃƒÂªÃ‚Â³Ã‚ÂµÃƒÂ¬Ã…Â¾Ã¢â‚¬Ëœ ÃƒÂªÃ‚Â¹Ã†â€™ÃƒÂ­Ã¢â‚¬Å¾Ã‚Â¸ ÃƒÂ­Ã¢â‚¬Â¢Ã‹Å“ÃƒÂ¬?Ã‹Å“.
 							break;
 							case 5:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 114000107, 1)); //우아한 공작 깃털 신발.
+							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 114000107, 1)); //ÃƒÂ¬Ã…Â¡Ã‚Â°ÃƒÂ¬Ã¢â‚¬Â¢Ã¢â‚¬Å¾ÃƒÂ­Ã¢â‚¬Â¢Ã…â€œ ÃƒÂªÃ‚Â³Ã‚ÂµÃƒÂ¬Ã…Â¾Ã¢â‚¬Ëœ ÃƒÂªÃ‚Â¹Ã†â€™ÃƒÂ­Ã¢â‚¬Å¾Ã‚Â¸ ÃƒÂ¬Ã¢â‚¬Â¹Ã‚Â ÃƒÂ«Ã‚Â°Ã…â€œ.
 							break;
 							case 6:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125005216, 1)); //우아한 공작 깃털 �?건.
+							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125005216, 1)); //ÃƒÂ¬Ã…Â¡Ã‚Â°ÃƒÂ¬Ã¢â‚¬Â¢Ã¢â‚¬Å¾ÃƒÂ­Ã¢â‚¬Â¢Ã…â€œ ÃƒÂªÃ‚Â³Ã‚ÂµÃƒÂ¬Ã…Â¾Ã¢â‚¬Ëœ ÃƒÂªÃ‚Â¹Ã†â€™ÃƒÂ­Ã¢â‚¬Å¾Ã‚Â¸ ÃƒÂ«Ã¢â‚¬Ëœ?ÃƒÂªÃ‚Â±Ã‚Â´.
 							break;
 						}
 				    }
@@ -819,9 +819,9 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = trialsOfEternityTask.head(), end = trialsOfEternityTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : trialsOfEternityTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

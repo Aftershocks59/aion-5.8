@@ -11,6 +11,8 @@ commons-io = "2.19.0"
 commons-lang = "2.6"          # DEBT: keep org.apache.commons.lang v2, migrate to lang3
 trove4j = "3.0.3"
 kryo = "5.6.2"
+junit = "5.11.4"
+mockito = "5.15.2"
 joda-time = "2.13.1"
 quartz = "2.5.0"
 javassist = "3.30.2-GA"
@@ -22,7 +24,6 @@ activation = "2.1.3"
 jsr305 = "3.0.2"
 netty3 = "3.10.6.Final"       # DEBT: upgrade AL-Chat from end-of-life Netty 3 to Netty 4
 guice = "7.0.0"
-javolution = "5.5.1"          # DEBT: swap FastMap/FastList/FastSet for java.util equivalents
 
 [libraries]
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
@@ -33,6 +34,9 @@ commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
 commons-lang = { module = "commons-lang:commons-lang", version.ref = "commons-lang" }
 trove4j = { module = "net.sf.trove4j:trove4j", version.ref = "trove4j" }
 kryo = { module = "com.esotericsoftware:kryo", version.ref = "kryo" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.11.4" }
+mockito-junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 joda-time = { module = "joda-time:joda-time", version.ref = "joda-time" }
 quartz = { module = "org.quartz-scheduler:quartz", version.ref = "quartz" }
 javassist = { module = "org.javassist:javassist", version.ref = "javassist" }
@@ -44,7 +48,6 @@ activation = { module = "jakarta.activation:jakarta.activation-api", version.ref
 jsr305 = { module = "com.google.code.findbugs:jsr305", version.ref = "jsr305" }
 netty3 = { module = "io.netty:netty", version.ref = "netty3" }
 guice = { module = "com.google.inject:guice", version.ref = "guice" }
-javolution = { module = "javolution:javolution", version.ref = "javolution" }
 
 [bundles]
 logging = ["slf4j-api", "logback-classic", "logback-core"]

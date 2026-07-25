@@ -16,11 +16,13 @@
  */
 package mysql5;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.MySQL5DAOUtils;
 import com.aionemu.gameserver.dao.SurveyControllerDAO;
 import com.aionemu.gameserver.model.templates.survey.SurveyItem;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +44,8 @@ public class MySQL5SurveyControllerDAO extends SurveyControllerDAO {
 	}
 
 	@Override
-	public FastList<SurveyItem> getAllNew() {
-		FastList<SurveyItem> list = FastList.newInstance();
+	public List<SurveyItem> getAllNew() {
+		List<SurveyItem> list = new ArrayList<>();
 		
 		Connection con = null;
 		try {

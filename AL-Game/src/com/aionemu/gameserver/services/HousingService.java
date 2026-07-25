@@ -56,7 +56,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
-import javolution.util.FastList;
 
 public class HousingService {
 
@@ -185,7 +184,7 @@ public class HousingService {
 	}
 
 	public void resetAppearance(House house) {
-		FastList<HouseDecoration> customParts = house.getRegistry().getCustomParts();
+		List<HouseDecoration> customParts = house.getRegistry().getCustomParts();
 		for (HouseDecoration deco : customParts) {
 			deco.setPersistentState(PersistentState.DELETED);
 		}
@@ -293,8 +292,8 @@ public class HousingService {
 		controller.spawnObjects();
 	}
 
-	public FastList<House> getCustomHouses() {
-		FastList<House> houses = FastList.newInstance();
+	public List<House> getCustomHouses() {
+		List<House> houses = new ArrayList<>();
 		for (List<House> mapHouses : housesByMapId.values()) {
 			houses.addAll(mapHouses);
 		}

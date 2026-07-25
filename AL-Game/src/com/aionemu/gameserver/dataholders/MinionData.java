@@ -38,7 +38,7 @@ public class MinionData {
 	@XmlTransient
 	private TIntObjectHashMap<MinionTemplate> minionData = new TIntObjectHashMap<>();
 	@XmlTransient
-	private List<Integer> minionDataList = new ArrayList<Integer>();
+private List<Integer> minionDataList = new ArrayList<Integer>();
 
 	void afterUnmarshal(final Unmarshaller unmarshaller, final Object o) {
 		for (MinionTemplate minionTemplate : minionTemplates) {

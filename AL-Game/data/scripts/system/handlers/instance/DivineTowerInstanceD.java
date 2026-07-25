@@ -41,7 +41,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 import java.util.*;
 import java.util.concurrent.Future;
 
@@ -58,7 +57,7 @@ public class DivineTowerInstanceD extends GeneralInstanceHandler
 	private int IDAb1Heroes3RDWaveDoor;
 	private int IDAb1Heroes4THWaveDoor;
 	private boolean isInstanceDestroyed;
-	private final FastList<Future<?>> divineTowerTask = FastList.newInstance();
+	private final List<Future<?>> divineTowerTask = new ArrayList<>();
 	
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
@@ -78,8 +77,8 @@ public class DivineTowerInstanceD extends GeneralInstanceHandler
 			case 248025: //IDAb1_Heroes_Boss_73_Ah.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //�?�계 암룡�?� 무기 �?�?.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 152012758, 3)); //헤카�?��?�트.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //Ã¬?Â´ÃªÂ³â€ž Ã¬â€¢â€Ã«Â£Â¡Ã¬?Ëœ Ã«Â¬Â´ÃªÂ¸Â° Ã¬Æ’?Ã¬Å¾?.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 152012758, 3)); //Ã­â€”Â¤Ã¬Â¹Â´Ã«?Â¼Ã¬?Â´Ã­Å Â¸.
 					} switch (Rnd.get(1, 2)) {
 						case 1:
 							dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 168300002, 1)); //Conditioning: Level 1.
@@ -89,23 +88,23 @@ public class DivineTowerInstanceD extends GeneralInstanceHandler
 						break;
 					} switch (Rnd.get(1, 4)) {
 						case 1:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058135, 1)); //신성�?� 탑 특급 정예 친위병�?� 무기 �?�?.
+						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058135, 1)); //Ã¬â€¹Â Ã¬â€žÂ±Ã¬?Ëœ Ã­Æ’â€˜ Ã­Å Â¹ÃªÂ¸â€° Ã¬Â â€¢Ã¬ËœË† Ã¬Â¹Å“Ã¬Å“â€žÃ«Â³â€˜Ã¬?Ëœ Ã«Â¬Â´ÃªÂ¸Â° Ã¬Æ’?Ã¬Å¾?.
 						break;
 						case 2:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058136, 1)); //신성�?� 탑 특급 정예 친위병�?� 방어구 �?�?.
+						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058136, 1)); //Ã¬â€¹Â Ã¬â€žÂ±Ã¬?Ëœ Ã­Æ’â€˜ Ã­Å Â¹ÃªÂ¸â€° Ã¬Â â€¢Ã¬ËœË† Ã¬Â¹Å“Ã¬Å“â€žÃ«Â³â€˜Ã¬?Ëœ Ã«Â°Â©Ã¬â€“Â´ÃªÂµÂ¬ Ã¬Æ’?Ã¬Å¾?.
 						break;
 						case 3:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058137, 1)); //신성�?� 탑 특급 친위병�?� 무기 �?�?.
+						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058137, 1)); //Ã¬â€¹Â Ã¬â€žÂ±Ã¬?Ëœ Ã­Æ’â€˜ Ã­Å Â¹ÃªÂ¸â€° Ã¬Â¹Å“Ã¬Å“â€žÃ«Â³â€˜Ã¬?Ëœ Ã«Â¬Â´ÃªÂ¸Â° Ã¬Æ’?Ã¬Å¾?.
 						break;
 						case 4:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058138, 1)); //신성�?� 탑 특급 친위병�?� 방어구 �?�?.
+						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058138, 1)); //Ã¬â€¹Â Ã¬â€žÂ±Ã¬?Ëœ Ã­Æ’â€˜ Ã­Å Â¹ÃªÂ¸â€° Ã¬Â¹Å“Ã¬Å“â€žÃ«Â³â€˜Ã¬?Ëœ Ã«Â°Â©Ã¬â€“Â´ÃªÂµÂ¬ Ã¬Æ’?Ã¬Å¾?.
 						break;
 					} switch (Rnd.get(1, 2)) {
 						case 1:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058133, 1)); //신성�?� 탑 장비 진화 재료 꾸러미.
+						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058133, 1)); //Ã¬â€¹Â Ã¬â€žÂ±Ã¬?Ëœ Ã­Æ’â€˜ Ã¬Å¾Â¥Ã«Â¹â€ž Ã¬Â§â€žÃ­â„¢â€ Ã¬Å¾Â¬Ã«Â£Å’ ÃªÂ¾Â¸Ã«Å¸Â¬Ã«Â¯Â¸.
 						break;
 						case 2:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058134, 1)); //신성�?� 탑 스피넬주화 꾸러미.
+						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058134, 1)); //Ã¬â€¹Â Ã¬â€žÂ±Ã¬?Ëœ Ã­Æ’â€˜ Ã¬Å Â¤Ã­â€Â¼Ã«â€žÂ¬Ã¬Â£Â¼Ã­â„¢â€ ÃªÂ¾Â¸Ã«Å¸Â¬Ã«Â¯Â¸.
 						break;
 					}
 				}
@@ -225,9 +224,9 @@ public class DivineTowerInstanceD extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = divineTowerTask.head(), end = divineTowerTask.tail(); (n = n.getNext()) != end;) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : divineTowerTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

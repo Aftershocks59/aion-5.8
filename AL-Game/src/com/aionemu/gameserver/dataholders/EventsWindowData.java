@@ -45,7 +45,7 @@ public class EventsWindowData {
 	private TIntObjectHashMap<EventsWindow> eventData = new TIntObjectHashMap<EventsWindow>();
 
 	@XmlTransient
-	private Map<Integer, EventsWindow> eventDataMap = new HashMap<Integer, EventsWindow>(1);
+private Map<Integer, EventsWindow> eventDataMap = new HashMap<Integer, EventsWindow>(1);
 
 	void afterUnmarshal(Unmarshaller paramUnmarshaller, Object paramObject) {
 		for (EventsWindow event_window : events_window) {

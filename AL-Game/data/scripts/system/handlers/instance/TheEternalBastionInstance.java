@@ -16,6 +16,9 @@
  */
 package instance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -47,7 +50,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.Map;
 import java.util.Set;
@@ -74,7 +76,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	private int prepareTimerSeconds = 60000; //...1Min
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 1800000; //...30Min
-	private final FastList<Future<?>> bastionTask = FastList.newInstance();
+	private final List<Future<?>> bastionTask = new ArrayList<>();
 	
 	protected EternalBastionPlayerReward getPlayerReward(Integer object) {
 		return (EternalBastionPlayerReward) instanceReward.getPlayerReward(object);
@@ -663,9 +665,9 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = bastionTask.head(), end = bastionTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : bastionTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

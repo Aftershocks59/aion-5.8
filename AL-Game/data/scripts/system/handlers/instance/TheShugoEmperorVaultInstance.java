@@ -16,6 +16,9 @@
  */
 package instance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -45,7 +48,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -70,7 +72,7 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 600000; //...10Min
 	private ShugoEmperorVaultReward instanceReward;
-	private final FastList<Future<?>> vaultTask = FastList.newInstance();
+	private final List<Future<?>> vaultTask = new ArrayList<>();
 	
 	protected ShugoEmperorVaultPlayerReward getPlayerReward(Integer object) {
 		return (ShugoEmperorVaultPlayerReward) instanceReward.getPlayerReward(object);
@@ -474,9 +476,9 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = vaultTask.head(), end = vaultTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : vaultTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

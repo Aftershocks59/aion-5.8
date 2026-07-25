@@ -16,11 +16,14 @@ dependencies {
     api(libs.javassist)
     api(libs.bonecp)
     api(libs.mariadb)
-    api(libs.javolution)
     api(libs.jsr305)
     api(libs.jaxb.api)
     runtimeOnly(libs.jaxb.runtime)
     api(libs.activation)
+
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockito.junit)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 tasks.jar {

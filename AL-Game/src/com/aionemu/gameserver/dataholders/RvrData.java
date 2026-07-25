@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -28,7 +31,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.rvr.RvrLocation;
 import com.aionemu.gameserver.model.templates.rvr.RvrTemplate;
 
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +43,7 @@ public class RvrData {
 	private List<RvrTemplate> rvrTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, RvrLocation> rvr = new FastMap<Integer, RvrLocation>();
+private Map<Integer, RvrLocation> rvr = new LinkedHashMap<Integer, RvrLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (RvrTemplate template : rvrTemplates) {
@@ -53,7 +55,7 @@ public class RvrData {
 		return rvr.size();
 	}
 
-	public FastMap<Integer, RvrLocation> getRvrLocations() {
+	public Map<Integer, RvrLocation> getRvrLocations() {
 		return rvr;
 	}
 }

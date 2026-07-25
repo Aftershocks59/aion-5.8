@@ -16,6 +16,9 @@
  */
 package playercommands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -30,7 +33,6 @@ import com.aionemu.gameserver.services.ClassChangeService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
-import javolution.util.FastList;
 
 /**
  * Created by K1ll3r
@@ -169,20 +171,20 @@ public class GiveStigma extends PlayerCommand {
         PacketSendUtility.sendPacket(player, new SM_QUEST_COMPLETED_LIST(player.getQuestStateList().getAllFinishedQuests()));
     }
 
-    private void getStigmaStones(Player player, FastList<Integer> stoneList){
-        for (FastList.Node<Integer> n = stoneList.head(), end = stoneList.tail(); (n = n.getNext()) != end; ) {
-            ItemService.addItem(player, n.getValue(), 1);
+    private void getStigmaStones(Player player, List<Integer> stoneList){
+        for (Integer n : stoneList) {
+            ItemService.addItem(player, n, 1);
         }
     }
 
-    private void getRidOfStigmaStones(Player player, FastList<Integer> stoneList){
-        for (FastList.Node<Integer> n = stoneList.head(), end = stoneList.tail(); (n = n.getNext()) != end; ){
-            player.getInventory().decreaseByItemId(n.getValue(), 1);
+    private void getRidOfStigmaStones(Player player, List<Integer> stoneList){
+        for (Integer n : stoneList) {
+            player.getInventory().decreaseByItemId(n, 1);
         }
     }
 
-    private FastList<Integer> glad(Player player, boolean getStoneIds){
-        FastList<Integer> stones = new FastList<Integer>();
+    private List<Integer> glad(Player player, boolean getStoneIds){
+        List<Integer> stones = new ArrayList<Integer>();
         stones.add(140001119);
         stones.add(140001118);
         stones.add(140001117);
@@ -208,8 +210,8 @@ public class GiveStigma extends PlayerCommand {
         getStigmaStones(player, stones);
         return null;
     }
-    private FastList<Integer> temp(Player player, boolean getStoneIds){
-        FastList<Integer> stones = new FastList<Integer>();
+    private List<Integer> temp(Player player, boolean getStoneIds){
+        List<Integer> stones = new ArrayList<Integer>();
 
         stones.add(140001135);
         stones.add(140001134);
@@ -236,8 +238,8 @@ public class GiveStigma extends PlayerCommand {
         getStigmaStones(player, stones);
         return null;
     }
-    private FastList<Integer> sin(Player player, boolean getStoneIds){
-        FastList<Integer> stones = new FastList<Integer>();
+    private List<Integer> sin(Player player, boolean getStoneIds){
+        List<Integer> stones = new ArrayList<Integer>();
 
         stones.add(140001152);
         stones.add(140001151);
@@ -264,8 +266,8 @@ public class GiveStigma extends PlayerCommand {
         getStigmaStones(player, stones);
         return null;
     }
-    private FastList<Integer> ranger(Player player, boolean getStoneIds){
-        FastList<Integer> stones = new FastList<Integer>();
+    private List<Integer> ranger(Player player, boolean getStoneIds){
+        List<Integer> stones = new ArrayList<Integer>();
 
         if(player.getRace() == Race.ELYOS){
             stones.add(140001169);
@@ -300,8 +302,8 @@ public class GiveStigma extends PlayerCommand {
         getStigmaStones(player, stones);
         return null;
     }
-    private FastList<Integer> sorc(Player player, boolean getStoneIds){
-        FastList<Integer> stones = new FastList<Integer>();
+    private List<Integer> sorc(Player player, boolean getStoneIds){
+        List<Integer> stones = new ArrayList<Integer>();
 
         if(player.getRace() == Race.ELYOS){
             stones.add(140001184);
@@ -335,8 +337,8 @@ public class GiveStigma extends PlayerCommand {
         getStigmaStones(player, stones);
         return null;
     }
-    private FastList<Integer> sm(Player player, boolean getStoneIds){
-        FastList<Integer> stones = new FastList<Integer>();
+    private List<Integer> sm(Player player, boolean getStoneIds){
+        List<Integer> stones = new ArrayList<Integer>();
 
         if(player.getRace() == Race.ELYOS){
             stones.add(140001197);
@@ -370,8 +372,8 @@ public class GiveStigma extends PlayerCommand {
         getStigmaStones(player, stones);
         return null;
     }
-    private FastList<Integer> cleric(Player player, boolean getStoneIds){
-        FastList<Integer> stones = new FastList<Integer>();
+    private List<Integer> cleric(Player player, boolean getStoneIds){
+        List<Integer> stones = new ArrayList<Integer>();
 
         if(player.getRace() == Race.ELYOS){
             stones.add(140001234);
@@ -404,8 +406,8 @@ public class GiveStigma extends PlayerCommand {
         getStigmaStones(player, stones);
         return null;
     }
-    private FastList<Integer> chanter(Player player, boolean getStoneIds){
-        FastList<Integer> stones = new FastList<Integer>();
+    private List<Integer> chanter(Player player, boolean getStoneIds){
+        List<Integer> stones = new ArrayList<Integer>();
 
         stones.add(140001227);
         stones.add(140001226);
@@ -432,8 +434,8 @@ public class GiveStigma extends PlayerCommand {
         getStigmaStones(player, stones);
         return null;
     }
-    private FastList<Integer> gunner(Player player, boolean getStoneIds){
-        FastList<Integer> stones = new FastList<Integer>();
+    private List<Integer> gunner(Player player, boolean getStoneIds){
+        List<Integer> stones = new ArrayList<Integer>();
 
         stones.add(140001263);
         stones.add(140001262);
@@ -460,8 +462,8 @@ public class GiveStigma extends PlayerCommand {
         getStigmaStones(player, stones);
         return null;
     }
-    private FastList<Integer> at(Player player, boolean getStoneIds){
-        FastList<Integer> stones = new FastList<Integer>();
+    private List<Integer> at(Player player, boolean getStoneIds){
+        List<Integer> stones = new ArrayList<Integer>();
 
         stones.add(140001280);
         stones.add(140001279);
@@ -488,8 +490,8 @@ public class GiveStigma extends PlayerCommand {
         getStigmaStones(player, stones);
         return null;
     }
-    private FastList<Integer> bard(Player player, boolean getStoneIds){
-        FastList<Integer> stones = new FastList<Integer>();
+    private List<Integer> bard(Player player, boolean getStoneIds){
+        List<Integer> stones = new ArrayList<Integer>();
 
         stones.add(140001297);
         stones.add(140001296);

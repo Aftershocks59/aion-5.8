@@ -16,18 +16,20 @@
  */
 package com.aionemu.gameserver.world.container;
 
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
+
 import java.util.Iterator;
 import java.util.Map;
 
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 public class LegionContainer implements Iterable<Legion> {
-	private final Map<Integer, Legion> legionsById = new FastMap<Integer, Legion>().shared();
-	private final Map<String, Legion> legionsByName = new FastMap<String, Legion>().shared();
+	private final Map<Integer, Legion> legionsById = new ConcurrentHashMap<Integer, Legion>();
+	private final Map<String, Legion> legionsByName = new ConcurrentHashMap<String, Legion>();
 
 	public void add(Legion legion) {
 		if (legion == null || legion.getLegionName() == null) {
@@ -54,8 +56,8 @@ public class LegionContainer implements Iterable<Legion> {
 		return legionsByName.get(name.toLowerCase());
 	}
 
-	public FastList<Legion> getAllLegions() {
-		FastList<Legion> list = new FastList<Legion>();
+	public List<Legion> getAllLegions() {
+		List<Legion> list = new ArrayList<Legion>();
 		list.addAll(legionsByName.values());
 		return list;
 	}

@@ -41,7 +41,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler
 	private int hugeAetherFragment;
 	private boolean isInstanceDestroyed;
 	private Map<Integer, StaticDoor> doors;
-	private final FastList<Future<?>> abyssalSplinterTask = FastList.newInstance();
+	private final List<Future<?>> abyssalSplinterTask = new ArrayList<>();
 	
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
@@ -201,9 +200,9 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = abyssalSplinterTask.head(), end = abyssalSplinterTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
+        for (Future<?> n : abyssalSplinterTask) {
+            if (n != null) {
+                n.cancel(true);
             }
         }
     }

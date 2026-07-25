@@ -39,7 +39,7 @@ public class InstanceExitData {
 	protected List<InstanceExit> instanceExit;
 
 	@XmlTransient
-	protected List<InstanceExit> instanceExits = new ArrayList<InstanceExit>();
+protected List<InstanceExit> instanceExits = new ArrayList<InstanceExit>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (InstanceExit exit : instanceExit) {

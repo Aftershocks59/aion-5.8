@@ -18,10 +18,11 @@
 
 package com.aionemu.loginserver.controller;
 
+import java.util.LinkedHashMap;
+
 import java.sql.Timestamp;
 import java.util.Map;
 
-import javolution.util.FastMap;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.dao.BannedMacDAO;
@@ -35,7 +36,7 @@ import com.aionemu.loginserver.model.base.BannedMacEntry;
 public class BannedMacManager {
 
     private static BannedMacManager manager = new BannedMacManager();
-    private Map<String, BannedMacEntry> bannedList = new FastMap<String, BannedMacEntry>();
+    private Map<String, BannedMacEntry> bannedList = new LinkedHashMap<String, BannedMacEntry>();
 
     public static BannedMacManager getInstance() {
         return manager;

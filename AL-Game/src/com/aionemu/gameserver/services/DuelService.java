@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+
 import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
@@ -41,21 +44,20 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
-import javolution.util.FastMap;
 
 public class DuelService {
 	private static Logger log = LoggerFactory.getLogger(DuelService.class);
 
-	private FastMap<Integer, Integer> duels;
-	private FastMap<Integer, Future<?>> timeOutTask;
+	private Map<Integer, Integer> duels;
+	private Map<Integer, Future<?>> timeOutTask;
 
 	public static final DuelService getInstance() {
 		return SingletonHolder.instance;
 	}
 
 	private DuelService() {
-		this.duels = new FastMap<Integer, Integer>().shared();
-		timeOutTask = new FastMap<Integer, Future<?>>().shared();
+		this.duels = new ConcurrentHashMap<Integer, Integer>();
+		timeOutTask = new ConcurrentHashMap<Integer, Future<?>>();
 	}
 
 	public void onDuelRequest(Player requester, Player responder) {

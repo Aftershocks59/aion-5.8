@@ -39,7 +39,7 @@ public class ItemSkillEnhanceData {
 	protected List<ItemSkillEnhance> skillEnhances;
 
 	@XmlTransient
-	protected List<ItemSkillEnhance> enhanceSkillList = new ArrayList<ItemSkillEnhance>();
+protected List<ItemSkillEnhance> enhanceSkillList = new ArrayList<ItemSkillEnhance>();
 
 	public ItemSkillEnhance getSkillEnhance(int id) {
 		for (ItemSkillEnhance enhance : enhanceSkillList) {

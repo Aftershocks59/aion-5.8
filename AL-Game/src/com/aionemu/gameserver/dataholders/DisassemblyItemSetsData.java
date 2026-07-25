@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dataholders;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import com.aionemu.gameserver.model.templates.item.DisassembleItemGroups;
 import com.aionemu.gameserver.model.templates.item.DisassemblyItemSet;
 import gnu.trove.map.hash.TIntObjectHashMap;

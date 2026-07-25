@@ -15,6 +15,10 @@ dependencies {
     // Snapshot the parsed static data graph to a binary cache, so a start with
     // unchanged XML skips JAXB entirely.
     implementation(libs.kryo)
+
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockito.junit)
+    testRuntimeOnly(libs.junit.platform.launcher)
     implementation(libs.joda.time)
     implementation(libs.jaxb.api)
     runtimeOnly(libs.jaxb.runtime)

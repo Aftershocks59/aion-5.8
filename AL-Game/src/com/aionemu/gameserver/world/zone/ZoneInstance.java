@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.world.zone;
 
+import java.util.LinkedHashMap;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +32,6 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.handler.AdvencedZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
-import javolution.util.FastMap;
 
 /**
  * @author ATracer
@@ -39,7 +40,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 
 	private ZoneInfo template;
 	private int mapId;
-	private Map<Integer, Creature> creatures = new FastMap<Integer, Creature>();
+	private Map<Integer, Creature> creatures = new LinkedHashMap<Integer, Creature>();
 	protected List<ZoneHandler> handlers = new ArrayList<ZoneHandler>();
 
 	public ZoneInstance(int mapId, ZoneInfo template) {

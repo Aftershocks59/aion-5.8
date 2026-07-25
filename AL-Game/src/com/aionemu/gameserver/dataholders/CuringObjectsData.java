@@ -38,7 +38,7 @@ public class CuringObjectsData {
 	protected List<CuringTemplate> curingObject;
 
 	@XmlTransient
-	private List<CuringTemplate> curingObjects = new ArrayList<CuringTemplate>();
+private List<CuringTemplate> curingObjects = new ArrayList<CuringTemplate>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (CuringTemplate template : curingObject) {

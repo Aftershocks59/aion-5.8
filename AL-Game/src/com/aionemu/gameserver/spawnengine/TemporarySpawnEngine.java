@@ -16,6 +16,11 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import java.util.HashSet;
 
 import com.aionemu.gameserver.model.TaskId;
@@ -25,13 +30,11 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.TemporarySpawn;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 public class TemporarySpawnEngine {
 
-	private static final FastList<SpawnGroup2> temporarySpawns = new FastList<SpawnGroup2>();
-	private static final FastMap<SpawnGroup2, HashSet<Integer>> tempSpawnInstanceMap = new FastMap<SpawnGroup2, HashSet<Integer>>();
+	private static final List<SpawnGroup2> temporarySpawns = new ArrayList<SpawnGroup2>();
+	private static final Map<SpawnGroup2, HashSet<Integer>> tempSpawnInstanceMap = new LinkedHashMap<SpawnGroup2, HashSet<Integer>>();
 
 	public static void spawnAll() {
 		spawn(true);

@@ -42,7 +42,7 @@ public class ReviveWorldStartPointsData {
 	protected List<WorldReviveStartPoints> WorldStartPoints;
 
 	@XmlTransient
-	protected List<WorldReviveStartPoints> StartPointsList = new ArrayList<WorldReviveStartPoints>();
+protected List<WorldReviveStartPoints> StartPointsList = new ArrayList<WorldReviveStartPoints>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (WorldReviveStartPoints exit : WorldStartPoints) {

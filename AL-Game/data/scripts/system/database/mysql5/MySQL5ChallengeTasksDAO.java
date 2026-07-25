@@ -16,6 +16,8 @@
  */
 package mysql5;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.ChallengeTasksDAO;
 import com.aionemu.gameserver.dao.MySQL5DAOUtils;
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.model.challenge.ChallengeTask;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeQuestTemplate;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeType;
-import javolution.util.FastMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,7 @@ public class MySQL5ChallengeTasksDAO extends ChallengeTasksDAO {
 
 	@Override
 	public Map<Integer, ChallengeTask> load(int ownerId, ChallengeType type) {
-		FastMap<Integer, ChallengeTask> tasks = new FastMap<Integer, ChallengeTask>().shared();
+		Map<Integer, ChallengeTask> tasks = new ConcurrentHashMap<Integer, ChallengeTask>();
 		Connection conn = null;
 		try {
 			conn = DatabaseFactory.getConnection();
