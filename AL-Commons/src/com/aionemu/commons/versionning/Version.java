@@ -46,10 +46,14 @@ import java.util.jar.Manifest;
 public class Version {
 
     private static final Logger log = LoggerFactory.getLogger(Version.class);
-    private String revision;
-    private String date;
-    private String branch;
-    private String commitTime;
+
+    /** Stands in when the build information cannot be read, so nothing prints null. */
+    private static final String UNKNOWN = "Unknown";
+
+    private String revision = UNKNOWN;
+    private String date = UNKNOWN;
+    private String branch = UNKNOWN;
+    private String commitTime = UNKNOWN;
 
     public Version() {
     }
@@ -58,22 +62,37 @@ public class Version {
         loadInformation(c);
     }
 
+    /**
+     * Reads the build information from the manifest of the archive a class came
+     * from.
+     * <p>
+     * Leaves the fields on their unknown default when the class was not loaded from
+     * an archive. Running from a directory of compiled classes is what every Gradle
+     * run does, and there is simply no manifest to read: reporting it as an error,
+     * with a stack trace, said the server had a problem when it did not.
+     */
     public void loadInformation(Class<?> c) {
-        File jarName = null;
-        try {
-            jarName = Locator.getClassSource(c);
-            JarFile jarFile = new JarFile(jarName);
+        File jarName = Locator.getClassSource(c);
+        if (jarName == null || jarName.isDirectory()) {
+            log.debug("Skipping build information: " + jarName + " is not an archive.");
+            return;
+        }
 
-            Attributes attrs = jarFile.getManifest().getMainAttributes();
+        try (JarFile jarFile = new JarFile(jarName)) {
+            Manifest manifest = jarFile.getManifest();
+            if (manifest == null) {
+                log.debug("Skipping build information: " + jarName + " carries no manifest.");
+                return;
+            }
+
+            Attributes attrs = manifest.getMainAttributes();
             this.revision = getAttribute("Revision", attrs);
             this.date = getAttribute("Date", attrs);
             this.branch = getAttribute("Branch", attrs);
             this.commitTime = getAttribute("CommitTime", attrs);
         } catch (IOException e) {
-            log.error("Unable to get Soft information\nFile name '" + (jarName == null ? "null" : jarName.getAbsolutePath())
-                    + "' isn't a valid jar", e);
+            log.error("Unable to read the build information from '" + jarName.getAbsolutePath() + "'", e);
         }
-
     }
 
     public void transferInfo(String jarName, String type, File fileToWrite) {
@@ -82,14 +101,17 @@ public class Version {
                 log.error("Unable to Find File :" + fileToWrite.getName() + " Please Update your " + type);
                 return;
             }
-            // Open the JAR file
-            JarFile jarFile = new JarFile("./" + jarName);
-            // Get the manifest
-            Manifest manifest = jarFile.getManifest();
-            // Write the manifest to a file
-            OutputStream fos = new FileOutputStream(fileToWrite);
-            manifest.write(fos);
-            fos.close();
+            // Close both on the way out, including when writing throws: this used to
+            // leak the archive handle, which on Windows keeps the file locked.
+            try (JarFile jarFile = new JarFile("./" + jarName);
+                    OutputStream fos = new FileOutputStream(fileToWrite)) {
+                Manifest manifest = jarFile.getManifest();
+                if (manifest == null) {
+                    log.warn("Unable to copy the manifest: " + jarName + " carries none.");
+                    return;
+                }
+                manifest.write(fos);
+            }
         } catch (IOException e) {
             log.error("Error, " + e);
         }
