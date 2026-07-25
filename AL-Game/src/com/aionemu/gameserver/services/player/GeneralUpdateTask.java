@@ -16,15 +16,14 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
-import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.world.World;
@@ -47,9 +46,9 @@ class GeneralUpdateTask implements Runnable {
 			try {
 				DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);
 				DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player);
-				DAOManager.getDAO(PlayerQuestListDAO.class).store(player);
+				GameRepositories.playerQuests().save(player);
 				DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
-				DAOManager.getDAO(PlayerStigmasEquippedDAO.class).storeItems(player);
+				GameRepositories.equippedStigmas().save(player);
 				for (House house : player.getHouses())
 					house.save();
 			} catch (Exception ex) {

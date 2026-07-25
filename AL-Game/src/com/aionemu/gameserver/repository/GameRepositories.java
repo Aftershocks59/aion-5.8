@@ -68,6 +68,10 @@ public final class GameRepositories {
 	private final WeddingRepository weddings;
 	private final OutpostRepository outposts;
 	private final EventItemRepository eventItems;
+	private final BaseRepository bases;
+	private final PlayerTransformRepository playerTransforms;
+	private final EquippedStigmaRepository equippedStigmas;
+	private final PlayerQuestRepository playerQuests;
 
 	/**
 	 * Builds every repository over one data source.
@@ -109,6 +113,10 @@ public final class GameRepositories {
 		weddings = new JdbcWeddingRepository(dataSource);
 		outposts = new JdbcOutpostRepository(dataSource);
 		eventItems = new JdbcEventItemRepository(dataSource);
+		bases = new JdbcBaseRepository(dataSource);
+		playerTransforms = new JdbcPlayerTransformRepository(dataSource);
+		equippedStigmas = new JdbcEquippedStigmaRepository(dataSource);
+		playerQuests = new JdbcPlayerQuestRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -253,5 +261,21 @@ public final class GameRepositories {
 
 	public static EventItemRepository eventItems() {
 		return getInstance().eventItems;
+	}
+
+	public static BaseRepository bases() {
+		return getInstance().bases;
+	}
+
+	public static PlayerTransformRepository playerTransforms() {
+		return getInstance().playerTransforms;
+	}
+
+	public static EquippedStigmaRepository equippedStigmas() {
+		return getInstance().equippedStigmas;
+	}
+
+	public static PlayerQuestRepository playerQuests() {
+		return getInstance().playerQuests;
 	}
 }

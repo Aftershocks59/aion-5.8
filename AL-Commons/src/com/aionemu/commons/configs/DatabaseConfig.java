@@ -61,7 +61,12 @@ public class DatabaseConfig {
     /**
      * Default database password
      */
-    @Property(key = "database.password", defaultValue = "root")
+    /*
+	 * Defaults to no password. A blank value in the file counts as absent, so a
+	 * hard-coded default here would be sent whenever the environment supplies
+	 * nothing, and the server would report a password it was never given.
+	 */
+	@Property(key = "database.password", defaultValue = "")
     public static String DATABASE_PASSWORD;
 
     /**

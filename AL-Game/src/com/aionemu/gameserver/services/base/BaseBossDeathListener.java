@@ -20,7 +20,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.BaseDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -183,9 +182,5 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 		if (race == Race.ELYOS) {
 			AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE, true);
 		}
-	}
-
-	private BaseDAO getDAO() {
-		return DAOManager.getDAO(BaseDAO.class);
 	}
 }

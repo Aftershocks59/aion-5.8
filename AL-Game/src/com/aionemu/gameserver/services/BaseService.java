@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.Map;
@@ -25,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
-import com.aionemu.gameserver.dao.BaseDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.base.BaseLocation;
@@ -48,7 +48,7 @@ public class BaseService {
 
 	public void initBaseLocations() {
 		bases = DataManager.BASE_DATA.getBaseLocations();
-		DAOManager.getDAO(BaseDAO.class).loadBaseLocations(bases);
+		GameRepositories.bases().load(bases);
 		log.info("[BaseService] Loaded " + bases.size() + " bases locations.");
 	}
 
@@ -166,7 +166,7 @@ public class BaseService {
 		getActiveBase(id).setRace(race);
 		stop(id);
 		broadcastUpdate(getBaseLocation(id));
-		getDAO().updateLocation(getBaseLocation(getBaseLocation(id).getId()));
+		GameRepositories.bases().save(getBaseLocation(getBaseLocation(id).getId()));
 	}
 
 	public boolean isActive(int id) {
@@ -209,9 +209,5 @@ public class BaseService {
 
 	private static class BaseServiceHolder {
 		private static final BaseService INSTANCE = new BaseService();
-	}
-
-	private BaseDAO getDAO() {
-		return DAOManager.getDAO(BaseDAO.class);
 	}
 }

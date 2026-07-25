@@ -40,10 +40,8 @@ import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
-import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
-import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.dataholders.PlayerInitialData.LocationData;
@@ -107,9 +105,9 @@ public class PlayerService {
 	public static void storePlayer(Player player) {
 		DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
 		DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player);
-		DAOManager.getDAO(PlayerStigmasEquippedDAO.class).storeItems(player);
+		GameRepositories.equippedStigmas().save(player);
 		GameRepositories.playerSettings().save(player);
-		DAOManager.getDAO(PlayerQuestListDAO.class).store(player);
+		GameRepositories.playerQuests().save(player);
 		DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);
 		GameRepositories.playerPunishments().save(player, PunishmentType.PRISON);
 		GameRepositories.playerPunishments().save(player, PunishmentType.GATHER);
@@ -150,7 +148,7 @@ public class PlayerService {
 		MacroList macroses = GameRepositories.playerMacros().findAll(playerObjId);
 		player.setMacroList(macroses);
 		player.setSkillList(DAOManager.getDAO(PlayerSkillListDAO.class).loadSkillList(playerObjId));
-		player.setEquipedStigmaList(DAOManager.getDAO(PlayerStigmasEquippedDAO.class).loadItemsList(playerObjId));
+		player.setEquipedStigmaList(GameRepositories.equippedStigmas().load(playerObjId));
 		player.setKnownlist(new KnownList(player));
 		player.setFriendList(GameRepositories.playerSocial().findFriends(player, DAOManager.getDAO(PlayerDAO.class)::loadPlayerCommonData));
 		player.setBlockList(GameRepositories.playerSocial().findBlocked(player, DAOManager.getDAO(PlayerDAO.class)::loadPlayerCommonData));
@@ -172,7 +170,7 @@ public class PlayerService {
 		player.setEffectController(new PlayerEffectController(player));
 		player.setFlyController(new FlyController(player));
 		PlayerStatFunctions.addPredefinedStatFunctions(player);
-		player.setQuestStateList(DAOManager.getDAO(PlayerQuestListDAO.class).load(player));
+		player.setQuestStateList(GameRepositories.playerQuests().load(player));
 		player.setRecipeList(GameRepositories.playerRecipes().findAll(player.getObjectId()));
 		player.setSkillSkinList(GameRepositories.playerSkillSkins().findAll(playerObjId));
 

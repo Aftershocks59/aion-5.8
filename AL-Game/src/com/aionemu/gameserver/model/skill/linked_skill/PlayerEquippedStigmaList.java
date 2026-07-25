@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.skill.linked_skill;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
@@ -73,7 +73,7 @@ public final class PlayerEquippedStigmaList implements StigmaList<Player> {
 
 	private synchronized boolean addItem(Player player, int itemId, String itemName, PersistentState state) {
 		itemList.put(itemId, new EquippedStigmasEntry(itemId, itemName, state));
-		DAOManager.getDAO(PlayerStigmasEquippedDAO.class).storeItems(player);
+		GameRepositories.equippedStigmas().save(player);
 		return true;
 	}
 
@@ -85,7 +85,7 @@ public final class PlayerEquippedStigmaList implements StigmaList<Player> {
 			deletedItems.add(entry);
 		}
 		if (player != null) {
-			DAOManager.getDAO(PlayerStigmasEquippedDAO.class).storeItems(player);
+			GameRepositories.equippedStigmas().save(player);
 			itemList.remove(itemId);
 		}
 		return entry != null;

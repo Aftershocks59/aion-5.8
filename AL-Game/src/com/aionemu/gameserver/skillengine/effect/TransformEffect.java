@@ -16,13 +16,13 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerTransformDAO;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.Summon;
@@ -76,7 +76,7 @@ public abstract class TransformEffect extends EffectTemplate {
 			effected.getTransformModel().setModelId(newModel);
 			effected.getTransformModel().setTransformType(transformType);
 			effected.getTransformModel().setItemId(0);
-			DAOManager.getDAO(PlayerTransformDAO.class).deletePlTransfo(effected.getObjectId());
+			GameRepositories.playerTransforms().remove(effected.getObjectId());
 		} else if (effected instanceof Summon) {
 			effected.getTransformModel().setModelId(0);
 		} else if (effected instanceof Npc) {
@@ -112,7 +112,7 @@ public abstract class TransformEffect extends EffectTemplate {
 			((Player) effected).setTransformedModelId(model);
 			((Player) effected).setTransformedItemId(itemId);
 			((Player) effected).setTransformedItemId(panelid);
-			DAOManager.getDAO(PlayerTransformDAO.class).storePlTransfo(effected.getObjectId(), panelid, itemId);
+			GameRepositories.playerTransforms().save(effected.getObjectId(), panelid, itemId);
 		}
 	}
 

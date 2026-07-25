@@ -16,12 +16,12 @@
  */
 package com.aionemu.gameserver.services.teleport;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
-import com.aionemu.gameserver.dao.PlayerTransformDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.model.EmotionType;
@@ -760,7 +760,7 @@ public class TeleportService2 {
 	}
 
 	public static void playerTransformation(Player player) {
-		DAOManager.getDAO(PlayerTransformDAO.class).loadPlTransfo(player);
+		GameRepositories.playerTransforms().load(player);
 		PacketSendUtility.sendPacket(player, new SM_TRANSFORM(player, player.getTransformModel().getPanelId(), true,
 				player.getTransformModel().getItemId()));
 	}
