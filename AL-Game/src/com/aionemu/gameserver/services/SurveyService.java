@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
-import com.aionemu.gameserver.dao.SurveyControllerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -89,7 +89,7 @@ public class SurveyService {
 			log.warn("[SurveyController] player " + player.getName() + " tried to receive item with full inventory.");
 			return;
 		}
-		if (DAOManager.getDAO(SurveyControllerDAO.class).useItem(item.uniqueId)) {
+		if (GameRepositories.surveys().markDelivered(item.uniqueId)) {
 
 			ItemService.addItem(player, item.itemId, item.count);
 			if (item.itemId == ItemId.KINAH.value()) { // You received %num0 Kinah as reward for the survey.
@@ -108,7 +108,7 @@ public class SurveyService {
 	}
 
 	public void taskUpdate() {
-		List<SurveyItem> newList = DAOManager.getDAO(SurveyControllerDAO.class).getAllNew();
+		List<SurveyItem> newList = GameRepositories.surveys().findPending();
 		if (newList.size() == 0) {
 			return;
 		}

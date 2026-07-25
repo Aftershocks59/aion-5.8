@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player.f2p;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.F2pDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 
@@ -41,7 +41,7 @@ public class F2p {
 			if (f2pacc.getExpireTime() != 0) {
 				ExpireTimerTask.getInstance().addTask(f2pacc, owner);
 			}
-			DAOManager.getDAO(F2pDAO.class).storeF2p(owner.getObjectId().intValue(), f2pacc.getExpireTime());
+			GameRepositories.f2p().save(owner.getObjectId().intValue(), f2pacc.getExpireTime());
 		}
 	}
 
@@ -52,7 +52,7 @@ public class F2p {
 			if (f2pacc.getExpireTime() != 0) {
 				ExpireTimerTask.getInstance().addTask(f2pacc, owner);
 			}
-			DAOManager.getDAO(F2pDAO.class).storeF2p(owner.getObjectId().intValue(), f2pacc.getExpireTime());
+			GameRepositories.f2p().save(owner.getObjectId().intValue(), f2pacc.getExpireTime());
 		}
 	}
 
@@ -63,7 +63,7 @@ public class F2p {
 	public boolean remove() {
 		if (f2pAccount != null) {
 			f2pAccount.setActive(false);
-			DAOManager.getDAO(F2pDAO.class).deleteF2p(owner.getObjectId().intValue());
+			GameRepositories.f2p().remove(owner.getObjectId().intValue());
 			owner.getEquipment().checkRankLimitItems();
 			return true;
 		}

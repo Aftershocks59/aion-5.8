@@ -32,7 +32,6 @@ import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.EventItemsDAO;
-import com.aionemu.gameserver.dao.F2pDAO;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
@@ -161,7 +160,7 @@ public class PlayerService {
 		player.setEventWindow(DAOManager.getDAO(PlayerEventsWindowDAO.class).load(player));
 		player.setAtreianBestiary(DAOManager.getDAO(PlayerABDAO.class).load(player));
 		player.setWardrobe(GameRepositories.playerWardrobe().findAll(player));
-		DAOManager.getDAO(F2pDAO.class).loadF2pInfo(player);
+		GameRepositories.f2p().load(player);
 		GameRepositories.playerSettings().load(player);
 		DAOManager.getDAO(AbyssRankDAO.class).loadAbyssRank(player);
 		GameRepositories.playerNpcFactions().load(player);

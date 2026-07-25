@@ -32,7 +32,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.TownDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.challenge.ChallengeQuest;
 import com.aionemu.gameserver.model.challenge.ChallengeTask;
@@ -193,7 +192,7 @@ public class ChallengeTaskService {
 					PacketSendUtility.sendPacket(player,
 							new SM_SYSTEM_MESSAGE(1401520, town.getNameId(), town.getLevel()));
 				}
-				DAOManager.getDAO(TownDAO.class).store(town);
+				GameRepositories.towns().save(town);
 			}
 		}
 	}

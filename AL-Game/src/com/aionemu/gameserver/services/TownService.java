@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.TownDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
@@ -53,8 +53,8 @@ public class TownService {
 	}
 
 	private TownService() {
-		elyosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ELYOS);
-		asmosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ASMODIANS);
+		elyosTowns = GameRepositories.towns().findAll(Race.ELYOS);
+		asmosTowns = GameRepositories.towns().findAll(Race.ASMODIANS);
 		if (elyosTowns.size() == 0 && asmosTowns.size() == 0) {
 			for (HousingLand land : DataManager.HOUSE_DATA.getLands()) {
 				for (HouseAddress address : land.getAddresses()) {
@@ -71,7 +71,7 @@ public class TownService {
 							} else if (townRace == Race.ASMODIANS) {
 								asmosTowns.put(town.getId(), town);
 							}
-							DAOManager.getDAO(TownDAO.class).store(town);
+							GameRepositories.towns().save(town);
 						}
 					}
 				}

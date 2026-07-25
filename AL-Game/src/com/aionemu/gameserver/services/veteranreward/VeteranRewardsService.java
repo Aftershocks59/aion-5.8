@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.veteranreward;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import java.util.LinkedHashSet;
@@ -33,7 +34,6 @@ import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.VeteranRewardsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -103,7 +103,7 @@ public class VeteranRewardsService {
 			veteran_rewards.clear();
 		}
 
-		veteran_rewards = new CopyOnWriteArraySet<VeteranRewards>(getDAO().getVeteranReward());
+		veteran_rewards = new CopyOnWriteArraySet<VeteranRewards>(GameRepositories.veteranRewards().findAll());
 
 		if (veteran_rewards.size() > 0) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {
@@ -195,7 +195,7 @@ public class VeteranRewardsService {
 	}
 
 	private void RecycleVeteranReward(final int rewardId) {
-		getDAO().delVeteranReward(rewardId);
+		GameRepositories.veteranRewards().remove(rewardId);
 	}
 
 	private void SendVeteranRewardMail(String sender, String recipientName, String title, String message,
@@ -352,10 +352,6 @@ public class VeteranRewardsService {
 			// attachedItemObjId + " / " + "Item Count: " + attachedItemCount + " / "
 			// + "Kinah: " + attachedKinahCount + " / " + "Status: successfully."));
 		}
-	}
-
-	private VeteranRewardsDAO getDAO() {
-		return DAOManager.getDAO(VeteranRewardsDAO.class);
 	}
 
 	public static final VeteranRewardsService getInstance() {

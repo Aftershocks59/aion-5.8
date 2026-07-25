@@ -60,6 +60,10 @@ public final class GameRepositories {
 	private final ChallengeTaskRepository challengeTasks;
 	private final PlayerPunishmentRepository playerPunishments;
 	private final GuideRepository guides;
+	private final F2pRepository f2p;
+	private final TownRepository towns;
+	private final SurveyRepository surveys;
+	private final VeteranRewardRepository veteranRewards;
 
 	/**
 	 * Builds every repository over one data source.
@@ -93,6 +97,10 @@ public final class GameRepositories {
 		challengeTasks = new JdbcChallengeTaskRepository(dataSource);
 		playerPunishments = new JdbcPlayerPunishmentRepository(dataSource);
 		guides = new JdbcGuideRepository(dataSource);
+		f2p = new JdbcF2pRepository(dataSource);
+		towns = new JdbcTownRepository(dataSource);
+		surveys = new JdbcSurveyRepository(dataSource);
+		veteranRewards = new JdbcVeteranRewardRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -205,5 +213,21 @@ public final class GameRepositories {
 
 	public static GuideRepository guides() {
 		return getInstance().guides;
+	}
+
+	public static F2pRepository f2p() {
+		return getInstance().f2p;
+	}
+
+	public static TownRepository towns() {
+		return getInstance().towns;
+	}
+
+	public static SurveyRepository surveys() {
+		return getInstance().surveys;
+	}
+
+	public static VeteranRewardRepository veteranRewards() {
+		return getInstance().veteranRewards;
 	}
 }
