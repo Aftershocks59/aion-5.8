@@ -31,8 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.LegionConfig;
-import com.aionemu.gameserver.dao.LegionDAO;
-import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -139,10 +137,10 @@ public class LegionService {
 	private void storeLegion(Legion legion, boolean newLegion) {
 		if (newLegion) {
 			addCachedLegion(legion);
-			DAOManager.getDAO(LegionDAO.class).saveNewLegion(legion);
+			GameRepositories.legions().add(legion);
 		} else {
-			DAOManager.getDAO(LegionDAO.class).storeLegion(legion);
-			DAOManager.getDAO(LegionDAO.class).storeLegionEmblem(legion.getLegionId(), legion.getLegionEmblem());
+			GameRepositories.legions().save(legion);
+			GameRepositories.legions().saveEmblem(legion.getLegionId(), legion.getLegionEmblem());
 		}
 	}
 
@@ -164,9 +162,9 @@ public class LegionService {
 	private void storeLegionMember(LegionMember legionMember, boolean newMember) {
 		if (newMember) {
 			addCachedLegionMember(legionMember);
-			DAOManager.getDAO(LegionMemberDAO.class).saveNewLegionMember(legionMember);
+			GameRepositories.legionMembers().add(legionMember);
 		} else {
-			DAOManager.getDAO(LegionMemberDAO.class).storeLegionMember(legionMember.getObjectId(), legionMember);
+			GameRepositories.legionMembers().save(legionMember.getObjectId(), legionMember);
 		}
 	}
 
@@ -264,7 +262,7 @@ public class LegionService {
 	 */
 	private void deleteLegionFromDB(Legion legion) {
 		this.allCachedLegions.remove(legion);
-		DAOManager.getDAO(LegionDAO.class).deleteLegion(legion.getLegionId());
+		GameRepositories.legions().remove(legion.getLegionId());
 	}
 
 	/**
@@ -274,7 +272,7 @@ public class LegionService {
 	 */
 	private void deleteLegionMemberFromDB(LegionMemberEx legionMember) {
 		this.allCachedLegionMembers.remove(legionMember);
-		DAOManager.getDAO(LegionMemberDAO.class).deleteLegionMember(legionMember.getObjectId());
+		GameRepositories.legionMembers().remove(legionMember.getObjectId());
 		Legion legion = legionMember.getLegion();
 		legion.deleteLegionMember(legionMember.getObjectId());
 		addHistory(legion, legionMember.getName(), LegionHistoryType.KICK);
@@ -298,7 +296,7 @@ public class LegionService {
 		/**
 		 * Else load the legion information from the database
 		 */
-		Legion legion = DAOManager.getDAO(LegionDAO.class).loadLegion(legionName);
+		Legion legion = GameRepositories.legions().load(legionName);
 
 		/**
 		 * This will handle the rest of the information that needs to be loaded
@@ -334,7 +332,7 @@ public class LegionService {
 		/**
 		 * Else load the legion information from the database
 		 */
-		Legion legion = DAOManager.getDAO(LegionDAO.class).loadLegion(legionId);
+		Legion legion = GameRepositories.legions().load(legionId);
 
 		/**
 		 * This will handle the rest of the information that needs to be loaded
@@ -367,22 +365,22 @@ public class LegionService {
 		/**
 		 * Load and add the legion members to legion
 		 */
-		legion.setLegionMembers(DAOManager.getDAO(LegionMemberDAO.class).loadLegionMembers(legion.getLegionId()));
+		legion.setLegionMembers(GameRepositories.legionMembers().loadMembers(legion.getLegionId()));
 
 		/**
 		 * Load and set the announcement list
 		 */
-		legion.setAnnouncementList(DAOManager.getDAO(LegionDAO.class).loadAnnouncementList(legion.getLegionId()));
+		legion.setAnnouncementList(GameRepositories.legions().loadNotices(legion.getLegionId()));
 
 		/**
 		 * Set legion emblem
 		 */
-		legion.setLegionEmblem(DAOManager.getDAO(LegionDAO.class).loadLegionEmblem(legion.getLegionId()));
+		legion.setLegionEmblem(GameRepositories.legions().loadEmblem(legion.getLegionId()));
 
 		/**
 		 * Load Legion Warehouse
 		 */
-		legion.setLegionWarehouse(DAOManager.getDAO(LegionDAO.class).loadLegionStorage(legion));
+		legion.setLegionWarehouse(GameRepositories.legions().loadWarehouse(legion));
 
 		if (legionRanking.containsKey(legion.getLegionId())) {
 			legion.setLegionRank(legionRanking.get(legion.getLegionId()));
@@ -390,7 +388,7 @@ public class LegionService {
 		/**
 		 * Load Legion History
 		 */
-		DAOManager.getDAO(LegionDAO.class).loadLegionHistory(legion);
+		GameRepositories.legions().loadHistory(legion);
 	}
 
 	/**
@@ -424,7 +422,7 @@ public class LegionService {
 		if (this.allCachedLegionMembers.contains(playerObjId)) {
 			legionMember = this.allCachedLegionMembers.getMember(playerObjId);
 		} else {
-			legionMember = DAOManager.getDAO(LegionMemberDAO.class).loadLegionMember(playerObjId);
+			legionMember = GameRepositories.legionMembers().load(playerObjId);
 			if (legionMember != null) {
 				addCachedLegionMember(legionMember);
 			}
@@ -476,7 +474,7 @@ public class LegionService {
 		if (this.allCachedLegionMembers.containsEx(playerObjId)) {
 			return this.allCachedLegionMembers.getMemberEx(playerObjId);
 		} else {
-			LegionMemberEx legionMember = DAOManager.getDAO(LegionMemberDAO.class).loadLegionMemberEx(playerObjId);
+			LegionMemberEx legionMember = GameRepositories.legionMembers().loadDetailed(playerObjId);
 			addCachedLegionMemberEx(legionMember);
 			return legionMember;
 		}
@@ -492,7 +490,7 @@ public class LegionService {
 		if (this.allCachedLegionMembers.containsEx(playerName)) {
 			return this.allCachedLegionMembers.getMemberEx(playerName);
 		} else {
-			LegionMemberEx legionMember = DAOManager.getDAO(LegionMemberDAO.class).loadLegionMemberEx(playerName);
+			LegionMemberEx legionMember = GameRepositories.legionMembers().loadDetailed(playerName);
 			addCachedLegionMemberEx(legionMember);
 			return legionMember;
 		}
@@ -747,7 +745,7 @@ public class LegionService {
 			}
 			LegionMember legionMember = getLegionMember(LM.getObjectId());
 			legionMember.setRank(rank);
-			DAOManager.getDAO(LegionMemberDAO.class).storeLegionMember(legionMember.getObjectId(), legionMember);
+			GameRepositories.legionMembers().save(legionMember.getObjectId(), legionMember);
 			LM.setRank(rank);
 			PacketSendUtility.broadcastPacketToLegion(legion, new SM_LEGION_UPDATE_MEMBER(LM, msgId, LM.getName()));
 		}
@@ -867,7 +865,7 @@ public class LegionService {
 			PacketSendUtility.broadcastPacketToLegion(legion,
 					new SM_LEGION_UPDATE_NICKNAME(legionMember.getObjectId(), newNickname));
 			if (targetPlayer == null) {
-				DAOManager.getDAO(LegionMemberDAO.class).storeLegionMember(legionMember.getObjectId(), legionMember);
+				GameRepositories.legionMembers().save(legionMember.getObjectId(), legionMember);
 			}
 		}
 	}
@@ -1185,10 +1183,9 @@ public class LegionService {
 				}
 				// Finished
 				legionEmblem.setCustomEmblemData(legionEmblem.getUploadData());
-				DAOManager.getDAO(LegionDAO.class).storeLegionEmblem(activePlayer.getLegion().getLegionId(),
+				GameRepositories.legions().saveEmblem(activePlayer.getLegion().getLegionId(),
 						legionEmblem);
-				LegionEmblem emblem = DAOManager.getDAO(LegionDAO.class)
-						.loadLegionEmblem(activePlayer.getLegion().getLegionId());
+				LegionEmblem emblem = GameRepositories.legions().loadEmblem(activePlayer.getLegion().getLegionId());
 				LegionService.getInstance().storeLegionEmblem(activePlayer, emblem);
 			}
 		}
@@ -1296,7 +1293,7 @@ public class LegionService {
 	 * @return true if announcement was successful saved.
 	 */
 	private boolean storeNewAnnouncement(int legionId, Timestamp currentTime, String message) {
-		return DAOManager.getDAO(LegionDAO.class).saveNewAnnouncement(legionId, currentTime, message);
+		return GameRepositories.legions().addNotice(legionId, currentTime, message);
 	}
 
 	/**
@@ -1305,7 +1302,7 @@ public class LegionService {
 	 * @return true if succeeded
 	 */
 	private void removeAnnouncement(int legionId, Timestamp key) {
-		DAOManager.getDAO(LegionDAO.class).removeAnnouncement(legionId, key);
+		GameRepositories.legions().removeNotice(legionId, key);
 	}
 
 	private void addHistory(Legion legion, String text, LegionHistoryType legionHistoryType) {
@@ -1324,7 +1321,7 @@ public class LegionService {
 				new Timestamp(System.currentTimeMillis()), tabId, description);
 
 		legion.addHistory(legionHistory);
-		DAOManager.getDAO(LegionDAO.class).saveNewLegionHistory(legion.getLegionId(), legionHistory);
+		GameRepositories.legions().addHistory(legion.getLegionId(), legionHistory);
 
 		PacketSendUtility.broadcastPacketToLegion(legion,
 				new SM_LEGION_TABS(legion.getLegionHistoryByTabId(tabId), tabId));
@@ -2061,7 +2058,7 @@ public class LegionService {
 		 * @return true if is free, false in other case
 		 */
 		private boolean isFreeName(String name) {
-			return !DAOManager.getDAO(LegionDAO.class).isNameUsed(name);
+			return !GameRepositories.legions().isNameUsed(name);
 		}
 
 		/**
@@ -2134,7 +2131,7 @@ public class LegionService {
 		if (legionRestrictions.canChangeLegionJoinSetting(player)) {
 			legion.setDescription(description);
 			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0C, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
+			GameRepositories.legions().saveDescription(legion);
 		}
 	}
 
@@ -2146,7 +2143,7 @@ public class LegionService {
 		if (legionRestrictions.canChangeLegionJoinSetting(player)) {
 			legion.setJoinType(joinType);
 			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0D, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
+			GameRepositories.legions().saveDescription(legion);
 		}
 	}
 
@@ -2158,7 +2155,7 @@ public class LegionService {
 		if (legionRestrictions.canChangeLegionJoinSetting(player)) {
 			legion.setMinJoinLevel(minLevel);
 			PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x0E, legion));
-			DAOManager.getDAO(LegionDAO.class).updateLegionDescription(legion);
+			GameRepositories.legions().saveDescription(legion);
 		}
 	}
 
@@ -2194,7 +2191,7 @@ public class LegionService {
 			sendLegionJoinRequestPacket(player, legionId);
 			LegionJoinRequest ljr = new LegionJoinRequest(legionId, player, joinRequestMsg);
 			legion.addJoinRequest(ljr);
-			DAOManager.getDAO(LegionDAO.class).storeLegionJoinRequest(ljr);
+			GameRepositories.legions().saveJoinRequest(ljr);
 			player.getCommonData().setJoinRequestLegionId(legionId);
 			Player brigadeGeneral = getBrigadeGeneral(legion);
 			if (brigadeGeneral != null) {

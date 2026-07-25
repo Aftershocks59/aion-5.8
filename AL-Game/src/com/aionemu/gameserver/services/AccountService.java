@@ -28,7 +28,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.main.CacheConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.account.Account;
@@ -153,7 +152,7 @@ public class AccountService {
 			}
 			PlayerAppearance appereance = appereanceDAO.find(playerId);
 
-			LegionMember legionMember = DAOManager.getDAO(LegionMemberDAO.class).loadLegionMember(playerId);
+			LegionMember legionMember = GameRepositories.legionMembers().load(playerId);
 
 			/**
 			 * Load only equipment and its stones to display on character selection screen

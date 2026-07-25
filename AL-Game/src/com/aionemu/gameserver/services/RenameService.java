@@ -21,7 +21,6 @@ import java.util.Iterator;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RENAME;
@@ -86,7 +85,7 @@ public class RenameService {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400160));
 			return false;
 		}
-		if (DAOManager.getDAO(LegionDAO.class).isNameUsed(name)) {
+		if (GameRepositories.legions().isNameUsed(name)) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400156));
 			return false;
 		}

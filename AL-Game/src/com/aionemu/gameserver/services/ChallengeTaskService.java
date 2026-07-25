@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.challenge.ChallengeQuest;
@@ -231,8 +230,7 @@ public class ChallengeTaskService {
 						member.getLegionMember().setChallengeScore(0);
 						continue;
 					} else {
-						LegionMember legionMember = DAOManager.getDAO(LegionMemberDAO.class)
-								.loadLegionMember(memberObjId);
+						LegionMember legionMember = GameRepositories.legionMembers().load(memberObjId);
 						int score = legionMember.getChallengeScore();
 						if (score <= 0) {
 							continue;
@@ -242,7 +240,7 @@ public class ChallengeTaskService {
 						}
 						winnersByPoints.get(score).add(legionMember.getObjectId());
 						legionMember.setChallengeScore(0);
-						DAOManager.getDAO(LegionMemberDAO.class).storeLegionMember(memberObjId, legionMember);
+						GameRepositories.legionMembers().save(memberObjId, legionMember);
 					}
 				}
 				int rewardsAdded = 0, itemId, itemCount;

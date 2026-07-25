@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.GenericValidator;
-import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 
 /**
@@ -73,7 +72,7 @@ public class IDFactory {
 		lockIds(DAOManager.getDAO(PlayerDAO.class).getUsedIDs());
 		lockIds(GameRepositories.inventories().findUsedIds());
 		lockIds(GameRepositories.houseRegistries().findUsedIds());
-		lockIds(DAOManager.getDAO(LegionDAO.class).getUsedIDs());
+		lockIds(GameRepositories.legions().findUsedIds());
 		lockIds(GameRepositories.mails().findUsedIds());
 		lockIds(GameRepositories.guides().findUsedIds());
 		lockIds(GameRepositories.houses().findUsedIds());

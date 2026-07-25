@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.transfers;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -30,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
-import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -106,7 +106,7 @@ public class PlayerTransferService {
 			return;
 		}
 
-		if (DAOManager.getDAO(LegionMemberDAO.class).isIdUsed(playerId)) {
+		if (GameRepositories.legionMembers().isEnrolled(playerId)) {
 			log.warn("cannot transfer #" + taskId + " player with existing legion " + playerId + ".");
 			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
 					"cannot transfer player with existing legion " + playerId));

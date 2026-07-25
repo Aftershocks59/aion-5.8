@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.territory;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -25,7 +26,6 @@ import java.util.Iterator;
 import java.util.TreeMap;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionTerritory;
@@ -52,7 +52,7 @@ public class TerritoryService {
 		for (int i = 1; i <= 6; i++) {
 			territories.put(i, new LegionTerritory(i));
 		}
-		for (Integer legionId : DAOManager.getDAO(LegionDAO.class).getLegionIdsWithTerritories()) {
+		for (Integer legionId : GameRepositories.legions().findWithTerritory()) {
 			legions.add(ls.getLegion(legionId));
 		}
 		for (Legion legion : legions) {

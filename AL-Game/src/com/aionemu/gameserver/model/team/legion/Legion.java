@@ -133,7 +133,7 @@ public class Legion {
 	/**
 	 * @param legionMembers the legionMembers to set
 	 */
-	public void setLegionMembers(ArrayList<Integer> legionMembers) {
+	public void setLegionMembers(List<Integer> legionMembers) {
 		this.legionMembers = legionMembers;
 	}
 
