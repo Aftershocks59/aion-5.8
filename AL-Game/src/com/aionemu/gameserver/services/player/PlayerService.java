@@ -31,7 +31,6 @@ import com.aionemu.gameserver.controllers.FlyController;
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.EventItemsDAO;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
@@ -131,7 +130,7 @@ public class PlayerService {
 		GameRepositories.craftCooldowns().store(player);
 		GameRepositories.playerNpcFactions().store(player);
 		DAOManager.getDAO(PlayerLunaShopDAO.class).store(player);
-		DAOManager.getDAO(EventItemsDAO.class).loadItems(player);
+		GameRepositories.eventItems().load(player);
 		DAOManager.getDAO(PlayerCreativityPointsDAO.class).store(player);
 	}
 

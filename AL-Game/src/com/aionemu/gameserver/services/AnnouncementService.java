@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import java.util.LinkedHashSet;
@@ -31,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AnnouncementsDAO;
 import com.aionemu.gameserver.model.Announcement;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -85,7 +85,7 @@ public class AnnouncementService {
 	 * Load the announcements system
 	 */
 	private void load() {
-		announcements = new CopyOnWriteArraySet<Announcement>(getDAO().getAnnouncements());
+		announcements = new CopyOnWriteArraySet<Announcement>(GameRepositories.announcements().findAll());
 
 		for (final Announcement announce : announcements) {
 			delays.add(ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
@@ -130,15 +130,15 @@ public class AnnouncementService {
 	}
 
 	public void addAnnouncement(Announcement announce) {
-		getDAO().addAnnouncement(announce);
+		GameRepositories.announcements().add(announce);
 	}
 
 	public boolean delAnnouncement(final int idAnnounce) {
-		return getDAO().delAnnouncement(idAnnounce);
+		return GameRepositories.announcements().remove(idAnnounce);
 	}
 
 	public Set<Announcement> getAnnouncements() {
-		return getDAO().getAnnouncements();
+		return GameRepositories.announcements().findAll();
 	}
 
 	/**
@@ -146,9 +146,6 @@ public class AnnouncementService {
 	 * 
 	 * @return {@link com.aionemu.loginserver.dao.AnnouncementDAO}
 	 */
-	private AnnouncementsDAO getDAO() {
-		return DAOManager.getDAO(AnnouncementsDAO.class);
-	}
 
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {

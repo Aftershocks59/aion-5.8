@@ -25,7 +25,6 @@ import com.aionemu.gameserver.configs.main.HTMLConfig;
 import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.WeddingDAO;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
@@ -702,7 +701,7 @@ public final class PlayerEnterWorldService {
 			}
 			RelinquishCraftStatus.removeExcessCraftStatus(player, false);
 			PlayerTransferService.getInstance().onEnterWorld(player);
-			player.setPartnerId(DAOManager.getDAO(WeddingDAO.class).loadPartnerId(player));
+			player.setPartnerId(GameRepositories.weddings().findPartner(player.getObjectId()));
 			EnchantService.GloryShieldSkill(player);
 			ShugoSweepService.getInstance().onLogin(player);
 			LunaShopService.getInstance().onLogin(player);

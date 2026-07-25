@@ -111,7 +111,7 @@ public class PlayerLeaveWorldService {
 		GameRepositories.itemCooldowns().store(player);
 		GameRepositories.houseObjectCooldowns().store(player);
 		GameRepositories.playerLifeStats().save(player);
-		DAOManager.getDAO(EventItemsDAO.class).storeItems(player);
+		GameRepositories.eventItems().store(player);
 
 		// LUNA
 		LunaShopService.getInstance().onLogout(player);

@@ -16,13 +16,13 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.WeddingsConfig;
-import com.aionemu.gameserver.dao.WeddingDAO;
 import com.aionemu.gameserver.model.Wedding;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -76,7 +76,7 @@ public class WeddingService {
 	}
 
 	private void doWedding(Player player, Player partner) {
-		DAOManager.getDAO(WeddingDAO.class).storeWedding(player, partner);
+		GameRepositories.weddings().marry(player.getObjectId(), partner.getObjectId());
 		player.setPartnerId(partner.getObjectId());
 		partner.setPartnerId(player.getObjectId());
 		PacketSendUtility.sendMessage(player, "You had married on " + partner.getName() + ".");
@@ -87,7 +87,7 @@ public class WeddingService {
 	}
 
 	public void unDoWedding(Player player, Player partner) {
-		DAOManager.getDAO(WeddingDAO.class).deleteWedding(player, partner);
+		GameRepositories.weddings().divorce(player.getObjectId(), partner.getObjectId());
 		player.setPartnerId(0);
 		partner.setPartnerId(0);
 		PacketSendUtility.sendMessage(player, "Wedding canceled.");

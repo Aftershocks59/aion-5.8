@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.services.outpost;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
-import com.aionemu.gameserver.dao.OutpostDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -58,9 +58,5 @@ public class OutpostBossDeathListener extends OnDieEventCallback {
 
 	@Override
 	public void onAfterDie(AbstractAI obj) {
-	}
-
-	private OutpostDAO getDAO() {
-		return DAOManager.getDAO(OutpostDAO.class);
 	}
 }

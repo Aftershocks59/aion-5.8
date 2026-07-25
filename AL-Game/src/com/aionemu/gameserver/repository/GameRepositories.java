@@ -64,6 +64,10 @@ public final class GameRepositories {
 	private final TownRepository towns;
 	private final SurveyRepository surveys;
 	private final VeteranRewardRepository veteranRewards;
+	private final AnnouncementRepository announcements;
+	private final WeddingRepository weddings;
+	private final OutpostRepository outposts;
+	private final EventItemRepository eventItems;
 
 	/**
 	 * Builds every repository over one data source.
@@ -101,6 +105,10 @@ public final class GameRepositories {
 		towns = new JdbcTownRepository(dataSource);
 		surveys = new JdbcSurveyRepository(dataSource);
 		veteranRewards = new JdbcVeteranRewardRepository(dataSource);
+		announcements = new JdbcAnnouncementRepository(dataSource);
+		weddings = new JdbcWeddingRepository(dataSource);
+		outposts = new JdbcOutpostRepository(dataSource);
+		eventItems = new JdbcEventItemRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -229,5 +237,21 @@ public final class GameRepositories {
 
 	public static VeteranRewardRepository veteranRewards() {
 		return getInstance().veteranRewards;
+	}
+
+	public static AnnouncementRepository announcements() {
+		return getInstance().announcements;
+	}
+
+	public static WeddingRepository weddings() {
+		return getInstance().weddings;
+	}
+
+	public static OutpostRepository outposts() {
+		return getInstance().outposts;
+	}
+
+	public static EventItemRepository eventItems() {
+		return getInstance().eventItems;
 	}
 }

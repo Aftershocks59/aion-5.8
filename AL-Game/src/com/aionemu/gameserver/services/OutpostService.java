@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.Map;
@@ -25,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
-import com.aionemu.gameserver.dao.OutpostDAO;
 import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
@@ -54,7 +54,7 @@ public class OutpostService {
 	public void initOutpostLocations() {
 		log.info("[OutpostService] is initialized...");
 		outposts = DataManager.OUTPOST_DATA.getOutpostLocations();
-		DAOManager.getDAO(OutpostDAO.class).loadOutposLocations(outposts);
+		GameRepositories.outposts().load(outposts);
 	}
 
 	public void initOutposts() {
@@ -148,7 +148,7 @@ public class OutpostService {
 		getActiveOutpost(id).setRace(race);
 		stop(id);
 		broadcastUpdate(getOutpostLocation(id));
-		getDAO().updateLocation(getOutpostLocation(getActiveOutpost(id).getId()));
+		GameRepositories.outposts().save(getOutpostLocation(getActiveOutpost(id).getId()));
 	}
 
 	public void captureArtifact(int id, Race race) {
@@ -211,9 +211,5 @@ public class OutpostService {
 
 	private static class OutpostServiceHolder {
 		private static final OutpostService INSTANCE = new OutpostService();
-	}
-
-	private OutpostDAO getDAO() {
-		return DAOManager.getDAO(OutpostDAO.class);
 	}
 }
