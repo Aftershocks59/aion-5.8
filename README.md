@@ -10,7 +10,7 @@ Three servers make up a running installation:
 | `AL-Login` | Authenticates accounts, hands the client its server list | 2106 (client), 9014 (game server) |
 | `AL-Game` | Runs the world: players, NPCs, quests, instances, sieges | 7777 (client) |
 | `AL-Chat` | Serves chat channels and broadcasting | 9021 |
-| `AL-Commons` | Shared library: networking, DAO layer, runtime script compiler | — |
+| `AL-Commons` | Shared library: networking, database access, runtime script compiler | — |
 
 ## Requirements
 
@@ -69,7 +69,7 @@ GRANT ALL PRIVILEGES ON al_server_gs.* TO 'aion'@'localhost';
 ### Migrations
 
 Each server owns its schema and migrates it with Flyway before opening a single
-connection, so no DAO ever meets a database older than the code. A migration
+connection, so no query ever meets a database older than the code. A migration
 that fails stops the server rather than letting it run against a schema it
 disagrees with.
 
@@ -77,6 +77,7 @@ disagrees with.
 AL-Login/sql/migration/    V1__baseline_schema.sql
 AL-Game/sql/migration/     V1__baseline_schema.sql
                            V2__remove_orphan_player_quests.sql
+                           V3__add_tasks_last_activation.sql
 AL-Game/sql/maintenance/   operator scripts, run by hand, never migrations
 ```
 
@@ -99,6 +100,34 @@ database, which is not what a recurring job needs.
 Set `database.migration.enable = false` in the database configuration to apply
 them yourself instead, for instance when several servers share one schema and
 only one should write to it.
+
+## Persistence
+
+Every query lives in a repository: an interface naming what the game asks for,
+and a `Jdbc*Repository` that answers it. Each takes its `DataSource` by
+constructor, so a test hands it a mocked one and no test needs a database.
+
+```
+AL-Game/src/…/repository/     PlayerRepository        + JdbcPlayerRepository
+                              InventoryRepository     + JdbcInventoryRepository
+                              …                       GameRepositories
+AL-Login/src/…/repository/    AccountRepository       + JdbcAccountRepository
+                              …                       LoginRepositories
+```
+
+`GameRepositories` and `LoginRepositories` hand out the set, one typed accessor
+each, built lazily over the connection pool once the server has started:
+
+```java
+Player owner = GameRepositories.players().load(playerId);
+GameRepositories.inventories().save(owner);
+```
+
+A repository throws `RepositoryException` when the database refuses it, rather
+than logging and answering an empty list. Callers that must keep going catch it;
+the rest let it travel, which is what makes a lost write visible instead of
+silent. State on an object is marked as saved only after the write has landed,
+so a failed write is retried on the next save rather than forgotten.
 
 ## Credentials
 
