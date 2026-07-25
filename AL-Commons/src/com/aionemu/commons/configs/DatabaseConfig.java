@@ -65,22 +65,18 @@ public class DatabaseConfig {
     public static String DATABASE_PASSWORD;
 
     /**
-     * Amount of partitions used by BoneCP
+     * Caps how many connections the pool opens. Defaults to 10, matching the two
+     * partitions of five that the previous pool was configured with.
      */
-    @Property(key = "database.bonecp.partition.count", defaultValue = "2")
-    public static int DATABASE_BONECP_PARTITION_COUNT;
+    @Property(key = "database.pool.size.max", defaultValue = "10")
+    public static int DATABASE_POOL_SIZE_MAX;
 
     /**
-     * Minimum amount of connections that are always active in bonecp partition
+     * Sets how many connections stay open while idle, so a burst of queries does
+     * not pay for opening them.
      */
-    @Property(key = "database.bonecp.partition.connections.min", defaultValue = "2")
-    public static int DATABASE_BONECP_PARTITION_CONNECTIONS_MIN;
-
-    /**
-     * Maximum amount of connections that are allowed to use in bonecp partition
-     */
-    @Property(key = "database.bonecp.partition.connections.max", defaultValue = "5")
-    public static int DATABASE_BONECP_PARTITION_CONNECTIONS_MAX;
+    @Property(key = "database.pool.size.min", defaultValue = "4")
+    public static int DATABASE_POOL_SIZE_MIN;
 
     /**
      * Location of database script context descriptor

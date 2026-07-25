@@ -30,8 +30,8 @@
 package com.aionemu.commons.database;
 
 import com.aionemu.commons.configs.DatabaseConfig;
-import com.jolbox.bonecp.BoneCP;
-import com.jolbox.bonecp.BoneCPConfig;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +64,7 @@ public class DatabaseFactory {
     /**
      * Connection Pool holds all connections - Idle or Active
      */
-    private static BoneCP connectionPool;
+    private static HikariDataSource connectionPool;
 
     /**
      * Returns name of the database that is used For isntance, MySQL returns
@@ -99,28 +99,36 @@ public class DatabaseFactory {
             throw new Error("DB Driver doesnt exist!");
         }
 
-        if (DatabaseConfig.DATABASE_BONECP_PARTITION_CONNECTIONS_MIN > DatabaseConfig.DATABASE_BONECP_PARTITION_CONNECTIONS_MAX) {
-            log.error("Please check your database configuration. Minimum amount of connections is > maximum");
-            DatabaseConfig.DATABASE_BONECP_PARTITION_CONNECTIONS_MAX = DatabaseConfig.DATABASE_BONECP_PARTITION_CONNECTIONS_MIN;
+        if (DatabaseConfig.DATABASE_POOL_SIZE_MIN > DatabaseConfig.DATABASE_POOL_SIZE_MAX) {
+            log.warn("Database pool minimum ({}) exceeds its maximum ({}); clamping the minimum.",
+                    DatabaseConfig.DATABASE_POOL_SIZE_MIN, DatabaseConfig.DATABASE_POOL_SIZE_MAX);
         }
 
-        BoneCPConfig config = new BoneCPConfig();
-        config.setPartitionCount(DatabaseConfig.DATABASE_BONECP_PARTITION_COUNT);
-        config.setMinConnectionsPerPartition(DatabaseConfig.DATABASE_BONECP_PARTITION_CONNECTIONS_MIN);
-        config.setMaxConnectionsPerPartition(DatabaseConfig.DATABASE_BONECP_PARTITION_CONNECTIONS_MAX);
+        int maximumPoolSize = Math.max(1, DatabaseConfig.DATABASE_POOL_SIZE_MAX);
+        int minimumIdle = Math.max(1, Math.min(DatabaseConfig.DATABASE_POOL_SIZE_MIN, maximumPoolSize));
+
+        HikariConfig config = new HikariConfig();
+        config.setPoolName("AionPool");
+        config.setJdbcUrl(DatabaseConfig.DATABASE_URL);
         config.setUsername(DatabaseConfig.DATABASE_USER);
         config.setPassword(DatabaseConfig.DATABASE_PASSWORD);
-        config.setJdbcUrl(DatabaseConfig.DATABASE_URL);
-        config.setDisableJMX(true);
+        config.setMaximumPoolSize(maximumPoolSize);
+        config.setMinimumIdle(minimumIdle);
+
+        // Hand out connections already in auto-commit, which every caller assumes.
+        config.setAutoCommit(true);
+
+        // Validate a connection that has been idle before lending it out, so a
+        // connection the database dropped surfaces here rather than mid-query.
+        config.setConnectionTestQuery(null);
+        config.setRegisterMbeans(false);
 
         try {
-            connectionPool = new BoneCP(config);
-        } catch (SQLException e) {
+            connectionPool = new HikariDataSource(config);
+        } catch (RuntimeException e) {
             log.error("Error while creating DB Connection pool", e);
             throw new Error("DatabaseFactory not initialized!", e);
         }
-        /* test if connection is still valid before returning */
-        // connectionPool.setTestOnBorrow(true);
 
         try {
             Connection c = getConnection();
@@ -167,7 +175,7 @@ public class DatabaseFactory {
      * @return int Active DB Connections
      */
     public int getActiveConnections() {
-        return connectionPool.getTotalLeased();
+        return connectionPool.getHikariPoolMXBean().getActiveConnections();
     }
 
     /**
@@ -179,7 +187,7 @@ public class DatabaseFactory {
      * @return int Idle DB Connections
      */
     public int getIdleConnections() {
-        return connectionPool.getStatistics().getTotalFree();
+        return connectionPool.getHikariPoolMXBean().getIdleConnections();
     }
 
     /**
@@ -187,7 +195,9 @@ public class DatabaseFactory {
      */
     public static synchronized void shutdown() {
         try {
-            connectionPool.shutdown();
+            if (connectionPool != null) {
+                connectionPool.close();
+            }
         } catch (Exception e) {
             log.warn("Failed to shutdown DatabaseFactory", e);
         }

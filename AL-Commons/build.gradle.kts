@@ -14,7 +14,7 @@ dependencies {
     api(libs.commons.lang)
     api(libs.quartz)
     api(libs.javassist)
-    api(libs.bonecp)
+    api(libs.hikari)
     api(libs.mariadb)
     api(libs.jsr305)
     api(libs.jaxb.api)

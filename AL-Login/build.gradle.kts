@@ -36,6 +36,18 @@ tasks.register<JavaExec>("runServer") {
         }
 }
 
+// Print a bcrypt hash for pasting into account_data.password, for password
+// resets and for accounts still holding a pre-bcrypt digest.
+tasks.register<JavaExec>("hashPassword") {
+    group = "application"
+    description = "Print the bcrypt hash of the password held in AION_PASSWORD"
+    mainClass = "com.aionemu.loginserver.tools.PasswordHashTool"
+    classpath = sourceSets["main"].runtimeClasspath
+    // Read the password from the environment so it stays out of the shell
+    // history and out of the process list.
+    environment("AION_PASSWORD", System.getenv("AION_PASSWORD") ?: "")
+}
+
 tasks.jar {
     manifest {
         attributes(
