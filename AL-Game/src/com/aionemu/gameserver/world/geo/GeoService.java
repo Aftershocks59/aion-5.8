@@ -96,10 +96,18 @@ public class GeoService {
 		return engine;
 	}
 
+	/**
+	 * Opens or shuts a door.
+	 * <p>
+	 * A door's triangles never move: opening one only stops it being counted
+	 * against anything passing through. A door nobody has touched stands shut,
+	 * and blocks.
+	 */
 	public void setDoorState(int worldId, int instanceId, String name, boolean isOpened) {
-		// Doors are objects whose collision moves. The files say which triangles
-		// belong to one, but a door's state lives in the running server and the
-		// mesh is not rebuilt for it yet.
+		if (!engine.setDoorOpen(worldId, instanceId, name, isOpened) && GeoDataConfig.GEO_ENABLE) {
+			log.warn("World " + worldId + " was asked to " + (isOpened ? "open" : "shut") + " a door named " + name
+					+ ", which it does not have.");
+		}
 	}
 
 	public float getZAfterMoveBehind(int worldId, float x, float y, float z, int instanceId) {
@@ -110,7 +118,8 @@ public class GeoService {
 	}
 
 	public float getZ(VisibleObject object) {
-		float newZ = this.groundUnder(object.getWorldId(), object.getX(), object.getY(), object.getZ());
+		float newZ = this.groundUnder(object.getWorldId(), object.getInstanceId(), object.getX(), object.getY(),
+				object.getZ());
 		if (GeoDataConfig.GEO_ENABLE) {
 			newZ += 0.001f;
 		}
@@ -118,7 +127,7 @@ public class GeoService {
 	}
 
 	public float getZ(int worldId, float x, float y, float z, float defaultUp, int instanceId) {
-		float newZ = this.groundUnder(worldId, x, y, z);
+		float newZ = this.groundUnder(worldId, instanceId, x, y, z);
 		if (GeoDataConfig.GEO_ENABLE && defaultUp != 100.0f) {
 			newZ += 0.001f;
 		}
@@ -150,8 +159,8 @@ public class GeoService {
 	 * Snapping only downwards is what the server has always done, and it is what
 	 * stops a query from lifting whoever asked it up through a floor.
 	 */
-	private float groundUnder(int worldId, float x, float y, float z) {
-		float ground = engine.getGroundZ(worldId, x, y, z, z);
+	private float groundUnder(int worldId, int instanceId, float x, float y, float z) {
+		float ground = engine.getGroundZ(worldId, instanceId, x, y, z, z);
 		if (ground > 0.0f && ground < z + 2.0f) {
 			return ground;
 		}
@@ -159,7 +168,7 @@ public class GeoService {
 	}
 
 	public String getDoorName(int worldId, String meshFile, float x, float y, float z) {
-		return null;
+		return engine.getDoorNameAt(worldId, x, y, z);
 	}
 
 	public CollisionResults getCollisions(VisibleObject object, float x, float y, float z, boolean changeDirection,
@@ -213,12 +222,12 @@ public class GeoService {
 		if (isAlwaysVisible(worldId)) {
 			return true;
 		}
-		return engine.isClear(worldId, x, y, z, x1, y1, z1, MaterialCollision.COLUMN_MOVEMENT);
+		return engine.isClear(worldId, instanceId, x, y, z, x1, y1, z1, MaterialCollision.COLUMN_MOVEMENT);
 	}
 
 	public boolean canPass(int worldId, float x, float y, float z, float x1, float y1, float z1, float limit,
 			int instanceId) {
-		return engine.isClear(worldId, x, y, z, x1, y1, z1, MaterialCollision.COLUMN_MOVEMENT);
+		return engine.isClear(worldId, instanceId, x, y, z, x1, y1, z1, MaterialCollision.COLUMN_MOVEMENT);
 	}
 
 	public boolean canPassWalker(int worldId, float x, float y, float z, float x1, float y1, float z1, float limit,
@@ -248,8 +257,8 @@ public class GeoService {
 	public Vector3f getClosestCollision(Creature object, float x, float y, float z, boolean changeDirection,
 			byte intentions) {
 		float fromZ = object.getZ() - 0.6f;
-		float at = engine.firstHit(object.getWorldId(), object.getX(), object.getY(), fromZ, x, y, z,
-				MaterialCollision.COLUMN_MOVEMENT);
+		float at = engine.firstHit(object.getWorldId(), object.getInstanceId(), object.getX(), object.getY(), fromZ, x,
+				y, z, MaterialCollision.COLUMN_MOVEMENT);
 		if (!RayTriangle.hit(at) || at < 0.0f || at > 1.0f) {
 			return new Vector3f(x, y, z);
 		}

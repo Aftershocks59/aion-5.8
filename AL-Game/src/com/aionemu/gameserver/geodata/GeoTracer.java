@@ -14,6 +14,7 @@
 package com.aionemu.gameserver.geodata;
 
 import java.nio.ByteBuffer;
+import java.util.Set;
 
 /**
  * Runs a ray through one world and answers what it meets.
@@ -50,10 +51,24 @@ public final class GeoTracer {
 	public static final float SWEEP_BOTTOM = -1000.0f;
 
 	private final WorldGeoData world;
+	private final Set<Integer> openDoors;
 	private final float[] corners = new float[9];
 
+	/** Answers a tracer for a world whose doors all stand shut. */
 	public GeoTracer(WorldGeoData world) {
+		this(world, null);
+	}
+
+	/**
+	 * Answers a tracer for one instance of a world.
+	 *
+	 * @param world     the world's geodata
+	 * @param openDoors the editor ids of the doors standing open in this
+	 *                  instance, or null where none are
+	 */
+	public GeoTracer(WorldGeoData world, Set<Integer> openDoors) {
 		this.world = world;
+		this.openDoors = openDoors;
 	}
 
 	/**
@@ -115,6 +130,52 @@ public final class GeoTracer {
 			wasX = cellX;
 			wasY = cellY;
 		}
+
+		return nearer(best, hitDoors(x, y, z, wayX, wayY, wayZ, column));
+	}
+
+	/**
+	 * Answers what a ray meets among the world's doors.
+	 * <p>
+	 * A door's triangles never leave the world: opening one only stops it being
+	 * counted. So a door is asked whether it is standing, then whether the ray
+	 * passes through the heights it occupies, and only then for its triangles.
+	 */
+	private float hitDoors(float x, float y, float z, float wayX, float wayY, float wayZ, int column) {
+		float best = RayTriangle.MISS;
+		float endZ = z + wayZ;
+		for (FieldObject object : world.getMesh().getFieldObjects()) {
+			if (!object.blocksWhenShut() || isOpen(object)) {
+				continue;
+			}
+			if (!(object.getLowZ() <= z || object.getLowZ() <= endZ)) {
+				continue;
+			}
+			if (!(z <= object.getHighZ() || endZ <= object.getHighZ())) {
+				continue;
+			}
+			best = nearer(best, hitInRange(object.getFirstTriangle(), object.getLastTriangle(), x, y, z, wayX, wayY,
+					wayZ, column));
+		}
+		return best;
+	}
+
+	private boolean isOpen(FieldObject object) {
+		return openDoors != null && openDoors.contains(Integer.valueOf(object.getEditorId()));
+	}
+
+	/** Answers what a ray meets among a run of the world's triangles. */
+	private float hitInRange(int first, int last, float x, float y, float z, float wayX, float wayY, float wayZ,
+			int column) {
+		CollisionMesh mesh = world.getMesh();
+		float best = RayTriangle.MISS;
+		for (int triangle = first; triangle < last; triangle++) {
+			if (!MaterialCollision.blocks(mesh.materialOf(triangle), column)) {
+				continue;
+			}
+			best = nearer(best, RayTriangle.intersect(mesh.getVertices(), mesh.firstVertexOf(triangle),
+					mesh.secondVertexOf(triangle), mesh.thirdVertexOf(triangle), x, y, z, wayX, wayY, wayZ));
+		}
 		return best;
 	}
 
@@ -150,6 +211,13 @@ public final class GeoTracer {
 		float way = SWEEP_BOTTOM - SWEEP_TOP;
 		float best = RayTriangle.MISS;
 		float bestGap = Float.MAX_VALUE;
+
+		// A door that is shut is something to stand on, as much as a floor is.
+		float onDoor = hitDoors(x, y, SWEEP_TOP, 0.0f, 0.0f, way, MaterialCollision.COLUMN_MOVEMENT);
+		if (RayTriangle.hit(onDoor)) {
+			best = SWEEP_TOP + way * onDoor;
+			bestGap = Math.abs(z - best);
+		}
 
 		HeightMap terrain = world.getTerrain();
 		int code = terrain.surfaceCode(terrain.cornerIndex(cellX, cellY));

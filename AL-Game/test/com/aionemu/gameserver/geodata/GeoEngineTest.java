@@ -121,10 +121,13 @@ class GeoEngineTest {
 		assertEquals(0, engine.getWorldCount());
 		assertFalse(engine.knows(210010000));
 		assertNull(engine.getWorld(210010000));
-		assertEquals(123.5f, engine.getGroundZ(210010000, 100.0f, 100.0f, 40.0f, 123.5f), EPSILON);
+		assertEquals(123.5f, engine.getGroundZ(210010000, 0, 100.0f, 100.0f, 40.0f, 123.5f), EPSILON);
 		assertEquals(123.5f, engine.getTerrainZ(210010000, 100.0f, 100.0f, 123.5f), EPSILON);
-		assertTrue(engine.isClear(210010000, 0.0f, 0.0f, 0.0f, 100.0f, 100.0f, 0.0f,
+		assertTrue(engine.isClear(210010000, 0, 0.0f, 0.0f, 0.0f, 100.0f, 100.0f, 0.0f,
 				MaterialCollision.COLUMN_MOVEMENT));
+		assertNull(engine.findDoor(210010000, "AbyssDoor12"));
+		assertNull(engine.getDoorNameAt(210010000, 0.0f, 0.0f, 0.0f));
+		assertFalse(engine.setDoorOpen(210010000, 0, "AbyssDoor12", true));
 	}
 
 	@Test

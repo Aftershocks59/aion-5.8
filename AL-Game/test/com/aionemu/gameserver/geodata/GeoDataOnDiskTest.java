@@ -109,6 +109,7 @@ class GeoDataOnDiskTest {
 				for (FieldObject object : mesh.getFieldObjects()) {
 					assertEquals(FieldObject.PAYLOAD_SIZE, object.getPayload().length,
 							"world " + worldId + " carries a shape-changing object of another size");
+					countClass(object.getClassName());
 					if (object.getClassName().endsWith("Door")) {
 						doors++;
 					}
@@ -141,6 +142,15 @@ class GeoDataOnDiskTest {
 
 		System.out.println("Geodata read: " + read + " worlds, " + vertices + " vertices, " + triangles
 				+ " triangles, " + doors + " doors, " + walkable + " triangles walked through.");
+		System.out.println("Field object classes: " + classes);
+	}
+
+	/** Counts how many objects of each class the worlds carry. */
+	private static final java.util.Map<String, Integer> classes = new java.util.TreeMap<String, Integer>();
+
+	private static void countClass(String className) {
+		Integer seen = classes.get(className);
+		classes.put(className, Integer.valueOf(seen == null ? 1 : seen.intValue() + 1));
 	}
 
 	@Test
@@ -188,6 +198,79 @@ class GeoDataOnDiskTest {
 		System.out.println("Cells checked: " + cells + " over " + Math.min(read, 20) + " worlds, disagreeing "
 				+ disagreed);
 		assertEquals(0L, disagreed, "the height grid and the collision index disagree on which cells carry a mesh");
+	}
+
+	@Test
+	@DisplayName("Reads a door as a run of the world's own triangles, and shuts it")
+	void doorsNameTrianglesAndStartShut() throws IOException {
+		assumeTrue(!worlds.isEmpty(), "no geodata installed under " + GEO_DIRECTORY);
+
+		int doors = 0;
+		int measured = 0;
+		int repeated = 0;
+		int blocked = 0;
+		int passedWhenOpen = 0;
+
+		for (Path world : worlds) {
+			int worldId = Integer.parseInt(world.getFileName().toString());
+			try (WorldGeoData geo = WorldGeoData.load(worldId, world)) {
+				CollisionMesh mesh = geo.getMesh();
+				for (FieldObject object : mesh.getFieldObjects()) {
+					// The payload is four ints, and the last two repeat the first
+					// two. Only the first pair is read as the triangle run; the
+					// repeat is what says nothing else is hiding in there.
+					java.nio.ByteBuffer payload = java.nio.ByteBuffer.wrap(object.getPayload())
+							.order(java.nio.ByteOrder.LITTLE_ENDIAN);
+					int first = payload.getInt();
+					int last = payload.getInt();
+					if (payload.getInt() == first && payload.getInt() == last) {
+						repeated++;
+					}
+					assertEquals(first, object.getFirstTriangle());
+					assertEquals(last, object.getLastTriangle());
+					assertTrue(first <= last, "object " + object + " names a run that ends before it starts");
+					assertTrue(last <= mesh.getTriangleCount(),
+							"object " + object + " names triangles past the end of the mesh");
+
+					if (!object.isDoor()) {
+						continue;
+					}
+					doors++;
+					if (!object.isMeasured()) {
+						continue;
+					}
+					measured++;
+
+					// Fire a ray straight through the middle of the door, at half
+					// its height. Shut, it has to stop; open, it must not.
+					float middleZ = (object.getLowZ() + object.getHighZ()) / 2.0f;
+					float[] corners = new float[9];
+					mesh.cornersOf(first, corners);
+					float x = corners[0];
+					float y = corners[1];
+					GeoTracer shut = new GeoTracer(geo);
+					if (!shut.isClear(x - 4.0f, y, middleZ, x + 4.0f, y, middleZ,
+							MaterialCollision.COLUMN_MOVEMENT)) {
+						blocked++;
+						java.util.Set<Integer> open = java.util.Collections
+								.singleton(Integer.valueOf(object.getEditorId()));
+						if (new GeoTracer(geo, open).isClear(x - 4.0f, y, middleZ, x + 4.0f, y, middleZ,
+								MaterialCollision.COLUMN_MOVEMENT)) {
+							passedWhenOpen++;
+						}
+					}
+				}
+			}
+		}
+
+		System.out.println("Doors: " + doors + ", measured " + measured + ". Payload repeats its run " + repeated
+				+ " times. " + blocked + " doors stopped a ray while shut, " + passedWhenOpen + " let it by once open.");
+
+		assertEquals(measured, doors, "a door was left without geometry to block with");
+		assertTrue(blocked > 0, "no door anywhere stopped a ray fired through it");
+		// Opening is only ever the removal of that one door, so a ray it stopped
+		// has to get through unless something else stands in the same place.
+		assertTrue(passedWhenOpen * 2 > blocked, "opening a door mostly failed to let a ray through it");
 	}
 
 	@Test

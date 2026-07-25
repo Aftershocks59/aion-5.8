@@ -20,6 +20,9 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +43,23 @@ public final class GeoEngine implements AutoCloseable {
 
 	private final Map<Integer, WorldGeoData> worlds;
 
+	/**
+	 * Holds which doors stand open, per instance of a world.
+	 * <p>
+	 * A world is read once and every instance of it shares those records, but a
+	 * door opened in one instance stays shut in the next, so the state cannot
+	 * live on the record. Nothing is stored for an instance whose doors are all
+	 * shut, which is nearly all of them.
+	 */
+	private final ConcurrentMap<Long, Set<Integer>> openDoors = new ConcurrentHashMap<Long, Set<Integer>>();
+
 	private GeoEngine(Map<Integer, WorldGeoData> worlds) {
 		this.worlds = Collections.unmodifiableMap(worlds);
+	}
+
+	/** Packs a world and one of its instances into a single key. */
+	private static Long doorKey(int worldId, int instanceId) {
+		return Long.valueOf(((long) worldId << 32) | (instanceId & 0xffffffffL));
 	}
 
 	/** Answers an engine that knows no world, which every query falls through. */
@@ -136,13 +154,86 @@ public final class GeoEngine implements AutoCloseable {
 	 * @param fallback what to answer where there is no surface to find
 	 * @return the surface height in world units
 	 */
-	public float getGroundZ(int worldId, float x, float y, float z, float fallback) {
+	public float getGroundZ(int worldId, int instanceId, float x, float y, float z, float fallback) {
 		WorldGeoData world = worlds.get(Integer.valueOf(worldId));
 		if (world == null) {
 			return fallback;
 		}
-		float found = new GeoTracer(world).groundZ(x, y, z);
+		float found = tracer(world, worldId, instanceId).groundZ(x, y, z);
 		return RayTriangle.hit(found) ? found : fallback;
+	}
+
+	private GeoTracer tracer(WorldGeoData world, int worldId, int instanceId) {
+		return new GeoTracer(world, openDoors.get(doorKey(worldId, instanceId)));
+	}
+
+	/**
+	 * Opens or shuts a door in one instance of a world.
+	 *
+	 * @param name the name the editor gave the door
+	 * @param open true to let everything through it
+	 * @return true if a door of that name was found
+	 */
+	public boolean setDoorOpen(int worldId, int instanceId, String name, boolean open) {
+		FieldObject door = findDoor(worldId, name);
+		if (door == null) {
+			return false;
+		}
+
+		Long key = doorKey(worldId, instanceId);
+		if (open) {
+			Set<Integer> already = openDoors.get(key);
+			if (already == null) {
+				already = Collections.newSetFromMap(new ConcurrentHashMap<Integer, Boolean>());
+				Set<Integer> raced = openDoors.putIfAbsent(key, already);
+				already = raced != null ? raced : already;
+			}
+			already.add(Integer.valueOf(door.getEditorId()));
+			return true;
+		}
+
+		Set<Integer> standing = openDoors.get(key);
+		if (standing != null) {
+			standing.remove(Integer.valueOf(door.getEditorId()));
+		}
+		return true;
+	}
+
+	/** Answers a world's door of a given name, or null where it has none. */
+	public FieldObject findDoor(int worldId, String name) {
+		WorldGeoData world = worlds.get(Integer.valueOf(worldId));
+		if (world == null || name == null) {
+			return null;
+		}
+		for (FieldObject object : world.getMesh().getFieldObjects()) {
+			if (object.isDoor() && name.equals(object.getName())) {
+				return object;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Answers the name of the door standing at a point.
+	 *
+	 * @return the door's name, or null where no door stands there
+	 */
+	public String getDoorNameAt(int worldId, float x, float y, float z) {
+		WorldGeoData world = worlds.get(Integer.valueOf(worldId));
+		if (world == null) {
+			return null;
+		}
+		for (FieldObject object : world.getMesh().getFieldObjects()) {
+			if (object.isDoor() && object.contains(x, y, z)) {
+				return object.getName();
+			}
+		}
+		return null;
+	}
+
+	/** Forgets which doors stood open in an instance that has ended. */
+	public void forgetInstance(int worldId, int instanceId) {
+		openDoors.remove(doorKey(worldId, instanceId));
 	}
 
 	/**
@@ -178,12 +269,13 @@ public final class GeoEngine implements AutoCloseable {
 	 *               movement and creature sight
 	 * @return true where the way is clear, and where the world has no geodata
 	 */
-	public boolean isClear(int worldId, float x, float y, float z, float toX, float toY, float toZ, int column) {
+	public boolean isClear(int worldId, int instanceId, float x, float y, float z, float toX, float toY, float toZ,
+			int column) {
 		WorldGeoData world = worlds.get(Integer.valueOf(worldId));
 		if (world == null) {
 			return true;
 		}
-		return new GeoTracer(world).isClear(x, y, z, toX, toY, toZ, column);
+		return tracer(world, worldId, instanceId).isClear(x, y, z, toX, toY, toZ, column);
 	}
 
 	/**
@@ -192,12 +284,13 @@ public final class GeoEngine implements AutoCloseable {
 	 * @return the fraction of the way, or {@link RayTriangle#MISS} where nothing
 	 *         does
 	 */
-	public float firstHit(int worldId, float x, float y, float z, float toX, float toY, float toZ, int column) {
+	public float firstHit(int worldId, int instanceId, float x, float y, float z, float toX, float toY, float toZ,
+			int column) {
 		WorldGeoData world = worlds.get(Integer.valueOf(worldId));
 		if (world == null) {
 			return RayTriangle.MISS;
 		}
-		return new GeoTracer(world).firstHit(x, y, z, toX, toY, toZ, column);
+		return tracer(world, worldId, instanceId).firstHit(x, y, z, toX, toY, toZ, column);
 	}
 
 	/** Interpolates the ground height across the four corners a position falls between. */

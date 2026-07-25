@@ -108,7 +108,11 @@ public final class CollisionMesh {
 			throw new IOException("Left " + buffer.remaining() + " bytes unread at the end of " + file + ".");
 		}
 
-		return new CollisionMesh(version, vertices, triangles, materials, fieldObjects);
+		CollisionMesh mesh = new CollisionMesh(version, vertices, triangles, materials, fieldObjects);
+		for (FieldObject object : fieldObjects) {
+			object.measure(mesh);
+		}
+		return mesh;
 	}
 
 	private static void checkRoom(ByteBuffer buffer, int count, int stride, Path file, String what)
