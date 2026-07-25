@@ -16,10 +16,11 @@
  */
 package admincommands;
 
+import com.aionemu.gameserver.model.ingameshop.IGItem;
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.List;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.InGameShopDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -67,7 +68,7 @@ public class Gameshop extends AdminCommand {
 				PacketSendUtility.sendMessage(admin, "<itemId, category, subCategory, list> values must be int, byte, byte, int.");
 				return;
 			}
-			DAOManager.getDAO(InGameShopDAO.class).deleteIngameShopItem(itemId, category, subCategory, list - 1);
+			GameRepositories.inGameShop().remove(itemId, category, subCategory, list - 1);
 			PacketSendUtility.sendMessage(admin, "You remove [item:" + itemId + "]");
 		}
 		else if ("add".startsWith(params[0])) {
@@ -123,8 +124,8 @@ public class Gameshop extends AdminCommand {
 			if (titleDescription.equals("empty")) {
 				titleDescription = StringUtils.EMPTY;
 			}
-			DAOManager.getDAO(InGameShopDAO.class).saveIngameShopItem(IDFactory.getInstance().nextId(), itemId, count, price,
-				category, subCategory, list - 1, 1, itemType, gift, titleDescription, description);
+			GameRepositories.inGameShop().add(new IGItem(IDFactory.getInstance().nextId(), itemId, count, price,
+				category, subCategory, list - 1, 1, itemType, gift, titleDescription, description));
 			PacketSendUtility.sendMessage(admin, "You add [item:" + itemId + "]");
 		}
 		else if ("deleteranking".startsWith(params[0])) {
@@ -134,7 +135,7 @@ public class Gameshop extends AdminCommand {
 			catch (NumberFormatException e) {
 				PacketSendUtility.sendMessage(admin, "<itemId> value must be an integer.");
 			}
-			DAOManager.getDAO(InGameShopDAO.class).deleteIngameShopItem(itemId, (byte) -1, (byte) -1, -1);
+			GameRepositories.inGameShop().remove(itemId, (byte) -1, (byte) -1, -1);
 			PacketSendUtility.sendMessage(admin, "You remove from Ranking Sales [item:" + itemId + "]");
 		}
 		else if ("addranking".startsWith(params[0])) {
@@ -165,8 +166,8 @@ public class Gameshop extends AdminCommand {
 			if (titleDescription.equals("empty")) {
 				titleDescription = StringUtils.EMPTY;
 			}
-			DAOManager.getDAO(InGameShopDAO.class).saveIngameShopItem(IDFactory.getInstance().nextId(), itemId, count, price,
-				(byte) -1, (byte) -1, -1, 0, itemType, gift, titleDescription, description);
+			GameRepositories.inGameShop().add(new IGItem(IDFactory.getInstance().nextId(), itemId, count, price,
+				(byte) -1, (byte) -1, -1, 0, itemType, gift, titleDescription, description));
 			PacketSendUtility.sendMessage(admin, "You remove from Ranking Sales [item:" + itemId + "]");
 		}
 		else if ("settoll".startsWith(params[0])) {

@@ -88,6 +88,9 @@ public final class GameRepositories {
 	private final AtreianBestiaryRepository atreianBestiary;
 	private final LunaShopRepository lunaShop;
 	private final HouseRegistryRepository houseRegistries;
+	private final LadderRepository ladder;
+	private final InGameShopRepository inGameShop;
+	private final HouseRepository houses;
 
 	/**
 	 * Builds every repository over one data source.
@@ -149,6 +152,9 @@ public final class GameRepositories {
 		atreianBestiary = new JdbcAtreianBestiaryRepository(dataSource);
 		lunaShop = new JdbcLunaShopRepository(dataSource);
 		houseRegistries = new JdbcHouseRegistryRepository(dataSource);
+		ladder = new JdbcLadderRepository(dataSource);
+		inGameShop = new JdbcInGameShopRepository(dataSource);
+		houses = new JdbcHouseRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -373,5 +379,17 @@ public final class GameRepositories {
 
 	public static HouseRegistryRepository houseRegistries() {
 		return getInstance().houseRegistries;
+	}
+
+	public static LadderRepository ladder() {
+		return getInstance().ladder;
+	}
+
+	public static InGameShopRepository inGameShop() {
+		return getInstance().inGameShop;
+	}
+
+	public static HouseRepository houses() {
+		return getInstance().houses;
 	}
 }

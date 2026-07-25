@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.GenericValidator;
-import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.dao.MailDAO;
@@ -79,7 +78,7 @@ public class IDFactory {
 		lockIds(DAOManager.getDAO(LegionDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(MailDAO.class).getUsedIDs());
 		lockIds(GameRepositories.guides().findUsedIds());
-		lockIds(DAOManager.getDAO(HousesDAO.class).getUsedIDs());
+		lockIds(GameRepositories.houses().findUsedIds());
 		log.info("IDFactory: " + getUsedCount() + " id's used.");
 	}
 

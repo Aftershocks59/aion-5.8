@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.ingameshop;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -34,7 +35,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.ingameshop.InGameShopProperty;
 import com.aionemu.gameserver.configs.main.AdvCustomConfig;
 import com.aionemu.gameserver.configs.main.InGameShopConfig;
-import com.aionemu.gameserver.dao.InGameShopDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -59,7 +59,6 @@ public class InGameShopEn {
 	private static InGameShopEn instance = new InGameShopEn();
 	private final Logger log = LoggerFactory.getLogger("INGAMESHOP_LOG");
 	private Map<Byte, List<IGItem>> items;
-	private InGameShopDAO dao;
 	private InGameShopProperty iGProperty;
 	private int lastRequestId = 0;
 	private List<IGRequest> activeRequests;
@@ -75,10 +74,9 @@ public class InGameShopEn {
 			return;
 		}
 		iGProperty = InGameShopProperty.load();
-		dao = DAOManager.getDAO(InGameShopDAO.class);
 		items = new LinkedHashMap<>();
 		activeRequests = new ArrayList<>();
-		items = dao.loadInGameShopItems();
+		items = GameRepositories.inGameShop().findAll();
 		log.info("Loaded with " + items.size() + " items.");
 	}
 
@@ -93,7 +91,7 @@ public class InGameShopEn {
 		}
 		iGProperty.clear();
 		iGProperty = InGameShopProperty.load();
-		items = DAOManager.getDAO(InGameShopDAO.class).loadInGameShopItems();
+		items = GameRepositories.inGameShop().findAll();
 		log.info("Loaded with " + items.size() + " items.");
 	}
 
@@ -280,7 +278,7 @@ public class InGameShopEn {
 						}
 
 						item.increaseSales();
-						dao.increaseSales(item.getObjectId(), item.getSalesRanking());
+						GameRepositories.inGameShop().setSales(item.getObjectId(), item.getSalesRanking());
 						PacketSendUtility.sendPacket(player, new SM_TOLL_INFO(toll));
 					} else if (result == 4) {
 						player.getClientConnection().getAccount().setToll(toll);

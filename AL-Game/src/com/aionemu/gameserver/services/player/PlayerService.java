@@ -31,7 +31,6 @@ import com.aionemu.gameserver.controllers.FlyController;
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.MailDAO;
@@ -111,7 +110,7 @@ public class PlayerService {
 		DAOManager.getDAO(InventoryDAO.class).store(player);
 
 		for (House house : player.getHouses()) {
-			DAOManager.getDAO(HousesDAO.class).storeHouse(house);
+			GameRepositories.houses().save(house);
 			if (house.getRegistry() != null
 					&& house.getRegistry().getPersistentState() == PersistentState.UPDATE_REQUIRED) {
 				GameRepositories.houseRegistries().save(house.getRegistry(),

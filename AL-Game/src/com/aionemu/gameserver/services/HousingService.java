@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import java.util.concurrent.ConcurrentHashMap;
 import com.aionemu.gameserver.controllers.HouseController;
-import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
@@ -76,9 +76,9 @@ public class HousingService {
 	private HousingService() {
 		log.info("Loading housing data...");
 		customHouses = new ConcurrentHashMap<>(
-				DAOManager.getDAO(HousesDAO.class).loadHouses(DataManager.HOUSE_DATA.getLands(), false));
+				GameRepositories.houses().load(DataManager.HOUSE_DATA.getLands(), false));
 		studios = new ConcurrentHashMap<>(
-				DAOManager.getDAO(HousesDAO.class).loadHouses(DataManager.HOUSE_DATA.getLands(), true));
+				GameRepositories.houses().load(DataManager.HOUSE_DATA.getLands(), true));
 		log.info("Housing Service loaded.");
 	}
 
@@ -286,7 +286,7 @@ public class HousingService {
 		// currentHouse.getRegistry().despawnObjects(false);
 		currentHouse.getRegistry().save();
 		currentHouse.reloadHouseRegistry(); // load new defaults
-		DAOManager.getDAO(HousesDAO.class).storeHouse(currentHouse);
+		GameRepositories.houses().save(currentHouse);
 		HouseController controller = ((HouseController) currentHouse.getController());
 		controller.broadcastAppearance();
 		controller.spawnObjects();

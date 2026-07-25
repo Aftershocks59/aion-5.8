@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.events.bg;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.LinkedHashMap;
 
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ import java.util.concurrent.ScheduledFuture;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.dao.LadderDAO;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -609,28 +609,28 @@ public abstract class Battleground {
 		if (is1v1()) {
 			return;
 		}
-		getLadderDAO().addWin(player);
-		getLadderDAO().addRating(player, Math.round(ratingChange / (getLadderDAO().getRating(player) * 0.0015f)));
+		GameRepositories.ladder().addWin(player.getObjectId());
+		GameRepositories.ladder().addRating(player.getObjectId(), Math.round(ratingChange / (GameRepositories.ladder().findRating(player.getObjectId()) * 0.0015f)));
 	}
 
 	protected void playerLoseMatch(Player player, int ratingChange) {
 		if (is1v1()) {
 			return;
 		}
-		getLadderDAO().addLoss(player);
-		getLadderDAO().addRating(player, Math.round(ratingChange * (getLadderDAO().getRating(player) * 0.0015f)));
+		GameRepositories.ladder().addLoss(player.getObjectId());
+		GameRepositories.ladder().addRating(player.getObjectId(), Math.round(ratingChange * (GameRepositories.ladder().findRating(player.getObjectId()) * 0.0015f)));
 	}
 
 	protected void performLadderUpdate(Collection<Player> winner, Collection<Player> loser) {
 		int avgWinnerRating = 0;
 		int avgLoserRating = 0;
 		for (Player pl : winner) {
-			getLadderDAO().addWin(pl);
-			avgWinnerRating += getLadderDAO().getRating(pl);
+			GameRepositories.ladder().addWin(pl.getObjectId());
+			avgWinnerRating += GameRepositories.ladder().findRating(pl.getObjectId());
 		}
 		for (Player pl : winner) {
-			getLadderDAO().addLoss(pl);
-			avgWinnerRating += getLadderDAO().getRating(pl);
+			GameRepositories.ladder().addLoss(pl.getObjectId());
+			avgWinnerRating += GameRepositories.ladder().findRating(pl.getObjectId());
 		}
 		if (winner.size() > 0) {
 			avgWinnerRating = avgWinnerRating / winner.size();
@@ -640,10 +640,10 @@ public abstract class Battleground {
 		}
 		int ratingChange = calcRatingChange(avgWinnerRating, avgLoserRating);
 		for (Player pl : winner) {
-			getLadderDAO().addRating(pl, +ratingChange);
+			GameRepositories.ladder().addRating(pl.getObjectId(), +ratingChange);
 		}
 		for (Player pl : loser) {
-			getLadderDAO().addRating(pl, -ratingChange);
+			GameRepositories.ladder().addRating(pl.getObjectId(), -ratingChange);
 		}
 	}
 
@@ -756,8 +756,8 @@ public abstract class Battleground {
 			}
 			player.setBattleground(null);
 			if (!this.isDone && !player.getController().isInShutdownProgress()) {
-				getLadderDAO().addLeave(player);
-				getLadderDAO().addRating(player, -K_VALUE);
+				GameRepositories.ladder().addLeave(player.getObjectId());
+				GameRepositories.ladder().addRating(player.getObjectId(), -K_VALUE);
 			}
 			if (isLogout || isAfk) {
 				player.setAfk(true);
@@ -1011,13 +1011,9 @@ public abstract class Battleground {
 			player.setBattleground(this);
 			preparePlayer(player, 0, false);
 			performTeleport(player, pos.getX(), pos.getY(), pos.getZ());
-			getLadderDAO().setLeaves(player, getLadderDAO().getLeaves(player) - 1);
-			getLadderDAO().addRating(player, K_VALUE);
+			GameRepositories.ladder().setLeaves(player.getObjectId(), GameRepositories.ladder().findLeaves(player.getObjectId()) - 1);
+			GameRepositories.ladder().addRating(player.getObjectId(), K_VALUE);
 		}
-	}
-
-	protected static LadderDAO getLadderDAO() {
-		return DAOManager.getDAO(LadderDAO.class);
 	}
 
 	protected WorldMapInstance createInstance() {

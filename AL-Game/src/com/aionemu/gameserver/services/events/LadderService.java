@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.LinkedHashMap;
 
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.dao.LadderDAO;
 import com.aionemu.gameserver.eventEngine.Event;
 import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -89,7 +89,7 @@ public class LadderService {
 	}
 
 	public void UpdateRanks() {
-		getLadderDAO().updateRanks();
+		GameRepositories.ladder().updateRanks();
 	}
 
 	public boolean registerForNormal(Player player) {
@@ -1207,10 +1207,6 @@ public class LadderService {
 		} else {
 			PacketSendUtility.sendSys3Message(player, sender, msg);
 		}
-	}
-
-	private LadderDAO getLadderDAO() {
-		return DAOManager.getDAO(LadderDAO.class);
 	}
 
 	@SuppressWarnings("synthetic-access")

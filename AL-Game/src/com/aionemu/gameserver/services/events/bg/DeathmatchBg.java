@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.events.bg;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -915,7 +916,7 @@ public class DeathmatchBg extends Battleground {
 						AbyssPointsService.addGp(pl, 25);
 					}
 				} else {
-					super.getLadderDAO().addRating(pl, -super.K_VALUE / 20);
+					GameRepositories.ladder().addRating(pl.getObjectId(), -super.K_VALUE / 20);
 				}
 			}
 			super.specAnnounce(

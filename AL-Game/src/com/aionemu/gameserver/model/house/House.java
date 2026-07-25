@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.controllers.HouseController;
-import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
@@ -417,7 +416,7 @@ public class House extends VisibleObject {
 		getRegistry().despawnObjects();
 		if (this.getBuilding().getType() == BuildingType.PERSONAL_INS) {
 			HousingService.getInstance().removeStudio(playerObjectId);
-			DAOManager.getDAO(HousesDAO.class).deleteHouse(playerObjectId);
+			GameRepositories.houses().removeFor(playerObjectId);
 			return true;
 		}
 		houseRegistry = null;
@@ -468,7 +467,7 @@ public class House extends VisibleObject {
 	}
 
 	public synchronized void save() {
-		DAOManager.getDAO(HousesDAO.class).storeHouse(this);
+		GameRepositories.houses().save(this);
 		if (houseRegistry != null) {
 			this.houseRegistry.save();
 		}
