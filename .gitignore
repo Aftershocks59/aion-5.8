@@ -7,9 +7,15 @@ bin/
 *.class
 
 # Ignore runtime artefacts produced by the servers.
+#
+# Name the log directories rather than matching "log/" anywhere: that pattern
+# also matched a source package called log and silently kept it out of a commit,
+# leaving the build referring to a class the repository did not hold.
 AL-Game/cache/
 AL-Login/cache/
-log/
+AL-Chat/log/
+AL-Game/log/
+AL-Login/log/
 *.log
 
 # Ignore JVM crash and heap dumps.
