@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.World;
 
@@ -42,7 +41,7 @@ class ItemUpdateTask implements Runnable {
 		Player player = World.getInstance().findPlayer(playerId);
 		if (player != null)
 			try {
-				DAOManager.getDAO(InventoryDAO.class).store(player);
+				GameRepositories.inventories().save(player);
 				GameRepositories.itemStones().save(player.getAllItems());
 			} catch (Exception ex) {
 				log.error("Exception during periodic saving of player items " + player.getName(), ex);

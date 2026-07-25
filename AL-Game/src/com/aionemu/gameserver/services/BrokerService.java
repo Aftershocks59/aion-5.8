@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.concurrent.ConcurrentHashMap;
 
 import java.sql.Timestamp;
@@ -34,7 +35,6 @@ import com.aionemu.gameserver.configs.main.BrokerConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.dao.BrokerDAO;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.broker.BrokerItemMask;
 import com.aionemu.gameserver.model.broker.BrokerMessages;
@@ -1052,13 +1052,13 @@ public class BrokerService {
 		public void run() {
 			// first save item for FK consistency
 			if (item != null) {
-				DAOManager.getDAO(InventoryDAO.class).store(item, playerId);
+				GameRepositories.inventories().save(item, playerId);
 			}
 			if (brokerItem != null) {
 				DAOManager.getDAO(BrokerDAO.class).store(brokerItem);
 			}
 			if (kinahItem != null) {
-				DAOManager.getDAO(InventoryDAO.class).store(kinahItem, playerId);
+				GameRepositories.inventories().save(kinahItem, playerId);
 			}
 		}
 	}

@@ -22,7 +22,6 @@ import com.aionemu.commons.database.IUStH;
 import com.aionemu.commons.database.ReadStH;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.BrokerDAO;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.MySQL5DAOUtils;
 import com.aionemu.gameserver.model.broker.BrokerRace;
 import com.aionemu.gameserver.model.gameobjects.BrokerItem;
@@ -147,7 +146,7 @@ public class MySQL5BrokerDAO extends BrokerDAO {
 			case NEW:
 				result = insertBrokerItem(item);
 				if (item.getItem() != null) {
-					DAOManager.getDAO(InventoryDAO.class).store(item.getItem(), item.getSellerId());
+					GameRepositories.inventories().save(item.getItem(), item.getSellerId());
 				}
 				break;
 

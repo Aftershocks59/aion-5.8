@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
@@ -1000,7 +1000,7 @@ public class Equipment {
 		if (equippedItem.getItemCount() == 0) {
 			equipment.remove(equippedItem.getEquipmentSlot());
 			PacketSendUtility.sendPacket(owner, new SM_DELETE_ITEM(equippedItem.getObjectId()));
-			DAOManager.getDAO(InventoryDAO.class).store(equippedItem, owner);
+			GameRepositories.inventories().save(equippedItem, owner);
 		}
 		ItemPacketService.updateItemAfterInfoChange(owner, equippedItem, ItemUpdateType.STATS_CHANGE);
 		setPersistentState(PersistentState.UPDATE_REQUIRED);

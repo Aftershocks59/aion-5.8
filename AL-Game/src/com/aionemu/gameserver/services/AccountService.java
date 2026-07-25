@@ -28,7 +28,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.main.CacheConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.Race;
@@ -124,7 +123,7 @@ public class AccountService {
 	}
 
 	private static void removeAccountWH(int accountId) {
-		DAOManager.getDAO(InventoryDAO.class).deleteAccountWH(accountId);
+		GameRepositories.inventories().removeAccountWarehouse(accountId);
 	}
 
 	/**
@@ -159,7 +158,7 @@ public class AccountService {
 			/**
 			 * Load only equipment and its stones to display on character selection screen
 			 */
-			List<Item> equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(playerId);
+			List<Item> equipment = GameRepositories.inventories().loadEquipment(playerId);
 
 			PlayerAccountData acData = new PlayerAccountData(playerCommonData, cbi, appereance, equipment,
 					legionMember);
@@ -168,7 +167,7 @@ public class AccountService {
 			account.addPlayerAccountData(acData);
 
 			if (account.getAccountWarehouse() == null) {
-				Storage accWarehouse = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerId,
+				Storage accWarehouse = GameRepositories.inventories().loadStorage(playerId,
 						StorageType.ACCOUNT_WAREHOUSE);
 				ItemService.loadItemStones(accWarehouse.getItems());
 				account.setAccountWarehouse(accWarehouse);

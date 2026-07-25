@@ -16,8 +16,8 @@
  */
 package playercommands;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Equipment;
@@ -78,7 +78,7 @@ public class cmd_remodel extends PlayerCommand {
 				if (item.getItemTemplate().getWeaponType() == template.getWeaponType()) {
 					ItemRemodelService.systemRemodelItem(player, item, template);
 					PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item));
-					DAOManager.getDAO(InventoryDAO.class).store(item, player);
+					GameRepositories.inventories().save(item, player);
 					return true;
 				}
 			}
@@ -86,7 +86,7 @@ public class cmd_remodel extends PlayerCommand {
 				if (item.getItemTemplate().getItemSlot() == template.getItemSlot()) {
 					ItemRemodelService.systemRemodelItem(player, item, template);
 					PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item));
-					DAOManager.getDAO(InventoryDAO.class).store(item, player);
+					GameRepositories.inventories().save(item, player);
 					return true;
 				}
 			}

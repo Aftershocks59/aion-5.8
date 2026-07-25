@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.items;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,6 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -137,7 +137,7 @@ public class GodStone extends ItemStone {
 								equippedItem.setGodStone(null);
 								setPersistentState(PersistentState.DELETED);
 								ItemPacketService.updateItemAfterInfoChange(player, equippedItem);
-								DAOManager.getDAO(InventoryDAO.class).store(equippedItem, player);
+								GameRepositories.inventories().save(equippedItem, player);
 								PacketSendUtility.sendPacket(player,
 										new SM_INVENTORY_UPDATE_ITEM(player, equippedItem));
 							}

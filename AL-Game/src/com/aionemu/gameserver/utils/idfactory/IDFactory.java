@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.GenericValidator;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -73,7 +72,7 @@ public class IDFactory {
 		// Here should be calls to all IDFactoryAwareDAO implementations to initialize
 		// used values in IDFactory
 		lockIds(DAOManager.getDAO(PlayerDAO.class).getUsedIDs());
-		lockIds(DAOManager.getDAO(InventoryDAO.class).getUsedIDs());
+		lockIds(GameRepositories.inventories().findUsedIds());
 		lockIds(GameRepositories.houseRegistries().findUsedIds());
 		lockIds(DAOManager.getDAO(LegionDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(MailDAO.class).getUsedIDs());

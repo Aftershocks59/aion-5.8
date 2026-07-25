@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -322,7 +321,7 @@ public class VeteranRewardsService {
 		}
 
 		if (attachedItem != null) {
-			if (!DAOManager.getDAO(InventoryDAO.class).store(attachedItem, recipientCommonData.getPlayerObjId())) {
+			if (!GameRepositories.inventories().save(attachedItem, recipientCommonData.getPlayerObjId())) {
 				return;
 			}
 		}

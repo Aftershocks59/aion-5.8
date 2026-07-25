@@ -16,11 +16,11 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -100,7 +100,7 @@ public class ArmsfusionService {
 		}
 		ItemSocketService.copyFusionStones(secondItem, firstItem);
 		firstItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
-		DAOManager.getDAO(InventoryDAO.class).store(firstItem, player);
+		GameRepositories.inventories().save(firstItem, player);
 		if (!player.getInventory().decreaseByObjectId(secondItemUniqueId, 1))
 			return;
 		ItemPacketService.updateItemAfterInfoChange(player, firstItem);
@@ -140,7 +140,7 @@ public class ArmsfusionService {
 		}
 		weaponToBreak.setFusionedItem(null);
 		ItemSocketService.removeAllFusionStone(player, weaponToBreak);
-		DAOManager.getDAO(InventoryDAO.class).store(weaponToBreak, player);
+		GameRepositories.inventories().save(weaponToBreak, player);
 		ItemPacketService.updateItemAfterInfoChange(player, weaponToBreak);
 		PacketSendUtility.sendPacket(player,
 				SM_SYSTEM_MESSAGE.STR_COMPOUNDED_ITEM_DECOMPOUND_SUCCESS(weaponToBreak.getNameId()));

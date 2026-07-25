@@ -97,6 +97,7 @@ public final class GameRepositories {
 	private final AbyssRankRepository abyssRanks;
 	private final SeasonRankingRepository seasonRankings;
 	private final ItemStoneRepository itemStones;
+	private final InventoryRepository inventories;
 
 	/**
 	 * Builds every repository over one data source.
@@ -167,6 +168,7 @@ public final class GameRepositories {
 		abyssRanks = new JdbcAbyssRankRepository(dataSource);
 		seasonRankings = new JdbcSeasonRankingRepository(dataSource);
 		itemStones = new JdbcItemStoneRepository(dataSource);
+		inventories = new JdbcInventoryRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -427,5 +429,9 @@ public final class GameRepositories {
 
 	public static ItemStoneRepository itemStones() {
 		return getInstance().itemStones;
+	}
+
+	public static InventoryRepository inventories() {
+		return getInstance().inventories;
 	}
 }

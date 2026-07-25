@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -334,7 +333,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 				player.getWarehouse().add(item);
 			}
 		}
-		DAOManager.getDAO(InventoryDAO.class).store(player);
+		GameRepositories.inventories().save(player);
 
 		for (String s : itemOut) {
 			textLog.info(s);

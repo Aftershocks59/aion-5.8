@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.LegionConfig;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -1108,7 +1107,7 @@ public class LegionService {
 			/**
 			 * 1. save items first
 			 */
-			DAOManager.getDAO(InventoryDAO.class).store(allItems, player.getObjectId(),
+			GameRepositories.inventories().save(allItems, player.getObjectId(),
 					player.getPlayerAccount().getId(), legion.getLegionId());
 
 			/**

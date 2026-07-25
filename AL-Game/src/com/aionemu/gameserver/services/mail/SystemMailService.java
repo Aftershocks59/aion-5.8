@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.mail;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
@@ -23,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -138,7 +138,7 @@ public class SystemMailService {
 			return false;
 		}
 		if (attachedItem != null) {
-			if (!DAOManager.getDAO(InventoryDAO.class).store(attachedItem, recipientCommonData.getPlayerObjId())) {
+			if (!GameRepositories.inventories().save(attachedItem, recipientCommonData.getPlayerObjId())) {
 				return false;
 			}
 		}
@@ -206,7 +206,7 @@ public class SystemMailService {
 			return false;
 		}
 		if (attachedItem != null) {
-			if (!DAOManager.getDAO(InventoryDAO.class).store(attachedItem, recipientCommonData.getPlayerObjId())) {
+			if (!GameRepositories.inventories().save(attachedItem, recipientCommonData.getPlayerObjId())) {
 				return false;
 			}
 		}

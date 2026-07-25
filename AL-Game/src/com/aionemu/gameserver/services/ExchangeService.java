@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
@@ -447,8 +447,8 @@ public class ExchangeService {
 
 		@Override
 		public void run() {
-			DAOManager.getDAO(InventoryDAO.class).store(player1Items, player1Id);
-			DAOManager.getDAO(InventoryDAO.class).store(player2Items, player2Id);
+			GameRepositories.inventories().save(player1Items, player1Id);
+			GameRepositories.inventories().save(player2Items, player2Id);
 		}
 	}
 

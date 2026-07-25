@@ -30,7 +30,6 @@ import com.aionemu.gameserver.configs.main.CacheConfig;
 import com.aionemu.gameserver.controllers.FlyController;
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -92,7 +91,7 @@ public class PlayerService {
 			return false;
 		}
 		GameRepositories.playerSkills().save(player);
-		return DAOManager.getDAO(InventoryDAO.class).store(player);
+		return GameRepositories.inventories().save(player);
 	}
 
 	public static void storePlayer(Player player) {
@@ -104,7 +103,7 @@ public class PlayerService {
 		GameRepositories.abyssRanks().save(player.getObjectId(), player.getAbyssRank());
 		GameRepositories.playerPunishments().save(player, PunishmentType.PRISON);
 		GameRepositories.playerPunishments().save(player, PunishmentType.GATHER);
-		DAOManager.getDAO(InventoryDAO.class).store(player);
+		GameRepositories.inventories().save(player);
 
 		for (House house : player.getHouses()) {
 			GameRepositories.houses().save(house);
@@ -156,7 +155,7 @@ public class PlayerService {
 		GameRepositories.playerNpcFactions().load(player);
 		GameRepositories.playerMotions().load(player);
 		player.setVars(GameRepositories.playerVariables().findAll(player.getObjectId()));
-		Equipment equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(player);
+		Equipment equipment = GameRepositories.inventories().loadEquipment(player);
 		ItemService.loadItemStones(equipment.getEquippedItemsWithoutStigma());
 		equipment.setOwner(player);
 		player.setEquipment(equipment);
@@ -172,12 +171,12 @@ public class PlayerService {
 		 */
 		Storage accWarehouse = account.getAccountWarehouse();
 		player.setStorage(accWarehouse, StorageType.ACCOUNT_WAREHOUSE);
-		Storage inventory = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId, StorageType.CUBE);
+		Storage inventory = GameRepositories.inventories().loadStorage(playerObjId, StorageType.CUBE);
 		ItemService.loadItemStones(inventory.getItems());
 		player.setStorage(inventory, StorageType.CUBE);
 
 		for (int petBagId = StorageType.PET_BAG_MIN; petBagId <= StorageType.PET_BAG_MAX; petBagId++) {
-			Storage petBag = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId,
+			Storage petBag = GameRepositories.inventories().loadStorage(playerObjId,
 					StorageType.getStorageTypeById(petBagId));
 			ItemService.loadItemStones(petBag.getItems());
 			player.setStorage(petBag, StorageType.getStorageTypeById(petBagId));
@@ -186,14 +185,14 @@ public class PlayerService {
 		for (int houseWhId = StorageType.HOUSE_WH_MIN; houseWhId <= StorageType.HOUSE_WH_MAX; houseWhId++) {
 			StorageType whType = StorageType.getStorageTypeById(houseWhId);
 			if (whType != null) {
-				Storage cabinet = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId,
+				Storage cabinet = GameRepositories.inventories().loadStorage(playerObjId,
 						StorageType.getStorageTypeById(houseWhId));
 				ItemService.loadItemStones(cabinet.getItems());
 				player.setStorage(cabinet, StorageType.getStorageTypeById(houseWhId));
 			}
 		}
 
-		Storage warehouse = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId,
+		Storage warehouse = GameRepositories.inventories().loadStorage(playerObjId,
 				StorageType.REGULAR_WAREHOUSE);
 		ItemService.loadItemStones(warehouse.getItems());
 
@@ -309,7 +308,7 @@ public class PlayerService {
 	}
 
 	public static void deletePlayerFromDB(int playerId) {
-		DAOManager.getDAO(InventoryDAO.class).deletePlayerItems(playerId);
+		GameRepositories.inventories().removeFor(playerId);
 		DAOManager.getDAO(PlayerDAO.class).deletePlayer(playerId);
 	}
 
