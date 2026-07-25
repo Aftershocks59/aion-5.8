@@ -30,7 +30,6 @@ import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceS
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.model.DescriptionId;

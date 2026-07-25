@@ -17,7 +17,6 @@
 package com.aionemu.gameserver.model.templates.tasks;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 
 /**
  * @author Divinity

@@ -17,8 +17,6 @@
 package admincommands;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -42,7 +40,7 @@ public class PasskeyReset extends AdminCommand {
 		}
 
 		String name = Util.convertName(params[0]);
-		int accountId = DAOManager.getDAO(PlayerDAO.class).getAccountIdByName(name);
+		int accountId = GameRepositories.players().findAccountIdByName(name);
 		if (accountId == 0) {
 			PacketSendUtility.sendMessage(player, "player " + name + " can't find!");
 			PacketSendUtility.sendMessage(player, "syntax: //passkeyreset <player> <passkey>");

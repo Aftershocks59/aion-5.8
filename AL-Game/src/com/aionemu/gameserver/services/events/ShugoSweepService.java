@@ -20,10 +20,8 @@ import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -109,7 +107,7 @@ public class ShugoSweepService {
 			player.getPlayerShugoSweep().setShugoSweepByObjId(player.getObjectId());
 		} else {
 			player.getPlayerShugoSweep().setGoldenDice(goldDice - 1);
-			DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+			GameRepositories.players().save(player);
 		}
 
 		int completedSteps = player.getPlayerShugoSweep().getCompletedSteps();

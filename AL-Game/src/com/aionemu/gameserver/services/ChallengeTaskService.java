@@ -28,9 +28,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.challenge.ChallengeQuest;
 import com.aionemu.gameserver.model.challenge.ChallengeTask;
@@ -251,7 +249,7 @@ public class ChallengeTaskService {
 								rewardsAdded++;
 								itemId = reward.getRewardId();
 								itemCount = reward.getItemCount();
-								String recipientName = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(objectId)
+								String recipientName = GameRepositories.players().load(objectId)
 										.getName();
 								SystemMailService.getInstance().sendMail("Legion reward", recipientName, "", "", itemId,
 										itemCount, 0, 0, LetterType.NORMAL);

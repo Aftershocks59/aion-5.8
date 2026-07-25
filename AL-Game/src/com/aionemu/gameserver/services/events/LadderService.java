@@ -30,7 +30,6 @@ import java.util.concurrent.ScheduledFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.eventEngine.Event;
 import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;

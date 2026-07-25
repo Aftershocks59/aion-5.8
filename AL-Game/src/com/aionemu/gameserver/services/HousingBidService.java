@@ -35,11 +35,9 @@ import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
@@ -427,7 +425,7 @@ public class HousingBidService extends AbstractCronTask {
 	private PlayerCommonData getPlayerData(int objectId) {
 		Player player = World.getInstance().findPlayer(objectId);
 		if (player == null) {
-			return DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(objectId);
+			return GameRepositories.players().load(objectId);
 		}
 		return player.getCommonData();
 	}

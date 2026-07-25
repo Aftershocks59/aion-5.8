@@ -16,12 +16,11 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
@@ -55,7 +54,7 @@ public class GrowthEnergy {
 			public void visit(final Player player) {
 				player.getCommonData().setAuraOfGrowth(0);
 				PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
-				DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+				GameRepositories.players().save(player);
 			}
 		});
 	}
@@ -71,7 +70,7 @@ public class GrowthEnergy {
 		if (pcd.isReadyForAuraOfGrowth()) {
 			long auraOfGrowthpercent = pcd.getAuraOfGrowthPoints();
 			pcd.addAuraOfGrowth(auraOfGrowthpercent);
-			DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+			GameRepositories.players().save(player);
 			sendMessage(player);
 		}
 	}

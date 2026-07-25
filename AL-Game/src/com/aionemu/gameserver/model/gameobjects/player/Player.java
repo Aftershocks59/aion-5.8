@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
@@ -40,7 +39,6 @@ import com.aionemu.gameserver.controllers.attack.PlayerAggroList;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.controllers.movement.PlayerMoveController;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.NpcType;
@@ -2929,7 +2927,7 @@ public class Player extends Creature {
 	public void clearJoinRequest() {
 		playerCommonData.setJoinRequestLegionId(0);
 		playerCommonData.setJoinRequestState(LegionJoinRequestState.NONE);
-		DAOManager.getDAO(PlayerDAO.class).clearJoinRequest(getObjectId());
+		GameRepositories.players().clearJoinRequest(getObjectId());
 	}
 
 	public void setEnchantBoost(boolean boost) {

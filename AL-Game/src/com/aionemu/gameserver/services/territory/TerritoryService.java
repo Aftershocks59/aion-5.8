@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeMap;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionTerritory;

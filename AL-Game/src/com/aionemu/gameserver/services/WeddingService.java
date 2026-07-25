@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.WeddingsConfig;
 import com.aionemu.gameserver.model.Wedding;
 import com.aionemu.gameserver.model.gameobjects.player.Player;

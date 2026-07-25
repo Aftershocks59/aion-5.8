@@ -28,10 +28,8 @@ import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -243,8 +241,7 @@ public class VeteranRewardsService {
 			message = message.substring(0, 1000);
 		}
 
-		PlayerCommonData recipientCommonData = (DAOManager.getDAO(PlayerDAO.class))
-				.loadPlayerCommonDataByName(recipientName);
+		PlayerCommonData recipientCommonData = GameRepositories.players().loadByName(recipientName);
 
 		if (recipientCommonData == null) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_ERROR_LOG) {

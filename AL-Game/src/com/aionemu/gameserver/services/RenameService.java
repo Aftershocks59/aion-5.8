@@ -19,9 +19,7 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.Iterator;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RENAME;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -69,7 +67,7 @@ public class RenameService {
 				PacketSendUtility.sendPacket(p, new SM_RENAME(player.getObjectId(), oldName, newName));
 			}
 		}
-		DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+		GameRepositories.players().save(player);
 		return true;
 	}
 

@@ -16,9 +16,8 @@
  */
 package admincommands;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
@@ -120,7 +119,7 @@ public class Repairkit extends AdminCommand {
         int playerID = 0;
 
         try {
-            playerID = DAOManager.getDAO(PlayerDAO.class).getPlayerIdByName(playerToWipe);
+            playerID = GameRepositories.players().findIdByName(playerToWipe);
         } catch (Exception e) {
             log.info("[repairkit-wipe] GM : [" + admin.getName() + "] couldn't Find Name in Database ( RepairKIT )");
         }
@@ -160,7 +159,7 @@ public class Repairkit extends AdminCommand {
         int playerID = 0;
 
         try {
-            playerID = DAOManager.getDAO(PlayerDAO.class).getPlayerIdByName(playerToRemoveFrom);
+            playerID = GameRepositories.players().findIdByName(playerToRemoveFrom);
         } catch (Exception e) {
             log.info("[repairkit-removeItem] GM : [" + admin.getName() + "] Couldn't Find Name in Database ( RepairKIT )");
         }
@@ -232,7 +231,7 @@ public class Repairkit extends AdminCommand {
         int playerID = 0;
 
         try {
-            playerID = DAOManager.getDAO(PlayerDAO.class).getPlayerIdByName(playerToReturn);
+            playerID = GameRepositories.players().findIdByName(playerToReturn);
         } catch (Exception e) {
             log.info("[repairkit-return] GM : [" + admin.getName() + "] Couldn't Find Name in Database ( RepairKIT )");
         }

@@ -26,7 +26,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.IPRange;
 import com.aionemu.commons.utils.NetworkUtils;
 import com.aionemu.commons.database.DatabaseFactory;

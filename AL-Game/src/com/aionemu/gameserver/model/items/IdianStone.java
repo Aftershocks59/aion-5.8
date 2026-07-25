@@ -17,7 +17,6 @@
 package com.aionemu.gameserver.model.items;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.dataholders.DataManager;

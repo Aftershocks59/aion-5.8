@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.services.base;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
 import com.aionemu.gameserver.configs.main.CustomConfig;

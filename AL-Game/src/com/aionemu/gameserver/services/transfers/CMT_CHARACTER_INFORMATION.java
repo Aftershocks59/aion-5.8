@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Gender;

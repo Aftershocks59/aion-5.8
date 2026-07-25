@@ -17,8 +17,6 @@
 package admincommands;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -163,7 +161,7 @@ public class SiegeCommand extends AdminCommand
 			} if (legion != null) {
 				int legionBGeneral = LegionService.getInstance().getLegionBGeneral(legion.getLegionId());
 				if (legionBGeneral != 0) {
-					PlayerCommonData BGeneral = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(legionBGeneral);
+					PlayerCommonData BGeneral = GameRepositories.players().load(legionBGeneral);
 					sr = SiegeRace.getByRace(BGeneral.getRace());
 				}
 			}

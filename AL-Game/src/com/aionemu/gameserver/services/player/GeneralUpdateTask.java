@@ -20,8 +20,6 @@ import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.world.World;
@@ -45,7 +43,7 @@ class GeneralUpdateTask implements Runnable {
 				GameRepositories.abyssRanks().save(player.getObjectId(), player.getAbyssRank());
 				GameRepositories.playerSkills().save(player);
 				GameRepositories.playerQuests().save(player);
-				DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+				GameRepositories.players().save(player);
 				GameRepositories.equippedStigmas().save(player);
 				for (House house : player.getHouses())
 					house.save();

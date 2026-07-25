@@ -11,7 +11,6 @@ import java.util.concurrent.ScheduledFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.versionning.Version;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.cache.HTMLCache;
@@ -24,7 +23,6 @@ import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.HTMLConfig;
 import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
@@ -423,7 +421,7 @@ public final class PlayerEnterWorldService {
 					client.sendPacket(new SM_LEGION_REQUEST_LIST(player.getLegion().getJoinRequestMap().values()));
 				}
 			} else {
-				DAOManager.getDAO(PlayerDAO.class).getJoinRequestState(player);
+				GameRepositories.players().loadJoinRequestState(player);
 				LegionService.getInstance().handleJoinRequestGetAnswer(player);
 			}
 			client.sendPacket(new SM_TITLE_INFO(player));
@@ -779,7 +777,7 @@ public final class PlayerEnterWorldService {
 		log.info("Player logged in: " + player.getName() + " Account: "
 				+ player.getClientConnection().getAccount().getName());
 		player.getCommonData().setOnline(true);
-		DAOManager.getDAO(PlayerDAO.class).onlinePlayer(player, true);
+		GameRepositories.players().setOnline(player.getObjectId(), true);
 		player.onLoggedIn();
 		player.setOnlineTime();
 	}

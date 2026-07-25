@@ -28,10 +28,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -56,13 +54,10 @@ public class PlayerTransferService {
 	public static PlayerTransferService getInstance() {
 		return instance;
 	}
-
-	private PlayerDAO dao;
 	private Map<Integer, TransferablePlayer> transfers = new LinkedHashMap<>();
 	private List<Integer> rsList = new ArrayList<>();
 
 	public PlayerTransferService() {
-		this.dao = DAOManager.getDAO(PlayerDAO.class);
 		if (!PlayerTransferConfig.REMOVE_SKILL_LIST.equals("*")) {
 			for (String skillId : PlayerTransferConfig.REMOVE_SKILL_LIST.split(",")) {
 				rsList.add(Integer.parseInt(skillId));
@@ -93,7 +88,7 @@ public class PlayerTransferService {
 	 */
 	public void startTransfer(int accountId, int targetAccountId, int playerId, byte targetServerId, int taskId) {
 		boolean exist = false;
-		for (int id : DAOManager.getDAO(PlayerDAO.class).getPlayerOidsOnAccount(accountId))
+		for (int id : GameRepositories.players().findIdsOnAccount(accountId))
 			if (id == playerId) {
 				exist = true;
 				break;
@@ -113,7 +108,7 @@ public class PlayerTransferService {
 			return;
 		}
 
-		PlayerCommonData common = dao.loadPlayerCommonData(playerId);
+		PlayerCommonData common = GameRepositories.players().load(playerId);
 		if (common.isOnline()) {
 			log.warn("cannot transfer #" + taskId + " online players " + playerId + ".");
 			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
@@ -194,7 +189,7 @@ public class PlayerTransferService {
 			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId,
 					"unexpected sql error while creating a clone"));
 		} else {
-			DAOManager.getDAO(PlayerDAO.class).setPlayerLastTransferTime(cha.getObjectId(), System.currentTimeMillis());
+			GameRepositories.players().setLastTransferTime(cha.getObjectId(), System.currentTimeMillis());
 			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.OK, taskId));
 			log.info("clone successful #" + taskId + " `" + name + "`");
 			textLog.info("taskId:" + taskId + "; [CloneCharacter:Done]");

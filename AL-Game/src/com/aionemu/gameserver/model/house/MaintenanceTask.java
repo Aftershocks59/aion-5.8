@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.house;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +28,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_ACQUIRE;
@@ -144,7 +143,7 @@ public class MaintenanceTask extends AbstractCronTask {
 			PlayerCommonData pcd = null;
 			Player player = World.getInstance().findPlayer(house.getOwnerId());
 			if (player == null) {
-				pcd = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(house.getOwnerId());
+				pcd = GameRepositories.players().load(house.getOwnerId());
 			} else {
 				pcd = player.getCommonData();
 			}

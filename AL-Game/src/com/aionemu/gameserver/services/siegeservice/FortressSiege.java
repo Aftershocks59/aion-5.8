@@ -24,9 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -542,7 +540,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		SiegeResult resultLegion = isBossKilled() ? SiegeResult.OCCUPY : SiegeResult.DEFENDER;
 		int legionBGeneral = LegionService.getInstance().getLegionBGeneral(getSiegeLocation().getLegionId());
 		if (legionBGeneral != 0) {
-			PlayerCommonData BGeneral = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(legionBGeneral);
+			PlayerCommonData BGeneral = GameRepositories.players().load(legionBGeneral);
 			if (legionRewards != null) {
 				for (SiegeLegionReward medalsType : legionRewards) {
 					MailFormatter.sendAbyssRewardMail(getSiegeLocation(), BGeneral, AbyssSiegeLevel.VETERAN_SOLDIER,
@@ -642,7 +640,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		for (SiegeReward topGrade : playerRewards) {
 			for (int rewardedPC = 0; i < topPlayersIds.size() && rewardedPC < topGrade.getTop(); ++i) {
 				Integer playerId = topPlayersIds.get(i);
-				PlayerCommonData pcd = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(playerId);
+				PlayerCommonData pcd = GameRepositories.players().load(playerId);
 				++rewardedPC;
 				MailFormatter.sendAbyssRewardMail(getSiegeLocation(), pcd, AbyssSiegeLevel.VETERAN_SOLDIER,
 						resultPlayers, System.currentTimeMillis(), topGrade.getItemId(),

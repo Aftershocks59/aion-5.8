@@ -19,7 +19,6 @@ package com.aionemu.gameserver.services.toypet;
 import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
 import com.aionemu.gameserver.controllers.PetController;
 import com.aionemu.gameserver.dataholders.DataManager;

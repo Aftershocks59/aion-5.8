@@ -29,9 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.LegionConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -2251,7 +2249,7 @@ public class LegionService {
 		Player player = World.getInstance().findPlayer(playerId);
 		if (player == null) {
 			playerOnline = false;
-			DAOManager.getDAO(PlayerDAO.class).updateLegionJoinRequestState(playerId, state);
+			GameRepositories.players().setJoinRequestState(playerId, state);
 			if (legion.getJoinRequestMap().containsKey(playerId)) {
 				legion.getJoinRequestMap().remove(playerId);
 			}

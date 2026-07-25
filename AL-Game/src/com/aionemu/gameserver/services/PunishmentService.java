@@ -20,7 +20,6 @@ import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.Calendar;
 import java.util.concurrent.Future;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;

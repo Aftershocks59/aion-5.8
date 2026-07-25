@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.utils.audit;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.LinkedHashMap;
 
 import java.util.ArrayList;
@@ -24,10 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
@@ -104,7 +103,7 @@ public class GMService {
 
 			// * = Wedding
 			if (player.isMarried()) {
-				String partnerName = DAOManager.getDAO(PlayerDAO.class).getPlayerNameByObjId(player.getPartnerId());
+				String partnerName = GameRepositories.players().findName(player.getPartnerId());
 				adminTag += "\uE020" + partnerName;
 			}
 
@@ -158,7 +157,7 @@ public class GMService {
 		// * = Wedding
 		// if (player.isMarried()) {
 		// String partnerName =
-		// DAOManager.getDAO(PlayerDAO.class).getPlayerNameByObjId(player.getPartnerId());
+		// GameRepositories.players().findName(player.getPartnerId());
 		// adminTag += "\uE020"+ partnerName;
 		// }
 

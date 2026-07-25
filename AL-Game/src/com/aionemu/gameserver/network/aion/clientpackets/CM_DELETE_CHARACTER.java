@@ -17,7 +17,6 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.model.account.CharacterPasskey.ConnectType;
 import com.aionemu.gameserver.model.account.PlayerAccountData;

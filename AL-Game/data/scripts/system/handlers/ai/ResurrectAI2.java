@@ -17,7 +17,6 @@
 package ai;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
 import com.aionemu.gameserver.ai2.AIName;

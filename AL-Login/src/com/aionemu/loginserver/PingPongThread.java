@@ -28,7 +28,6 @@ import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PING;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.repository.LoginRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 
 /**
  * @author KID

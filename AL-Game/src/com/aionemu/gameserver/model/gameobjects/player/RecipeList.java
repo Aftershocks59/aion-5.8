@@ -20,7 +20,6 @@ import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEARN_RECIPE;

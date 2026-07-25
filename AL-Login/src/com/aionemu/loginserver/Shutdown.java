@@ -26,7 +26,6 @@ import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.network.NetConnector;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.repository.LoginRepositories;
 

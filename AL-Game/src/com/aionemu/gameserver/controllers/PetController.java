@@ -17,7 +17,6 @@
 package com.aionemu.gameserver.controllers;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Pet;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;

@@ -39,7 +39,6 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import com.aionemu.commons.configs.DatabaseConfig;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.SchemaMigrator;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.utils.ExitCode;
@@ -124,7 +123,6 @@ public class LoginServer {
         // no DAO ever talks to a database older than the code.
         SchemaMigrator.migrate(DatabaseConfig.DATABASE_MIGRATION_PATH);
         DatabaseFactory.init();
-        DAOManager.init();
 
         /**
          * Start deadlock detector that will restart server if deadlock happened

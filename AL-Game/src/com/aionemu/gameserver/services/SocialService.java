@@ -17,8 +17,6 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.BlockedPlayer;
 import com.aionemu.gameserver.model.gameobjects.player.Friend;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -47,7 +45,7 @@ public class SocialService {
 		if (GameRepositories.playerSocial().unblock(player.getObjectId(), blockedUserId)) {
 			player.getBlockList().remove(blockedUserId);
 			player.getClientConnection().sendPacket(new SM_BLOCK_RESPONSE(SM_BLOCK_RESPONSE.UNBLOCK_SUCCESSFUL,
-					DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(blockedUserId).getName()));
+					GameRepositories.players().load(blockedUserId).getName()));
 			player.getClientConnection().sendPacket(new SM_BLOCK_LIST());
 			return true;
 		}
@@ -84,7 +82,7 @@ public class SocialService {
 				friend2Player = World.getInstance().findPlayer(exFriend2Id);
 			}
 			String friend2Name = friend2Player != null ? friend2Player.getName()
-					: DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(exFriend2Id).getName();
+					: GameRepositories.players().load(exFriend2Id).getName();
 			deleter.getFriendList().delFriend(exFriend2Id);
 			deleter.getClientConnection().sendPacket(new SM_FRIEND_LIST());
 			deleter.getClientConnection()

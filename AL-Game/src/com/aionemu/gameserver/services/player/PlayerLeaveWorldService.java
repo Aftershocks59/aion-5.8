@@ -19,12 +19,10 @@ package com.aionemu.gameserver.services.player;
 import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 
-import com.aionemu.gameserver.dao.*;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.model.account.PlayerAccountData;
@@ -160,7 +158,7 @@ public class PlayerLeaveWorldService {
 		player.getCommonData().setOnline(false);
 		player.getCommonData().setLastOnline(new Timestamp(System.currentTimeMillis()));
 		player.setClientConnection(null);
-		DAOManager.getDAO(PlayerDAO.class).onlinePlayer(player, false);
+		GameRepositories.players().setOnline(player.getObjectId(), false);
 		if (GSConfig.ENABLE_CHAT_SERVER) {
 			ChatService.onPlayerLogout(player);
 		}

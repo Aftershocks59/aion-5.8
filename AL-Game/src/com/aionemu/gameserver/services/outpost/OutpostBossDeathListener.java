@@ -17,7 +17,6 @@
 package com.aionemu.gameserver.services.outpost;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
 import com.aionemu.gameserver.model.Race;

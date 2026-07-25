@@ -17,8 +17,6 @@
 package admincommands;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.PetitionType;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
@@ -89,7 +87,7 @@ public class Petitions extends AdminCommand {
 			isOnline = true;
 		}
 		else {
-			petitionPlayer = DAOManager.getDAO(PlayerDAO.class).getPlayerNameByObjId(petition.getPlayerObjId());
+			petitionPlayer = GameRepositories.players().findName(petition.getPlayerObjId());
 			isOnline = false;
 		}
 

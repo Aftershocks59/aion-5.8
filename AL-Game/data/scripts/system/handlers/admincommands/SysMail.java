@@ -16,8 +16,7 @@
  */
 package admincommands;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
@@ -223,14 +222,14 @@ public class SysMail extends AdminCommand {
 			return null;
 		}
 		else if (recipientType == RecipientType.PLAYER) {
-			PlayerCommonData recipientCommonData = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonDataByName(recipient);
+			PlayerCommonData recipientCommonData = GameRepositories.players().loadByName(recipient);
 			if (recipientCommonData != null && recipientCommonData.getMailboxLetters() >= 100) {
 				PacketSendUtility.sendMessage(admin, recipient + "Players mail box is full");
 				return null;
 			}
 			
 			if (letterType == LetterType.NORMAL) {
-				if (!DAOManager.getDAO(PlayerDAO.class).isNameUsed(recipient)) {
+				if (!GameRepositories.players().isNameUsed(recipient)) {
 					PacketSendUtility.sendMessage(admin, "Could not find a Recipient by that name.");
 					return null;
 				}

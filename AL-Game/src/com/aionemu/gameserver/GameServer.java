@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.configs.DatabaseConfig;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.SchemaMigrator;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.NioServer;
 import com.aionemu.commons.network.ServerCfg;
 import com.aionemu.commons.services.CronService;
@@ -58,7 +58,6 @@ import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
 import com.aionemu.gameserver.configs.main.WeddingsConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.GameEngine;
@@ -283,7 +282,7 @@ public class GameServer {
 		GeoService.getInstance().initializeGeo();
 		DropRegistrationService.getInstance();
 		GameServer gs = new GameServer();
-		DAOManager.getDAO(PlayerDAO.class).setPlayersOffline(false);
+		GameRepositories.players().setAllOnline(false);
 
 		/**
 		 * Engines
@@ -584,8 +583,8 @@ public class GameServer {
 				public void onStartup() {
 					lock.lock();
 					try {
-						ASMOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ASMODIANS);
-						ELYOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ELYOS);
+						ASMOS_COUNT = GameRepositories.players().countAccountsForRace(Race.ASMODIANS);
+						ELYOS_COUNT = GameRepositories.players().countAccountsForRace(Race.ELYOS);
 						computeRatios();
 					} catch (Exception e) {
 					} finally {
@@ -649,7 +648,6 @@ public class GameServer {
 		SchemaMigrator.migrate(DatabaseConfig.DATABASE_MIGRATION_PATH);
 		DatabaseFactory.init();
 		// Initialize DAOs
-		DAOManager.init();
 		// Initialize thread pools
 		ThreadConfig.load();
 		ThreadPoolManager.getInstance();

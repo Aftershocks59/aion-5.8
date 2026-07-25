@@ -26,7 +26,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.model.ranking.SeasonRankingEnum;
 import com.aionemu.gameserver.model.ranking.SeasonRankingResult;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SEASON_RANKING;

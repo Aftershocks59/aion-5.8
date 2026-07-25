@@ -17,7 +17,6 @@
 package com.aionemu.gameserver.model.gameobjects.player.f2p;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 

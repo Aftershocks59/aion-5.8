@@ -16,10 +16,9 @@
  */
 package admincommands;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.team.legion.Legion;
@@ -138,17 +137,13 @@ public class LegionCommand extends AdminCommand {
 			message.add("id: "+legion.getLegionId());
 			List<Integer> members = legion.getLegionMembers();
 			message.add("members: "+members.size());
-			
-			PlayerDAO dao = null;
 			for(int memberId : members) {
 				Player pl = World.getInstance().findPlayer(memberId);
 				if(pl != null)
 					online.add(pl.getName()+" (lv"+pl.getLevel()+") classId "+pl.getPlayerClass().getClassId());
 				else {
-					if(dao == null)
-						dao = DAOManager.getDAO(PlayerDAO.class);
 					
-					PlayerCommonData pcd = dao.loadPlayerCommonData(memberId);
+					PlayerCommonData pcd = GameRepositories.players().load(memberId);
 					offline.add(pcd.getName()+" (lv"+pcd.getLevel()+") classId "+pcd.getPlayerClass().getClassId());
 				}
 			}

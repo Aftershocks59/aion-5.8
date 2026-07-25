@@ -23,7 +23,6 @@ import java.util.Date;
 
 import org.quartz.CronExpression;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 

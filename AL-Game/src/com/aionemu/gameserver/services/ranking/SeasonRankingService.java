@@ -17,7 +17,6 @@
 package com.aionemu.gameserver.services.ranking;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.ranking.Arena6V6Ranking;
 import com.aionemu.gameserver.model.gameobjects.player.ranking.ArenaOfTenacityRank;

@@ -22,7 +22,6 @@ import java.util.Map;
 
 import java.util.Collection;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MINIONS;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;

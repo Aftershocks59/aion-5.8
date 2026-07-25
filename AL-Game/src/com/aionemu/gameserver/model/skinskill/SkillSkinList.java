@@ -22,7 +22,6 @@ import java.util.Map;
 
 import java.util.Collection;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.SkillSkinTemplate;

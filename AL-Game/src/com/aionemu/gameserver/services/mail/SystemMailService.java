@@ -23,8 +23,6 @@ import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Letter;
@@ -89,8 +87,7 @@ public class SystemMailService {
 		if (message.length() > 1000) {
 			message = message.substring(0, 1000);
 		}
-		PlayerCommonData recipientCommonData = DAOManager.getDAO(PlayerDAO.class)
-				.loadPlayerCommonDataByName(recipientName);
+		PlayerCommonData recipientCommonData = GameRepositories.players().loadByName(recipientName);
 		if (recipientCommonData == null) {
 			// log.info("[SYSMAILSERVICE] > [RecipientName: " + recipientName + "] NO SUCH
 			// CHARACTER NAME.");
@@ -175,8 +172,7 @@ public class SystemMailService {
 			attachedItemObjId = attachedItem.getItemId();
 			attachedItemCount = attachedItem.getItemCount();
 		}
-		PlayerCommonData recipientCommonData = DAOManager.getDAO(PlayerDAO.class)
-				.loadPlayerCommonDataByName(recipientName);
+		PlayerCommonData recipientCommonData = GameRepositories.players().loadByName(recipientName);
 		if (recipientCommonData == null) {
 			return false;
 		}

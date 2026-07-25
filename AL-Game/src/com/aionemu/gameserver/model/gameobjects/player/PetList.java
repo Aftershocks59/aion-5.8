@@ -24,7 +24,6 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 
 

@@ -21,7 +21,6 @@ package com.aionemu.loginserver.network.gameserver.clientpackets;
 import com.aionemu.loginserver.repository.LoginRepositories;
 import java.sql.Timestamp;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.controller.AccountController;

@@ -26,7 +26,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.model.house.PlayerScript;
 import com.aionemu.gameserver.utils.xml.CompressUtil;

@@ -31,11 +31,9 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.ingameshop.InGameShopProperty;
 import com.aionemu.gameserver.configs.main.AdvCustomConfig;
 import com.aionemu.gameserver.configs.main.InGameShopConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -198,12 +196,12 @@ public class InGameShopEn {
 			return;
 		}
 
-		if (!DAOManager.getDAO(PlayerDAO.class).isNameUsed(receiver)) {
+		if (!GameRepositories.players().isNameUsed(receiver)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INGAMESHOP_NO_USER_TO_GIFT);
 			return;
 		}
 
-		PlayerCommonData recipientCommonData = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonDataByName(receiver);
+		PlayerCommonData recipientCommonData = GameRepositories.players().loadByName(receiver);
 		if (recipientCommonData.getMailboxLetters() >= 100) {
 			PacketSendUtility.sendPacket(player,
 					SM_SYSTEM_MESSAGE.STR_MAIL_MSG_RECIPIENT_MAILBOX_FULL(recipientCommonData.getName()));

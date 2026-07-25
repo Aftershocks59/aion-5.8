@@ -27,7 +27,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import java.util.concurrent.ConcurrentHashMap;
 import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.dataholders.DataManager;

@@ -18,7 +18,6 @@ package com.aionemu.gameserver.services.abysslandingservice.landingspecialservic
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialStateType;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;

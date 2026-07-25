@@ -16,22 +16,20 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CleaningConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class DatabaseCleaningService {
 
 	private Logger log = LoggerFactory.getLogger(DatabaseCleaningService.class);
-	private PlayerDAO dao = (PlayerDAO) DAOManager.getDAO(PlayerDAO.class);
 
 	private final int SECURITY_MINIMUM_PERIOD = 30;
 
@@ -55,7 +53,7 @@ public class DatabaseCleaningService {
 
 		if (periodInDays > SECURITY_MINIMUM_PERIOD) {
 			delegateToThreads(CleaningConfig.CLEANING_THREADS,
-					dao.getPlayersToDelete(periodInDays, CleaningConfig.CLEANING_LIMIT));
+					GameRepositories.players().findInactive(periodInDays, CleaningConfig.CLEANING_LIMIT));
 			monitoringProcess();
 		} else {
 			log.warn(

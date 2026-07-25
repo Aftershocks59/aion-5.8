@@ -20,7 +20,6 @@ import com.aionemu.gameserver.model.ingameshop.IGItem;
 import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.List;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;

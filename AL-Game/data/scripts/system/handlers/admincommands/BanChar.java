@@ -16,8 +16,7 @@
  */
 package admincommands;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.PunishmentService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -51,7 +50,7 @@ public class BanChar extends AdminCommand {
 
 		// Second, try to get player Id from offline player from database
 		if (playerId == 0)
-			playerId = DAOManager.getDAO(PlayerDAO.class).getPlayerIdByName(playerName);
+			playerId = GameRepositories.players().findIdByName(playerName);
 
 		// Third, fail
 		if (playerId == 0) {

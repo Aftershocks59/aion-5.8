@@ -24,9 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.GenericValidator;
-import com.aionemu.gameserver.dao.PlayerDAO;
 
 /**
  * This class is responsible for id generation for all Aion-Emu objects.<br>
@@ -69,7 +67,7 @@ public class IDFactory {
 		lockIds(0);
 		// Here should be calls to all IDFactoryAwareDAO implementations to initialize
 		// used values in IDFactory
-		lockIds(DAOManager.getDAO(PlayerDAO.class).getUsedIDs());
+		lockIds(GameRepositories.players().findUsedIds());
 		lockIds(GameRepositories.inventories().findUsedIds());
 		lockIds(GameRepositories.houseRegistries().findUsedIds());
 		lockIds(GameRepositories.legions().findUsedIds());

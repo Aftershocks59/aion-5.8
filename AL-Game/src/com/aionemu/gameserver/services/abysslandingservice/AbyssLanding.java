@@ -17,7 +17,6 @@
 package com.aionemu.gameserver.services.abysslandingservice;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.model.landing.LandingLocation;
 import com.aionemu.gameserver.model.landing.LandingStateType;
 

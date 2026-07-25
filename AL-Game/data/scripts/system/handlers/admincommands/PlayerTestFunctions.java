@@ -17,7 +17,6 @@
 package admincommands;
 
 import com.aionemu.gameserver.repository.GameRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.dorinerk_wardrobe.PlayerWardrobeEntry;
 import com.aionemu.gameserver.model.gameobjects.Creature;

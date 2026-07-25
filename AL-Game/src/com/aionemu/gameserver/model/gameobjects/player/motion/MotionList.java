@@ -22,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.Collections;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;

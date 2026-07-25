@@ -19,7 +19,6 @@
 package com.aionemu.loginserver.taskmanager.handler.implementations;
 
 import com.aionemu.loginserver.repository.LoginRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

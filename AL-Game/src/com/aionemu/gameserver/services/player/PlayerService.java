@@ -24,13 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.configs.main.CacheConfig;
 import com.aionemu.gameserver.controllers.FlyController;
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.dataholders.PlayerInitialData.LocationData;
@@ -77,7 +75,7 @@ public class PlayerService {
 	private static final CacheMap<Integer, Player> playerCache = CacheMapFactory.createSoftCacheMap("Player", "player");
 
 	public static boolean isFreeName(String name) {
-		return !DAOManager.getDAO(PlayerDAO.class).isNameUsed(name);
+		return !GameRepositories.players().isNameUsed(name);
 	}
 
 	public static boolean isOldName(String name) {
@@ -85,7 +83,7 @@ public class PlayerService {
 	}
 
 	public static boolean storeNewPlayer(Player player, String accountName, int accountId) {
-		if (!DAOManager.getDAO(PlayerDAO.class).saveNewPlayer(player.getCommonData(), accountId, accountName)
+		if (!GameRepositories.players().add(player.getCommonData(), accountId, accountName)
 				|| !GameRepositories.playerAppearance().save(player)) {
 			return false;
 		}
@@ -94,7 +92,7 @@ public class PlayerService {
 	}
 
 	public static void storePlayer(Player player) {
-		DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
+		GameRepositories.players().save(player);
 		GameRepositories.playerSkills().save(player);
 		GameRepositories.equippedStigmas().save(player);
 		GameRepositories.playerSettings().save(player);
@@ -141,8 +139,8 @@ public class PlayerService {
 		player.setSkillList(GameRepositories.playerSkills().load(playerObjId));
 		player.setEquipedStigmaList(GameRepositories.equippedStigmas().load(playerObjId));
 		player.setKnownlist(new KnownList(player));
-		player.setFriendList(GameRepositories.playerSocial().findFriends(player, DAOManager.getDAO(PlayerDAO.class)::loadPlayerCommonData));
-		player.setBlockList(GameRepositories.playerSocial().findBlocked(player, DAOManager.getDAO(PlayerDAO.class)::loadPlayerCommonData));
+		player.setFriendList(GameRepositories.playerSocial().findFriends(player, GameRepositories.players()::load));
+		player.setBlockList(GameRepositories.playerSocial().findBlocked(player, GameRepositories.players()::load));
 		player.setTitleList(GameRepositories.playerTitles().findAll(playerObjId));
 		player.setCP(GameRepositories.creativityPoints().load(player.getObjectId()));
 		player.setEventWindow(GameRepositories.eventWindows().load(player.getPlayerAccount().getId()));
@@ -308,11 +306,11 @@ public class PlayerService {
 
 	public static void deletePlayerFromDB(int playerId) {
 		GameRepositories.inventories().removeFor(playerId);
-		DAOManager.getDAO(PlayerDAO.class).deletePlayer(playerId);
+		GameRepositories.players().remove(playerId);
 	}
 
 	public static int deleteAccountsCharsFromDB(int accountId) {
-		List<Integer> charIds = DAOManager.getDAO(PlayerDAO.class).getPlayerOidsOnAccount(accountId);
+		List<Integer> charIds = GameRepositories.players().findIdsOnAccount(accountId);
 		for (int playerId : charIds) {
 			deletePlayerFromDB(playerId);
 		}
@@ -320,12 +318,12 @@ public class PlayerService {
 	}
 
 	private static void storeDeletionTime(PlayerAccountData accData) {
-		DAOManager.getDAO(PlayerDAO.class).updateDeletionTime(accData.getPlayerCommonData().getPlayerObjId(),
+		GameRepositories.players().setDeletionTime(accData.getPlayerCommonData().getPlayerObjId(),
 				accData.getDeletionDate());
 	}
 
 	public static void storeCreationTime(int objectId, Timestamp creationDate) {
-		DAOManager.getDAO(PlayerDAO.class).storeCreationTime(objectId, creationDate);
+		GameRepositories.players().setCreationTime(objectId, creationDate);
 	}
 
 	public static void addMacro(Player player, int macroOrder, String macroXML) {
@@ -365,7 +363,7 @@ public class PlayerService {
 				}
 			}
 		});
-		result.putAll(DAOManager.getDAO(PlayerDAO.class).getPlayerNames(playerObjIdsCopy));
+		result.putAll(GameRepositories.players().findNames(playerObjIdsCopy));
 		return result;
 	}
 }

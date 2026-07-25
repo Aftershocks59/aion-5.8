@@ -30,10 +30,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.controllers.HouseController;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
@@ -194,7 +192,7 @@ public class House extends VisibleObject {
 		if (playerObjectId != 0) {
 			ArrayList<Integer> players = new ArrayList<Integer>(1);
 			players.add(playerObjectId);
-			Map<Integer, String> playerNames = DAOManager.getDAO(PlayerDAO.class).getPlayerNames(players);
+			Map<Integer, String> playerNames = GameRepositories.players().findNames(players);
 			if (playerNames.containsKey(playerObjectId)) {
 				masterName = playerNames.get(playerObjectId);
 			} else {

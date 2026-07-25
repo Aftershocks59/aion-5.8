@@ -102,6 +102,7 @@ public final class GameRepositories {
 	private final MailRepository mails;
 	private final LegionRepository legions;
 	private final LegionMemberRepository legionMembers;
+	private final PlayerRepository players;
 
 	/**
 	 * Builds every repository over one data source.
@@ -179,6 +180,7 @@ public final class GameRepositories {
 		mails = new JdbcMailRepository(dataSource, inventories, itemStones);
 		legions = new JdbcLegionRepository(dataSource, inventories);
 		legionMembers = new JdbcLegionMemberRepository(dataSource);
+		players = new JdbcPlayerRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -459,5 +461,9 @@ public final class GameRepositories {
 
 	public static LegionMemberRepository legionMembers() {
 		return getInstance().legionMembers;
+	}
+
+	public static PlayerRepository players() {
+		return getInstance().players;
 	}
 }

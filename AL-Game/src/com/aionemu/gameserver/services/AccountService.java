@@ -24,11 +24,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.main.CacheConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.account.AccountTime;
@@ -134,14 +132,12 @@ public class AccountService {
 	 */
 	public static Account loadAccount(int accountId) {
 		Account account = new Account(accountId);
-
-		PlayerDAO playerDAO = DAOManager.getDAO(PlayerDAO.class);
 		PlayerAppearanceRepository appereanceDAO = GameRepositories.playerAppearance();
 
-		List<Integer> playerIdList = playerDAO.getPlayerOidsOnAccount(accountId);
+		List<Integer> playerIdList = GameRepositories.players().findIdsOnAccount(accountId);
 
 		for (int playerId : playerIdList) {
-			PlayerCommonData playerCommonData = playerDAO.loadPlayerCommonData(playerId);
+			PlayerCommonData playerCommonData = GameRepositories.players().load(playerId);
 			CharacterBanInfo cbi = GameRepositories.playerPunishments().findBan(playerId);
 			if (playerCommonData.isOnline()) {
 				if (World.getInstance().findPlayer(playerId) == null) {
@@ -161,7 +157,7 @@ public class AccountService {
 
 			PlayerAccountData acData = new PlayerAccountData(playerCommonData, cbi, appereance, equipment,
 					legionMember);
-			playerDAO.setCreationDeletionTime(acData);
+			GameRepositories.players().loadCreationAndDeletion(acData);
 
 			account.addPlayerAccountData(acData);
 

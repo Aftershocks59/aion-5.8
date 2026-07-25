@@ -16,8 +16,7 @@
  */
 package admincommands;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
@@ -34,7 +33,7 @@ public class Online extends AdminCommand {
 	@Override
 	public void execute(Player admin, String... params) {
 
-		int playerCount = DAOManager.getDAO(PlayerDAO.class).getOnlinePlayerCount();
+		int playerCount = GameRepositories.players().countOnline();
 
 		if (playerCount == 1) {
 			PacketSendUtility.sendMessage(admin, "There is " + (playerCount) + " player online !");

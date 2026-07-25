@@ -16,8 +16,7 @@
  */
 package admincommands;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -55,7 +54,7 @@ public class Ban extends AdminCommand {
 
 		// Second, try to get account ID of offline player from database
 		if (accountId == 0)
-			accountId = DAOManager.getDAO(PlayerDAO.class).getAccountIdByName(name);
+			accountId = GameRepositories.players().findAccountIdByName(name);
 
 		// Third, fail
 		if (accountId == 0) {

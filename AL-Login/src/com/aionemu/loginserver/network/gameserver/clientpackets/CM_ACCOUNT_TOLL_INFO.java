@@ -19,7 +19,6 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 import com.aionemu.loginserver.repository.LoginRepositories;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 
