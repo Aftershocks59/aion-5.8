@@ -45,7 +45,8 @@ means a slower start, never a broken one.
 
 ## Database
 
-Create the two schemas and a dedicated user, then import the shipped SQL:
+Create the two empty schemas and a dedicated user. Do not import any SQL by
+hand: each server builds and updates its own schema when it starts.
 
 ```sql
 CREATE DATABASE al_server_ls CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -55,10 +56,39 @@ GRANT ALL PRIVILEGES ON al_server_ls.* TO 'aion'@'localhost';
 GRANT ALL PRIVILEGES ON al_server_gs.* TO 'aion'@'localhost';
 ```
 
-```bash
-mariadb -u aion -p al_server_ls < AL-Login/sql/al_server_ls.sql
-mariadb -u aion -p al_server_gs < AL-Game/sql/al_server_gs.sql
+### Migrations
+
+Each server owns its schema and migrates it with Flyway before opening a single
+connection, so no DAO ever meets a database older than the code. A migration
+that fails stops the server rather than letting it run against a schema it
+disagrees with.
+
 ```
+AL-Login/sql/migration/    V1__baseline_schema.sql
+AL-Game/sql/migration/     V1__baseline_schema.sql
+                           V2__remove_orphan_player_quests.sql
+AL-Game/sql/maintenance/   operator scripts, run by hand, never migrations
+```
+
+To add one, drop a `V<n>__<what_it_does>.sql` file in the right directory and
+take the next free number. `MigrationFilesTest` fails the build on a name Flyway
+would silently skip, and on two files claiming the same version.
+
+Never edit a migration that has already run: Flyway records a checksum and
+refuses to continue when a file changes underneath it. Correct it with a new
+one.
+
+An **empty** schema is built from `V1`. An **existing** schema is stamped at
+version 1 and only the later migrations run, so upgrading an installed server
+never recreates its tables.
+
+`sql/maintenance` holds recurring operator scripts, such as the abyss GP decay.
+They deliberately sit outside the migration path: a migration runs once per
+database, which is not what a recurring job needs.
+
+Set `database.migration.enable = false` in the database configuration to apply
+them yourself instead, for instance when several servers share one schema and
+only one should write to it.
 
 ## Credentials
 

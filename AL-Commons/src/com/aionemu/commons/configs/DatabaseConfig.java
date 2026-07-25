@@ -65,6 +65,21 @@ public class DatabaseConfig {
     public static String DATABASE_PASSWORD;
 
     /**
+     * Brings the schema up to date when the server starts.
+     * <p>
+     * Turn it off to run the migrations by hand, for instance when several servers
+     * share one database and only one of them should apply them.
+     */
+    @Property(key = "database.migration.enable", defaultValue = "true")
+    public static boolean DATABASE_MIGRATION_ENABLE;
+
+    /**
+     * Holds the migrations to apply, read from the server working directory.
+     */
+    @Property(key = "database.migration.path", defaultValue = "./sql/migration")
+    public static String DATABASE_MIGRATION_PATH;
+
+    /**
      * Caps how many connections the pool opens. Defaults to 10, matching the two
      * partitions of five that the previous pool was configured with.
      */

@@ -34,7 +34,9 @@ import java.util.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.aionemu.commons.configs.DatabaseConfig;
 import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.commons.database.SchemaMigrator;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.NioServer;
 import com.aionemu.commons.network.ServerCfg;
@@ -642,6 +644,9 @@ public class GameServer {
 		// DateTime zone override from configs
 		DateTimeUtil.init();
 		Util.printSection(" *** DataBase *** ");
+		// Bring the schema up to date before anything opens a connection to it, so
+		// no DAO ever talks to a database older than the code.
+		SchemaMigrator.migrate(DatabaseConfig.DATABASE_MIGRATION_PATH);
 		DatabaseFactory.init();
 		// Initialize DAOs
 		DAOManager.init();

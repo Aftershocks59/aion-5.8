@@ -36,7 +36,9 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 
+import com.aionemu.commons.configs.DatabaseConfig;
 import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.commons.database.SchemaMigrator;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AEInfos;
@@ -118,6 +120,9 @@ public class LoginServer {
         //write a timestamp that can be used by TruncateToZipFileAppender
         log.info("\f" + new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date(System.currentTimeMillis())) + "\f");
         Config.load();
+        // Bring the schema up to date before anything opens a connection to it, so
+        // no DAO ever talks to a database older than the code.
+        SchemaMigrator.migrate(DatabaseConfig.DATABASE_MIGRATION_PATH);
         DatabaseFactory.init();
         DAOManager.init();
 

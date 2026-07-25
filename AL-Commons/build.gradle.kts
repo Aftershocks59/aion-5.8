@@ -16,6 +16,10 @@ dependencies {
     api(libs.javassist)
     api(libs.hikari)
     api(libs.mariadb)
+    // Version the two schemas. flyway-mysql carries the MySQL and MariaDB support,
+    // which flyway-core no longer ships on its own.
+    api(libs.flyway.core)
+    api(libs.flyway.mysql)
     api(libs.jsr305)
     api(libs.jaxb.api)
     runtimeOnly(libs.jaxb.runtime)
