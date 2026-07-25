@@ -6,6 +6,12 @@ plugins {
 
 dependencies {
     api(project(":AL-Commons"))
+
+    // Hash account passwords with bcrypt.
+    implementation(libs.bcrypt)
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 // Run the server straight from the module directory, where config/ and data/

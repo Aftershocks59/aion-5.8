@@ -18,14 +18,12 @@
 
 package com.aionemu.loginserver.utils;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.utils.Base64;
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 /**
  * Class with usefull methods to use with accounts
@@ -40,23 +38,52 @@ public class AccountUtils {
     private static final Logger log = LoggerFactory.getLogger(AccountUtils.class);
 
     /**
-     * Encodes password. SHA-1 is used to encode password bytes, Base64 wraps
-     * SHA1-hash to string.
+     * Cost of the bcrypt work factor. Each increment doubles the time to hash and
+     * to attack. 12 keeps a single check in the low tens of milliseconds on current
+     * hardware, which is negligible next to a login round trip.
+     */
+    private static final int BCRYPT_COST = 12;
+
+    /**
+     * Hashes a password with bcrypt.
+     * <p>
+     * Replaces an unsalted SHA-1 digest. That construction was broken twice over:
+     * SHA-1 is fast by design, so a commodity GPU walks billions of candidates per
+     * second, and without a salt one precomputed table cracks every account at
+     * once. bcrypt salts each hash and is deliberately slow.
+     * <p>
+     * The result embeds its own salt and cost, so two calls on the same password
+     * return different strings. Never compare hashes with equals: use
+     * {@link #matches(String, String)}.
      *
-     * @param password password to encode
-     * @return retunrs encoded password.
+     * @param password password to hash
+     * @return a 60 character bcrypt hash
      */
     public static String encodePassword(String password) {
+        return BCrypt.withDefaults().hashToString(BCRYPT_COST, password.toCharArray());
+    }
+
+    /**
+     * Checks a password against a stored hash.
+     *
+     * @param password  password as typed by the account holder
+     * @param storedHash hash held in the database
+     * @return true only when the password produced that hash
+     */
+    public static boolean matches(String password, String storedHash) {
+        if (password == null || storedHash == null || storedHash.isEmpty()) {
+            return false;
+        }
+
         try {
-            MessageDigest messageDiegest = MessageDigest.getInstance("SHA-1");
-            messageDiegest.update(password.getBytes("UTF-8"));
-            return Base64.encodeToString(messageDiegest.digest(), false);
-        } catch (NoSuchAlgorithmException e) {
-            log.error("Exception while encoding password");
-            throw new Error(e);
-        } catch (UnsupportedEncodingException e) {
-            log.error("Exception while encoding password");
-            throw new Error(e);
+            return BCrypt.verifyer().verify(password.getBytes(StandardCharsets.UTF_8),
+                    storedHash.getBytes(StandardCharsets.UTF_8)).verified;
+        } catch (IllegalArgumentException e) {
+            // Reject rather than fail: accounts created before the move still hold a
+            // SHA-1 digest, which is not a bcrypt hash. Their owners must have their
+            // password reset.
+            log.warn("Account holds a hash bcrypt cannot read; the password must be reset.");
+            return false;
         }
     }
 }

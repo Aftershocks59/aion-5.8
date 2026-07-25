@@ -182,8 +182,10 @@ public class AccountController {
             return AionAuthResponse.GM_ONLY;
         }
 
-        // check for paswords beeing equals
-        if (!account.getPasswordHash().equals(AccountUtils.encodePassword(password))) {
+        // Verify through bcrypt rather than comparing hashes. Each bcrypt hash
+        // carries its own random salt, so hashing the same password twice yields
+        // different strings and an equals check would always fail.
+        if (!AccountUtils.matches(password, account.getPasswordHash())) {
             return AionAuthResponse.INVALID_PASSWORD;
         }
 
