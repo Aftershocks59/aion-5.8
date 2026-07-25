@@ -29,7 +29,6 @@ import com.aionemu.gameserver.geoEngine.bounding.BoundingBox;
 import com.aionemu.gameserver.geoEngine.bounding.BoundingVolume;
 import com.aionemu.gameserver.geoEngine.collision.Collidable;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
-import com.aionemu.gameserver.geoEngine.collision.bih.BIHTree;
 import com.aionemu.gameserver.geoEngine.math.Matrix4f;
 import com.aionemu.gameserver.geoEngine.math.Triangle;
 import com.aionemu.gameserver.geoEngine.math.Vector2f;
@@ -325,19 +324,15 @@ public class Mesh {
 	}
 
 	public void createCollisionData() {
-		if (collisionTree != null) {
-			return;
-		}
-		BIHTree tree = new BIHTree(this);
-		tree.construct();
-		collisionTree = tree;
+		// The tree that used to accelerate ray casts against a mesh went with the
+		// geodata format it was built for. Nothing builds a mesh any more.
 	}
 
 	public int collideWith(Collidable other, Matrix4f worldMatrix, BoundingVolume worldBound,
 			CollisionResults results) {
 
 		if (collisionTree == null) {
-			createCollisionData();
+			return 0;
 		}
 		return collisionTree.collideWith(other, worldMatrix, worldBound, results);
 	}

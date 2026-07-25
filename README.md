@@ -156,11 +156,28 @@ Point the client at `127.0.0.1:2106`. With
 
 ## Geodata
 
-Geodata is not distributed with the sources. Until you install it under
-`AL-Game/data/geo/`, leave `gameserver.geodata.enable = false` in
-`AL-Game/config/main/geodata.properties`: the server then runs without collision
-detection or line of sight, but logins, character creation and world entry all
-work. Enabling it without the files aborts the start.
+**Geodata is being uploaded.** It is not distributed with the sources and is not
+yet available for download; this section will name where to get it once the
+upload finishes.
+
+Until you install it under `AL-Game/data/geo/`, leave
+`gameserver.geodata.enable = false` in
+`AL-Game/config/main/geodata.properties` — which is how it ships. The server
+then runs without collision detection or line of sight, but logins, character
+creation and world entry all work.
+
+Once installed, the layout is one directory per world id, holding the files the
+client ships:
+
+```
+AL-Game/data/geo/210010000/HeightMap40.Dat
+AL-Game/data/geo/210010000/Collision.Dat
+AL-Game/data/geo/210010000/MeshMaterial.Dat
+```
+
+A world may carry `HeightMap32.Dat` or `HeightMap24.Dat` instead of
+`HeightMap40.Dat`; the finest tier present is the one read. Worlds with no
+directory simply have no geodata, and are queried as if geodata were off.
 
 ## Static data cache
 

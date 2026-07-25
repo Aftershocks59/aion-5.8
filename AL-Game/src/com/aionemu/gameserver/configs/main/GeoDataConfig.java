@@ -1,36 +1,36 @@
-/*
-
+/**
+ * This file is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  Encom is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * It is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser Public License for more details.
  *
- *  Encom is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser Public License
- *  along with Encom.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser Public License along with
+ * it. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.aionemu.gameserver.configs.main;
 
 import com.aionemu.commons.configuration.Property;
 
+/**
+ * Holds what the server is allowed to ask the world's shape.
+ *
+ * @author Oraion
+ */
 public class GeoDataConfig {
 
 	/**
-	 * Geodata enable
+	 * Reads the geodata under data/geo and answers ground heights from it.
+	 * <p>
+	 * Off, the world has no shape: the ground is wherever whoever asked already
+	 * stood, and nothing blocks sight or movement. It ships off because the
+	 * geodata is distributed separately.
 	 */
 	@Property(key = "gameserver.geodata.enable", defaultValue = "false")
 	public static boolean GEO_ENABLE;
-
-	/**
-	 * Enable canSee checks using geodata.
-	 */
-	@Property(key = "gameserver.geodata.cansee.enable", defaultValue = "true")
-	public static boolean CANSEE_ENABLE;
 
 	/**
 	 * Enable Fear skill using geodata.
@@ -45,18 +45,6 @@ public class GeoDataConfig {
 	public static boolean GEO_NPC_MOVE;
 
 	/**
-	 * Enable npc checks aggro target visibility range (canSee)
-	 */
-	@Property(key = "gameserver.geo.npc.aggro", defaultValue = "false")
-	public static boolean GEO_NPC_AGGRO;
-
-	/**
-	 * Enable geo materials using skills
-	 */
-	@Property(key = "gameserver.geo.materials.enable", defaultValue = "false")
-	public static boolean GEO_MATERIALS_ENABLE;
-
-	/**
 	 * Show collision zone name and skill id
 	 */
 	@Property(key = "gameserver.geo.materials.showdetails", defaultValue = "false")
@@ -67,22 +55,4 @@ public class GeoDataConfig {
 	 */
 	@Property(key = "gameserver.geo.shields.enable", defaultValue = "false")
 	public static boolean GEO_SHIELDS_ENABLE;
-
-	/**
-	 * Enable geo doors
-	 */
-	@Property(key = "gameserver.geo.doors.enable", defaultValue = "false")
-	public static boolean GEO_DOORS_ENABLE;
-
-	/**
-	 * Object factory for geodata primitives enabled
-	 */
-	@Property(key = "gameserver.geodata.objectfactory.enabled", defaultValue = "true")
-	public static boolean GEO_OBJECT_FACTORY_ENABLE;
-
-	/**
-	 * If you use monon2 geo data for your server
-	 */
-	@Property(key = "gameserver.geodata.monon2.in.use", defaultValue = "fasle")
-	public static boolean GEO_MONONO2_IN_USE;
 }

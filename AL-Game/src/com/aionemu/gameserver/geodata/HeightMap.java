@@ -184,6 +184,23 @@ public final class HeightMap {
 	}
 
 	/**
+	 * Answers the index of one grid corner.
+	 * <p>
+	 * The grid runs down X in steps of a whole column, so a stride is the height
+	 * of a column and not the width of a row. That is what makes the last corner
+	 * land on the last cell: {@code stride * cols + rows} is exactly
+	 * {@code (cols + 1) * (rows + 1) - 1}. Multiplying the other way round only
+	 * agrees on a square world.
+	 *
+	 * @param cellX the corner's column
+	 * @param cellY the corner's row
+	 * @return the index into the grid
+	 */
+	public int cornerIndex(int cellX, int cellY) {
+		return stride * cellX + cellY;
+	}
+
+	/**
 	 * Answers the index of the cell a world position falls in.
 	 *
 	 * @param x world position along X
@@ -191,7 +208,7 @@ public final class HeightMap {
 	 * @return the index into the grid
 	 */
 	public int cellIndex(int x, int y) {
-		return stride * (y >> CELL_SHIFT) + (x >> CELL_SHIFT);
+		return cornerIndex(x >> CELL_SHIFT, y >> CELL_SHIFT);
 	}
 
 	/** Answers the raw cell, elevation and surface bits together. */

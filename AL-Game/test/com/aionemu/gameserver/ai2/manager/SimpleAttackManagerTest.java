@@ -18,13 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.ai2.AI2;
-import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 
@@ -36,26 +33,14 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
  * that died or left the world between the attack being scheduled and it firing
  * threw a NullPointerException out of the scheduler, which is what the live
  * server was logging on every fight.
+ * <p>
+ * Line of sight answers true without reading the target since the geodata engine
+ * was replaced, so that one route into the fault is shut. The order is still
+ * what keeps it shut once sight is served again.
  *
  * @author Oraion
  */
 class SimpleAttackManagerTest {
-
-	private boolean canSeeWasEnabled;
-
-	@BeforeEach
-	void enableLineOfSight() {
-		// canSee answers true and touches nothing when this is off, which it is by
-		// default outside a running server. The live server runs with it on, which is
-		// the only way the target is ever dereferenced.
-		canSeeWasEnabled = GeoDataConfig.CANSEE_ENABLE;
-		GeoDataConfig.CANSEE_ENABLE = true;
-	}
-
-	@AfterEach
-	void restoreLineOfSight() {
-		GeoDataConfig.CANSEE_ENABLE = canSeeWasEnabled;
-	}
 
 	private static Npc npcWithTarget(VisibleObject target) {
 		Npc npc = mock(Npc.class);

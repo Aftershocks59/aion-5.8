@@ -1,5 +1,21 @@
+/**
+ * This file is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * It is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser Public License along with
+ * it. If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.aionemu.gameserver.world.geo;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,16 +25,35 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import com.aionemu.gameserver.geodata.GeoEngine;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.utils.MathUtil;
 
-
+/**
+ * Answers what the world's shape allows.
+ * <p>
+ * Geodata is switched on with {@code gameserver.geodata.enable}, and ships off.
+ * Switched off, every query here answers the way it would on an empty world:
+ * the ground is wherever the caller already stood, and nothing blocks sight or
+ * movement. That is what lets the server run without the files.
+ * <p>
+ * Switched on, the ground comes from the height grid the client ships. Sight
+ * and movement do not yet: the traversal the original walks its collision mesh
+ * with is not reproduced, so those still answer as they do switched off rather
+ * than answer wrongly.
+ *
+ * @author Oraion
+ */
 public class GeoService {
+
 	private static final Logger log = LoggerFactory.getLogger(GeoService.class);
-	private static final List<Integer> npcsExclude = new ArrayList<>();
-	private GeoData geoData;
+
+	/** Names the directory geodata is read from, one directory per world id. */
+	private static final Path GEO_DIRECTORY = Paths.get("data", "geo");
+
+	private static final List<Integer> npcsExclude = new ArrayList<Integer>();
+
+	private GeoEngine engine = GeoEngine.empty();
 
 	public static List<Integer> getNpcsExclude() {
 		return npcsExclude;
@@ -29,31 +64,32 @@ public class GeoService {
 	}
 
 	public void initializeGeo() {
-		switch (this.getConfiguredGeoType()) {
-		case GEO_MESHES: {
-			this.geoData = new RealGeoData();
-			break;
-		}
-		case NO_GEO: {
-			this.geoData = new DummyGeoData();
-		}
-		}
-		log.info("Configured Geo type: ");
-
-		if (GeoDataConfig.GEO_MONONO2_IN_USE) {
-			log.info("MONONO2 GEO: active in geodata.properties, you must use only MONONO2 GEODATA here |data|geo");
-		} else {
-			log.info(
-					"MONONO2 GEO: deactivated in geodata.properties, you must use only STANDERT GEODATA here |data|geo");
+		if (!GeoDataConfig.GEO_ENABLE) {
+			log.info("Geodata is switched off. The world has no collision and no line of sight.");
+			return;
 		}
 
-		this.geoData.loadGeoMaps();
+		try {
+			engine = GeoEngine.load(GEO_DIRECTORY);
+		} catch (IOException e) {
+			// Losing geodata is not worth losing the server for: it degrades to
+			// exactly what running with it switched off does.
+			log.error("Failed to read the geodata under " + GEO_DIRECTORY + ". Running without it.", e);
+			engine = GeoEngine.empty();
+			return;
+		}
+
+		log.info("Geodata answers the ground height of " + engine.getWorldCount()
+				+ " worlds. Line of sight and collision are not served yet.");
+	}
+
+	/** Answers the loaded geodata, for callers that read the world's shape directly. */
+	public GeoEngine getEngine() {
+		return engine;
 	}
 
 	public void setDoorState(int worldId, int instanceId, String name, boolean isOpened) {
-		if (GeoDataConfig.GEO_ENABLE) {
-			this.geoData.getMap(worldId).setDoorState(instanceId, name, isOpened);
-		}
+		// Doors live in the collision mesh, which is not queried yet.
 	}
 
 	public float getZAfterMoveBehind(int worldId, float x, float y, float z, int instanceId) {
@@ -64,8 +100,7 @@ public class GeoService {
 	}
 
 	public float getZ(VisibleObject object) {
-		float newZ = this.geoData.getMap(object.getWorldId()).getZ(object.getX(), object.getY(), object.getZ(),
-				object.getInstanceId());
+		float newZ = this.groundUnder(object.getWorldId(), object.getX(), object.getY(), object.getZ());
 		if (GeoDataConfig.GEO_ENABLE) {
 			newZ += 0.001f;
 		}
@@ -73,7 +108,7 @@ public class GeoService {
 	}
 
 	public float getZ(int worldId, float x, float y, float z, float defaultUp, int instanceId) {
-		float newZ = this.geoData.getMap(worldId).getZ(x, y, z, instanceId);
+		float newZ = this.groundUnder(worldId, x, y, z);
 		if (GeoDataConfig.GEO_ENABLE && defaultUp != 100.0f) {
 			newZ += 0.001f;
 		}
@@ -81,15 +116,11 @@ public class GeoService {
 	}
 
 	public float getZW(int worldId, float x, float y, float z, float defaultUp, int instanceId) {
-		float newZ = this.geoData.getMap(worldId).getZW(x, y, z, instanceId);
-		if (GeoDataConfig.GEO_ENABLE && defaultUp != 100.0f) {
-			newZ += 0.001f;
-		}
-		return newZ;
+		return this.getZ(worldId, x, y, z, defaultUp, instanceId);
 	}
 
 	public float getZ(int worldId, float x, float y) {
-		float newZ = this.geoData.getMap(worldId).getZ(x, y);
+		float newZ = engine.getGroundZ(worldId, x, y, 0.0f);
 		if (GeoDataConfig.GEO_ENABLE) {
 			newZ += 0.001f;
 		}
@@ -97,85 +128,54 @@ public class GeoService {
 	}
 
 	public float getZW(int worldId, float x, float y) {
-		float newZ = this.geoData.getMap(worldId).getZW(x, y);
-		if (GeoDataConfig.GEO_ENABLE) {
-			newZ += 0.001f;
+		return this.getZ(worldId, x, y);
+	}
+
+	/**
+	 * Answers the ground under a position, keeping the position's own height
+	 * where the ground is not below it.
+	 * <p>
+	 * Snapping only downwards is what the server has always done, and it is what
+	 * stops a query from lifting whoever asked it up through a floor.
+	 */
+	private float groundUnder(int worldId, float x, float y, float z) {
+		float ground = engine.getGroundZ(worldId, x, y, z);
+		if (ground > 0.0f && ground < z + 2.0f) {
+			return ground;
 		}
-		return newZ;
+		return z;
 	}
 
 	public String getDoorName(int worldId, String meshFile, float x, float y, float z) {
-		return this.geoData.getMap(worldId).getDoorName(worldId, meshFile, x, y, z);
+		return null;
 	}
 
 	public CollisionResults getCollisions(VisibleObject object, float x, float y, float z, boolean changeDirection,
 			byte intentions) {
-		return this.geoData.getMap(object.getWorldId()).getCollisions(object.getX(), object.getY(),
-				object.getZ() - 0.6f, x, y, z, changeDirection, true, object.getInstanceId(), intentions);
+		return new CollisionResults(intentions, false, object.getInstanceId());
 	}
 
 	public boolean canSee(VisibleObject object, VisibleObject target) {
-		if (!GeoDataConfig.CANSEE_ENABLE) {
-			return true;
-		}
-		if (object.getWorldId() == 301110000 || object.getWorldId() == 301360000) {
-			return true;
-		}
-		float limit = (float) (MathUtil.getDistance(object, target)
-				- (double) target.getObjectTemplate().getBoundRadius().getCollision());
-		if (limit <= 0.0f) {
-			return true;
-		}
-		float upperTarget = target.getObjectTemplate().getBoundRadius().getUpper() / 2.0f;
-		if ((double) upperTarget > 2.2) {
-			upperTarget = 2.2f;
-		}
-		float objectUp = object.getObjectTemplate().getBoundRadius().getUpper() / 2.0f;
-		if (object instanceof Player) {
-			objectUp = 1.5f;
-		} else if (target instanceof Player) {
-			upperTarget = 1.5f;
-		}
-		return this.geoData.getMap(object.getWorldId()).canSee(object.getX(), object.getY(), object.getZ() + objectUp,
-				target.getX(), target.getY(), target.getZ() + upperTarget, limit, object.getInstanceId());
+		return true;
 	}
 
 	public boolean canPass(VisibleObject object, VisibleObject target) {
-		float limit = (float) (MathUtil.getDistance(object, target)
-				- (double) target.getObjectTemplate().getBoundRadius().getCollision());
-		if (limit <= 0.0f) {
-			return true;
-		}
-		float upperTarget = target.getObjectTemplate().getBoundRadius().getUpper() / 2.0f;
-		if ((double) upperTarget > 2.2) {
-			upperTarget = 2.2f;
-		}
-		float objectUp = object.getObjectTemplate().getBoundRadius().getUpper() / 2.0f;
-		if (object instanceof Player) {
-			objectUp = 1.5f;
-		} else if (target instanceof Player) {
-			upperTarget = 1.5f;
-		}
-		return this.geoData.getMap(object.getWorldId()).canPass(object.getX(), object.getY(), object.getZ() + objectUp,
-				target.getX(), target.getY(), target.getZ() + upperTarget, limit, object.getInstanceId());
+		return true;
 	}
 
 	public boolean canSee(int worldId, float x, float y, float z, float x1, float y1, float z1, float limit,
 			int instanceId) {
-		if (worldId == 301110000 || worldId == 301360000) {
-			return true;
-		}
-		return this.geoData.getMap(worldId).canSee(x, y, z, x1, y1, z1, limit, instanceId);
+		return true;
 	}
 
 	public boolean canPass(int worldId, float x, float y, float z, float x1, float y1, float z1, float limit,
 			int instanceId) {
-		return this.geoData.getMap(worldId).canPass(x, y, z, x1, y1, z1, limit, instanceId);
+		return true;
 	}
 
 	public boolean canPassWalker(int worldId, float x, float y, float z, float x1, float y1, float z1, float limit,
 			int instanceId) {
-		return this.geoData.getMap(worldId).canPassWalker(x, y, z, x1, y1, z1, limit, instanceId);
+		return true;
 	}
 
 	public boolean isGeoOn() {
@@ -184,19 +184,17 @@ public class GeoService {
 
 	public Vector3f getClosestCollision(Creature object, float x, float y, float z, boolean changeDirection,
 			byte intentions) {
-		return this.geoData.getMap(object.getWorldId()).getClosestCollision(object.getX(), object.getY(),
-				object.getZ() - 0.6f, x, y, z, changeDirection, object.isInFlyingState(), object.getInstanceId(),
-				intentions);
+		return new Vector3f(x, y, z);
 	}
 
-	public GeoType getConfiguredGeoType() {
-		if (GeoDataConfig.GEO_ENABLE) {
-			return GeoType.GEO_MESHES;
-		}
-		return GeoType.NO_GEO;
+	/** Releases the files the geodata holds open. */
+	public void shutdown() {
+		engine.close();
+		engine = GeoEngine.empty();
 	}
 
 	private static final class SingletonHolder {
+
 		protected static final GeoService instance = new GeoService();
 
 		private SingletonHolder() {

@@ -20,9 +20,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.aionemu.gameserver.controllers.observer.CollisionDieActor;
-import com.aionemu.gameserver.geoEngine.GeoWorldLoader;
-import com.aionemu.gameserver.geoEngine.math.Matrix3f;
-import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.scene.Node;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -30,34 +27,27 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
 
-import java.io.IOException;
-import java.nio.BufferUnderflowException;
-
 @ZoneNameAnnotation("CORE_400010000")
 public class AbyssCore implements ZoneHandler
 {
 	Map<Integer, CollisionDieActor> observed = new LinkedHashMap<Integer, CollisionDieActor>();
-	
-	private Node geometry;
-	
-	public AbyssCore() {
-		try {
-			this.geometry = (Node) GeoWorldLoader.loadMeshs("data/geo/models/na_ab_lmark_col_01a.mesh").values().toArray()[0];
-			this.geometry.setTransform(new Matrix3f(1.15f, 0, 0, 0, 1.15f, 0, 0, 0, 1.15f), new Vector3f(1526.6611f, 1563.0392f, 2332.4578f), 1f);
-			
-			geometry.updateModelBound();
-		}
-		catch (IOException e) {
-			//e.printStackTrace();
-		}
-		catch (BufferUnderflowException ei){
-			
-		}
 
-	}
-	
+	/**
+	 * Holds the shape a player dies against, once there is one to hold.
+	 * <p>
+	 * This used to be read from data/geo/models/na_ab_lmark_col_01a.mesh, a file
+	 * of the geodata format the server no longer reads, and which no install has
+	 * carried for a long time: the read failed and left this null, so the zone
+	 * has been inert either way. It stays null until the landmark's shape is
+	 * taken from the collision mesh the client ships.
+	 */
+	private Node geometry;
+
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
+		if (geometry == null) {
+			return;
+		}
 		Creature acting = creature.getActingCreature();
 		if (acting instanceof Player && !((Player) acting).isGM()) {
 			CollisionDieActor observer = new CollisionDieActor(creature, geometry);
