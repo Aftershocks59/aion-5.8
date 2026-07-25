@@ -30,7 +30,6 @@ import com.aionemu.gameserver.configs.main.CacheConfig;
 import com.aionemu.gameserver.controllers.FlyController;
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
-import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
@@ -115,7 +114,7 @@ public class PlayerService {
 		}
 
 		GameRepositories.itemStones().save(player.getAllItems());
-		DAOManager.getDAO(MailDAO.class).storeMailbox(player);
+		GameRepositories.mails().save(player);
 		GameRepositories.portalCooldowns().store(player);
 		GameRepositories.craftCooldowns().store(player);
 		GameRepositories.playerNpcFactions().store(player);

@@ -60,6 +60,16 @@ public interface InventoryRepository {
 	List<Item> loadStorageItems(int playerId, StorageType storageType);
 
 	/**
+	 * Reads every item in one storage, whoever owns it. Only the shared stores,
+	 * the broker and the mailboxes, are worth asking this of.
+	 *
+	 * @param storageType which storage
+	 * @return the items, empty if nothing is in it
+	 * @throws RepositoryException if they could not be read
+	 */
+	List<Item> loadStorageItems(StorageType storageType);
+
+	/**
 	 * Reads what a character is wearing, ready to be handed to them.
 	 *
 	 * @param player the character

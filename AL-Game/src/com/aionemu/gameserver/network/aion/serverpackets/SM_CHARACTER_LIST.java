@@ -16,11 +16,11 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.account.PlayerAccountData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -73,7 +73,7 @@ public class SM_CHARACTER_LIST extends PlayerInfo {
 				writeD(player.getPlayerSettings().getDisplay());// display helmet 0 show, 5 dont show
 				writeD(0);
 				writeD(0);
-				writeD(DAOManager.getDAO(MailDAO.class).haveUnread(pcd.getPlayerObjId()) ? 1 : 0); // mail
+				writeD(GameRepositories.mails().hasUnread(pcd.getPlayerObjId()) ? 1 : 0); // mail
 				writeD(0); // unk
 				writeD(0); // unk
 				writeQ(BrokerService.getInstance().getCollectedMoney(pcd)); // collected money from broker

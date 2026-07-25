@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
-import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Letter;
@@ -240,7 +239,7 @@ public class MailService {
 			}
 		}
 		// save letter
-		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
+		if (!GameRepositories.mails().save(time, newLetter)) {
 			return;
 		}
 		/**
@@ -279,7 +278,7 @@ public class MailService {
 		if (!recipientCommonData.isOnline()) {
 			PacketSendUtility.sendPacket(sender, new SM_MAIL_SERVICE(MailMessage.MAIL_SEND_SECCESS));
 			recipientCommonData.setMailboxLetters(recipientCommonData.getMailboxLetters() + 1);
-			DAOManager.getDAO(MailDAO.class).updateOfflineMailCounter(recipientCommonData);
+			GameRepositories.mails().setOfflineCounter(recipientCommonData);
 		}
 	}
 
@@ -353,7 +352,7 @@ public class MailService {
 
 		for (int letterId : mailObjId) {
 			mailbox.removeLetter(letterId);
-			DAOManager.getDAO(MailDAO.class).deleteLetter(letterId);
+			GameRepositories.mails().remove(letterId);
 		}
 		PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(mailObjId));
 	}
@@ -438,7 +437,7 @@ public class MailService {
 
 		@Override
 		public void run() {
-			player.setMailbox(DAOManager.getDAO(MailDAO.class).loadPlayerMailbox(player));
+			player.setMailbox(GameRepositories.mails().load(player));
 			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(player.getMailbox()));
 			HousingBidService.getInstance().onPlayerLogin(player);
 		}

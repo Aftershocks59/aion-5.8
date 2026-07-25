@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -134,7 +133,7 @@ public class SystemMailService {
 		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, finalAttachedKinahCount, finalAttachedApCount, title, message, finalSender, time, true,
 				letterType);
-		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
+		if (!GameRepositories.mails().save(time, newLetter)) {
 			return false;
 		}
 		if (attachedItem != null) {
@@ -160,7 +159,7 @@ public class SystemMailService {
 		}
 		if (!recipientCommonData.isOnline()) {
 			recipientCommonData.setMailboxLetters(recipientCommonData.getMailboxLetters() + 1);
-			DAOManager.getDAO(MailDAO.class).updateOfflineMailCounter(recipientCommonData);
+			GameRepositories.mails().setOfflineCounter(recipientCommonData);
 		}
 		return true;
 	}
@@ -202,7 +201,7 @@ public class SystemMailService {
 		Timestamp time = new Timestamp(System.currentTimeMillis());
 		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, attachedKinahCount, attachedApCount, title, message, sender, time, true, type);
-		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
+		if (!GameRepositories.mails().save(time, newLetter)) {
 			return false;
 		}
 		if (attachedItem != null) {
@@ -223,7 +222,7 @@ public class SystemMailService {
 		}
 		if (!recipientCommonData.isOnline()) {
 			recipientCommonData.setMailboxLetters(recipientCommonData.getMailboxLetters() + 1);
-			DAOManager.getDAO(MailDAO.class).updateOfflineMailCounter(recipientCommonData);
+			GameRepositories.mails().setOfflineCounter(recipientCommonData);
 		}
 		return true;
 	}

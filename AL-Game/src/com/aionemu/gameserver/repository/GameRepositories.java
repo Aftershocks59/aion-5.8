@@ -98,6 +98,8 @@ public final class GameRepositories {
 	private final SeasonRankingRepository seasonRankings;
 	private final ItemStoneRepository itemStones;
 	private final InventoryRepository inventories;
+	private final BrokerRepository brokers;
+	private final MailRepository mails;
 
 	/**
 	 * Builds every repository over one data source.
@@ -169,6 +171,10 @@ public final class GameRepositories {
 		seasonRankings = new JdbcSeasonRankingRepository(dataSource);
 		itemStones = new JdbcItemStoneRepository(dataSource);
 		inventories = new JdbcInventoryRepository(dataSource);
+		// These two hand out items and the stones in them, so they are given the
+		// repositories that own those rather than reaching for them themselves.
+		brokers = new JdbcBrokerRepository(dataSource, inventories, itemStones);
+		mails = new JdbcMailRepository(dataSource, inventories, itemStones);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -433,5 +439,13 @@ public final class GameRepositories {
 
 	public static InventoryRepository inventories() {
 		return getInstance().inventories;
+	}
+
+	public static BrokerRepository brokers() {
+		return getInstance().brokers;
+	}
+
+	public static MailRepository mails() {
+		return getInstance().mails;
 	}
 }

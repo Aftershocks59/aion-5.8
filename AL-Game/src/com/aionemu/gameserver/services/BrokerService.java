@@ -34,7 +34,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.BrokerConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
-import com.aionemu.gameserver.dao.BrokerDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.broker.BrokerItemMask;
 import com.aionemu.gameserver.model.broker.BrokerMessages;
@@ -102,7 +101,7 @@ public class BrokerService {
 		int loadedBrokerItemsCount = 0;
 		int loadedSettledItemsCount = 0;
 
-		List<BrokerItem> brokerItems = DAOManager.getDAO(BrokerDAO.class).loadBroker();
+		List<BrokerItem> brokerItems = GameRepositories.brokers().findAll();
 
 		for (BrokerItem item : brokerItems) {
 			if (item.getItemBrokerRace() == BrokerRace.ASMODIAN) {
@@ -325,7 +324,7 @@ public class BrokerService {
 			return;
 		}
 		if (SecurityConfig.BROKER_PREBUY_CHECK) {
-			if (!(DAOManager.getDAO(BrokerDAO.class).preBuyCheck(itemUniqueId))) {
+			if (!(GameRepositories.brokers().isStillOnSale(itemUniqueId))) {
 				PacketSendUtility.sendMessage(player, "Sorry, but this item already sold");
 				return;
 			}
@@ -1055,7 +1054,7 @@ public class BrokerService {
 				GameRepositories.inventories().save(item, playerId);
 			}
 			if (brokerItem != null) {
-				DAOManager.getDAO(BrokerDAO.class).store(brokerItem);
+				GameRepositories.brokers().save(brokerItem);
 			}
 			if (kinahItem != null) {
 				GameRepositories.inventories().save(kinahItem, playerId);

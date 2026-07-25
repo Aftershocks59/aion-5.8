@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
-import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
@@ -316,7 +315,7 @@ public class VeteranRewardsService {
 				attachedItem, finalAttachedKinahCount, finalAttachedApCount, title, message, finalSender, time, true,
 				type);
 
-		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
+		if (!GameRepositories.mails().save(time, newLetter)) {
 			return;
 		}
 
@@ -343,7 +342,7 @@ public class VeteranRewardsService {
 
 		if (!recipientCommonData.isOnline()) {
 			recipientCommonData.setMailboxLetters(recipientCommonData.getMailboxLetters() + 1);
-			DAOManager.getDAO(MailDAO.class).updateOfflineMailCounter(recipientCommonData);
+			GameRepositories.mails().setOfflineCounter(recipientCommonData);
 		}
 
 		if (VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {

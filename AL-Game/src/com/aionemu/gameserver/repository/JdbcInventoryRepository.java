@@ -61,6 +61,8 @@ public final class JdbcInventoryRepository extends JdbcRepositorySupport impleme
 			+ " WHERE `item_owner` = ? AND `item_location` = ? AND `is_equiped` = ?";
 	private static final String SELECT_IN_STORAGE = "SELECT " + COLUMNS + " FROM `inventory`"
 			+ " WHERE `item_owner` = ? AND `item_location` = ?";
+	private static final String SELECT_WHOLE_STORAGE = "SELECT " + COLUMNS + " FROM `inventory`"
+			+ " WHERE `item_location` = ?";
 	private static final String SELECT_USED_IDS = "SELECT `item_unique_id` FROM `inventory`";
 	private static final String SELECT_ACCOUNT = "SELECT `account_id` FROM `players` WHERE `id` = ?";
 	private static final String SELECT_LEGION = "SELECT `legion_id` FROM `legion_members` WHERE `player_id` = ?";
@@ -137,6 +139,28 @@ public final class JdbcInventoryRepository extends JdbcRepositorySupport impleme
 	@Override
 	public List<Item> loadStorageItems(int playerId, StorageType storageType) {
 		return readItems(SELECT_IN_STORAGE, ownerOf(playerId, storageType), storageType.getId(), null);
+	}
+
+	@Override
+	public List<Item> loadStorageItems(StorageType storageType) {
+		List<Item> items = new ArrayList<Item>();
+		int storage = storageType.getId();
+
+		try (Connection connection = connection();
+				PreparedStatement statement = connection.prepareStatement(SELECT_WHOLE_STORAGE)) {
+			statement.setInt(1, storage);
+			try (ResultSet rows = statement.executeQuery()) {
+				while (rows.next()) {
+					Item item = read(rows, storage);
+					item.setPersistentState(PersistentState.UPDATED);
+					items.add(item);
+				}
+			}
+		} catch (SQLException e) {
+			throw new RepositoryException("Failed to read everything in storage " + storage + ".", e);
+		}
+
+		return items;
 	}
 
 	@Override
