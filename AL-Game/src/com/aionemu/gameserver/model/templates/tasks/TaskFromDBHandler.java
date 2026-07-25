@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.tasks;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.TaskFromDBDAO;
 
 /**
  * @author Divinity
@@ -58,11 +58,9 @@ public abstract class TaskFromDBHandler implements Runnable {
 	public abstract boolean isValid();
 
 	/**
-	 * Retuns {@link com.aionemu.gameserver.dao.TaskFromDBDAO} , just a shortcut
-	 * 
-	 * @return {@link com.aionemu.gameserver.dao.TaskFromDBDAO}
+	 * Records that this task has just run.
 	 */
 	protected void setLastActivation() {
-		DAOManager.getDAO(TaskFromDBDAO.class).setLastActivation(id);
+		GameRepositories.scheduledTasks().markActivated(id, System.currentTimeMillis());
 	}
 }

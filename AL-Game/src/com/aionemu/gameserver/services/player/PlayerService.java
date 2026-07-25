@@ -36,12 +36,10 @@ import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerABDAO;
-import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
-import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.dataholders.PlayerInitialData.LocationData;
@@ -96,15 +94,17 @@ public class PlayerService {
 	}
 
 	public static boolean storeNewPlayer(Player player, String accountName, int accountId) {
-		return DAOManager.getDAO(PlayerDAO.class).saveNewPlayer(player.getCommonData(), accountId, accountName)
-				&& GameRepositories.playerAppearance().save(player)
-				&& DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player)
-				&& DAOManager.getDAO(InventoryDAO.class).store(player);
+		if (!DAOManager.getDAO(PlayerDAO.class).saveNewPlayer(player.getCommonData(), accountId, accountName)
+				|| !GameRepositories.playerAppearance().save(player)) {
+			return false;
+		}
+		GameRepositories.playerSkills().save(player);
+		return DAOManager.getDAO(InventoryDAO.class).store(player);
 	}
 
 	public static void storePlayer(Player player) {
 		DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
-		DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player);
+		GameRepositories.playerSkills().save(player);
 		GameRepositories.equippedStigmas().save(player);
 		GameRepositories.playerSettings().save(player);
 		GameRepositories.playerQuests().save(player);
@@ -129,7 +129,7 @@ public class PlayerService {
 		GameRepositories.playerNpcFactions().store(player);
 		DAOManager.getDAO(PlayerLunaShopDAO.class).store(player);
 		GameRepositories.eventItems().load(player);
-		DAOManager.getDAO(PlayerCreativityPointsDAO.class).store(player);
+		GameRepositories.creativityPoints().save(player);
 	}
 
 	public static Player getPlayer(int playerObjId, Account account) {
@@ -147,13 +147,13 @@ public class PlayerService {
 		}
 		MacroList macroses = GameRepositories.playerMacros().findAll(playerObjId);
 		player.setMacroList(macroses);
-		player.setSkillList(DAOManager.getDAO(PlayerSkillListDAO.class).loadSkillList(playerObjId));
+		player.setSkillList(GameRepositories.playerSkills().load(playerObjId));
 		player.setEquipedStigmaList(GameRepositories.equippedStigmas().load(playerObjId));
 		player.setKnownlist(new KnownList(player));
 		player.setFriendList(GameRepositories.playerSocial().findFriends(player, DAOManager.getDAO(PlayerDAO.class)::loadPlayerCommonData));
 		player.setBlockList(GameRepositories.playerSocial().findBlocked(player, DAOManager.getDAO(PlayerDAO.class)::loadPlayerCommonData));
 		player.setTitleList(GameRepositories.playerTitles().findAll(playerObjId));
-		player.setCP(DAOManager.getDAO(PlayerCreativityPointsDAO.class).loadCP(player));
+		player.setCP(GameRepositories.creativityPoints().load(player.getObjectId()));
 		player.setEventWindow(DAOManager.getDAO(PlayerEventsWindowDAO.class).load(player));
 		player.setAtreianBestiary(DAOManager.getDAO(PlayerABDAO.class).load(player));
 		player.setWardrobe(GameRepositories.playerWardrobe().findAll(player));

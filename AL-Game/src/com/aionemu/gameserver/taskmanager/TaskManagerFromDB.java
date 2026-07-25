@@ -16,15 +16,16 @@
  */
 package com.aionemu.gameserver.taskmanager;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.TaskFromDBDAO;
 import com.aionemu.gameserver.model.tasks.TaskFromDB;
 import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.taskmanager.tasks.RestartTask;
@@ -39,13 +40,13 @@ public class TaskManagerFromDB {
 
 	private static final Logger log = LoggerFactory.getLogger(TaskManagerFromDB.class);
 
-	private ArrayList<TaskFromDB> tasksList;
+	private List<TaskFromDB> tasksList;
 	private HashMap<String, TaskFromDBHandler> handlers;
 
 	public TaskManagerFromDB() {
 		this.handlers = new HashMap<String, TaskFromDBHandler>();
 
-		tasksList = getDAO().getAllTasks();
+		tasksList = GameRepositories.scheduledTasks().findAll();
 		log.info("Loaded " + tasksList.size() + " task" + (tasksList.size() > 1 ? "s" : "") + " from the database");
 
 		registerHandlers();
@@ -132,15 +133,6 @@ public class TaskManagerFromDB {
 			delay += 1 * 24 * 60 * 60 * 1000;
 		}
 		ThreadPoolManager.getInstance().scheduleAtFixedRate(handler, delay, 1 * 24 * 60 * 60 * 1000);
-	}
-
-	/**
-	 * Retuns {@link com.aionemu.gameserver.dao.TaskFromDBDAO} , just a shortcut
-	 * 
-	 * @return {@link com.aionemu.gameserver.dao.TaskFromDBDAO}
-	 */
-	private static TaskFromDBDAO getDAO() {
-		return DAOManager.getDAO(TaskFromDBDAO.class);
 	}
 
 	/**

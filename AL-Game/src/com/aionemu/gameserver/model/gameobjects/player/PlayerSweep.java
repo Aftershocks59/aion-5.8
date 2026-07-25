@@ -16,11 +16,11 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 
 /**
@@ -101,8 +101,7 @@ public class PlayerSweep {
 	}
 
 	public void setShugoSweepByObjId(int playerId) {
-		DAOManager.getDAO(PlayerShugoSweepDAO.class).setShugoSweepByObjId(playerId, getFreeDice(), getStep(),
-				getBoardId(), getGoldenDice(), getResetBoard(), getCompletedSteps());
+		GameRepositories.shugoSweeps().saveBoard(playerId, this);
 	}
 
 	public void setPersistentState(PersistentState persistentState) {

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -62,7 +62,7 @@ public class ShugoSweepService {
 	}
 
 	public void onLogin(Player player) {
-		DAOManager.getDAO(PlayerShugoSweepDAO.class).load(player);
+		GameRepositories.shugoSweeps().load(player);
 
 		if (player.getPlayerShugoSweep() == null) {
 			PlayerSweep ps = new PlayerSweep(0, EventsConfig.EVENT_SHUGOSWEEP_FREEDICE, boardId, 0, 0, 0);
@@ -70,8 +70,7 @@ public class ShugoSweepService {
 			player.setPlayerShugoSweep(ps);
 			player.getPlayerShugoSweep().setShugoSweepByObjId(player.getObjectId());
 
-			DAOManager.getDAO(PlayerShugoSweepDAO.class).add(player.getObjectId(), ps.getFreeDice(), ps.getStep(),
-					ps.getBoardId(), ps.getGoldenDice(), ps.getResetBoard(), ps.getCompletedSteps());
+			GameRepositories.shugoSweeps().add(player.getObjectId(), ps);
 		}
 
 		if (player.getPlayerShugoSweep().getBoardId() != boardId) {
@@ -95,7 +94,7 @@ public class ShugoSweepService {
 	}
 
 	public void onLogout(Player player) {
-		DAOManager.getDAO(PlayerShugoSweepDAO.class).store(player);
+		GameRepositories.shugoSweeps().save(player);
 		player.getPlayerShugoSweep().setShugoSweepByObjId(player.getObjectId());
 	}
 

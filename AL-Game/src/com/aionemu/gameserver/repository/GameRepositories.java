@@ -72,6 +72,10 @@ public final class GameRepositories {
 	private final PlayerTransformRepository playerTransforms;
 	private final EquippedStigmaRepository equippedStigmas;
 	private final PlayerQuestRepository playerQuests;
+	private final ScheduledTaskRepository scheduledTasks;
+	private final CreativityPointRepository creativityPoints;
+	private final ShugoSweepRepository shugoSweeps;
+	private final PlayerSkillRepository playerSkills;
 
 	/**
 	 * Builds every repository over one data source.
@@ -117,6 +121,10 @@ public final class GameRepositories {
 		playerTransforms = new JdbcPlayerTransformRepository(dataSource);
 		equippedStigmas = new JdbcEquippedStigmaRepository(dataSource);
 		playerQuests = new JdbcPlayerQuestRepository(dataSource);
+		scheduledTasks = new JdbcScheduledTaskRepository(dataSource);
+		creativityPoints = new JdbcCreativityPointRepository(dataSource);
+		shugoSweeps = new JdbcShugoSweepRepository(dataSource);
+		playerSkills = new JdbcPlayerSkillRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -277,5 +285,21 @@ public final class GameRepositories {
 
 	public static PlayerQuestRepository playerQuests() {
 		return getInstance().playerQuests;
+	}
+
+	public static ScheduledTaskRepository scheduledTasks() {
+		return getInstance().scheduledTasks;
+	}
+
+	public static CreativityPointRepository creativityPoints() {
+		return getInstance().creativityPoints;
+	}
+
+	public static ShugoSweepRepository shugoSweeps() {
+		return getInstance().shugoSweeps;
+	}
+
+	public static PlayerSkillRepository playerSkills() {
+		return getInstance().playerSkills;
 	}
 }
