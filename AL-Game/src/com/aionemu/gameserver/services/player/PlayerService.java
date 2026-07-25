@@ -35,11 +35,8 @@ import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.MailDAO;
-import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
-import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
-import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.dataholders.PlayerInitialData.LocationData;
@@ -117,7 +114,7 @@ public class PlayerService {
 			DAOManager.getDAO(HousesDAO.class).storeHouse(house);
 			if (house.getRegistry() != null
 					&& house.getRegistry().getPersistentState() == PersistentState.UPDATE_REQUIRED) {
-				DAOManager.getDAO(PlayerRegisteredItemsDAO.class).store(house.getRegistry(),
+				GameRepositories.houseRegistries().save(house.getRegistry(),
 						player.getCommonData().getPlayerObjId());
 			}
 		}
@@ -127,7 +124,7 @@ public class PlayerService {
 		GameRepositories.portalCooldowns().store(player);
 		GameRepositories.craftCooldowns().store(player);
 		GameRepositories.playerNpcFactions().store(player);
-		DAOManager.getDAO(PlayerLunaShopDAO.class).store(player);
+		GameRepositories.lunaShop().save(player);
 		GameRepositories.eventItems().load(player);
 		GameRepositories.creativityPoints().save(player);
 	}
@@ -155,7 +152,7 @@ public class PlayerService {
 		player.setTitleList(GameRepositories.playerTitles().findAll(playerObjId));
 		player.setCP(GameRepositories.creativityPoints().load(player.getObjectId()));
 		player.setEventWindow(DAOManager.getDAO(PlayerEventsWindowDAO.class).load(player));
-		player.setAtreianBestiary(DAOManager.getDAO(PlayerABDAO.class).load(player));
+		player.setAtreianBestiary(GameRepositories.atreianBestiary().load(player.getObjectId()));
 		player.setWardrobe(GameRepositories.playerWardrobe().findAll(player));
 		GameRepositories.f2p().load(player);
 		GameRepositories.playerSettings().load(player);
@@ -225,7 +222,7 @@ public class PlayerService {
 		GameRepositories.houseObjectCooldowns().load(player);
 		GameRepositories.playerBindPoints().load(player);
 		GameRepositories.craftCooldowns().load(player);
-		DAOManager.getDAO(PlayerLunaShopDAO.class).load(player);
+		GameRepositories.lunaShop().load(player);
 		if (player.getCommonData().getBonusTitleId() > 0) {
 			TitleChangeListener.onBonusTitleChange(player.getGameStats(), player.getCommonData().getTitleId(), true);
 		}

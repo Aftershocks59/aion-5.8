@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.house;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -274,7 +274,7 @@ public class HouseRegistry {
 
 	public void save() {
 		if (persistentState == PersistentState.UPDATE_REQUIRED) {
-			DAOManager.getDAO(PlayerRegisteredItemsDAO.class).store(this, getOwner().getOwnerId());
+			GameRepositories.houseRegistries().save(this, getOwner().getOwnerId());
 		}
 	}
 
@@ -292,7 +292,7 @@ public class HouseRegistry {
 
 	public void despawnObjects() {
 		if (getSpawnedObjects().isEmpty()) {
-			DAOManager.getDAO(PlayerRegisteredItemsDAO.class).resetRegistry(owner.getOwnerId());
+			GameRepositories.houseRegistries().reset(owner.getOwnerId());
 		} else {
 			despawnObjects(true);
 		}

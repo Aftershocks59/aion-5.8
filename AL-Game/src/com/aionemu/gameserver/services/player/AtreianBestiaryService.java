@@ -16,11 +16,11 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.RewardType;
@@ -49,9 +49,9 @@ public class AtreianBestiaryService {
 		}
 		for (int tmpNpcId : template.getNpcIds()) {
 			if (npcId == tmpNpcId) {
-				int killCount = DAOManager.getDAO(PlayerABDAO.class).getKillCountById(player.getObjectId(),
+				int killCount = GameRepositories.atreianBestiary().findKillCount(player.getObjectId(),
 						template.getId());
-				byte currentLvl = (byte) DAOManager.getDAO(PlayerABDAO.class).getLevelById(player.getObjectId(),
+				byte currentLvl = (byte) GameRepositories.atreianBestiary().findLevel(player.getObjectId(),
 						template.getId());
 				killCount++;
 				int claimReward = 0;
@@ -75,9 +75,9 @@ public class AtreianBestiaryService {
 		if (template == null) {
 			return;
 		}
-		int killCount = DAOManager.getDAO(PlayerABDAO.class).getKillCountById(player.getObjectId(), id);
-		byte currentLvl = (byte) DAOManager.getDAO(PlayerABDAO.class).getLevelById(player.getObjectId(), id);
-		int isClaimReward = DAOManager.getDAO(PlayerABDAO.class).getClaimRewardById(player.getObjectId(), id);
+		int killCount = GameRepositories.atreianBestiary().findKillCount(player.getObjectId(), id);
+		byte currentLvl = (byte) GameRepositories.atreianBestiary().findLevel(player.getObjectId(), id);
+		int isClaimReward = GameRepositories.atreianBestiary().findClaimedReward(player.getObjectId(), id);
 		currentLvl = (byte) (currentLvl + 1);
 		long exp = 0;
 		for (AtreianBestiaryAchievementTemplate at : template.getAtreianBestiaryAchievementTemplate()) {

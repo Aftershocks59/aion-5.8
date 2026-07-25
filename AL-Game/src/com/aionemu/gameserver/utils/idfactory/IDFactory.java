@@ -31,7 +31,6 @@ import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 
 /**
  * This class is responsible for id generation for all Aion-Emu objects.<br>
@@ -76,7 +75,7 @@ public class IDFactory {
 		// used values in IDFactory
 		lockIds(DAOManager.getDAO(PlayerDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(InventoryDAO.class).getUsedIDs());
-		lockIds(DAOManager.getDAO(PlayerRegisteredItemsDAO.class).getUsedIDs());
+		lockIds(GameRepositories.houseRegistries().findUsedIds());
 		lockIds(DAOManager.getDAO(LegionDAO.class).getUsedIDs());
 		lockIds(DAOManager.getDAO(MailDAO.class).getUsedIDs());
 		lockIds(GameRepositories.guides().findUsedIds());

@@ -16,11 +16,11 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 
 import java.sql.Connection;
@@ -84,9 +84,7 @@ public class PlayerLunaShop {
 	}
 
 	public void setLunaShopByObjId(int playerId) {
-		DAOManager.getDAO(PlayerLunaShopDAO.class).setLunaShopByObjId(playerId, isFreeUnderpath(), isFreeFactory(),
-				isFreeChest(), getLunaConsumePoint(), getLunaConsumeCount(), getWardrobeSlot(), getMuniKeys(),
-				getLunaDiceCount(), isLunaGoldenDice());
+		GameRepositories.lunaShop().saveShop(playerId, this);
 	}
 
 	public int getLunaDiceCount() {

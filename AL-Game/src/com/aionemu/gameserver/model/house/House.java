@@ -35,7 +35,6 @@ import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
@@ -160,7 +159,7 @@ public class House extends VisibleObject {
 	public synchronized void spawn(int instanceId) {
 		playerScripts = GameRepositories.houseScripts().load(getObjectId());
 		if (playerObjectId > 0 && status == HouseStatus.ACTIVE || status == HouseStatus.SELL_WAIT) {
-			DAOManager.getDAO(PlayerRegisteredItemsDAO.class).loadRegistry(playerObjectId);
+			GameRepositories.houseRegistries().load(playerObjectId);
 		}
 		fixBuildingStates();
 		if (getPosition() == null || !getPosition().isSpawned()) {
@@ -448,7 +447,7 @@ public class House extends VisibleObject {
 		houseRegistry = null;
 		getRegistry();
 		if (playerObjectId != 0) {
-			DAOManager.getDAO(PlayerRegisteredItemsDAO.class).loadRegistry(playerObjectId);
+			GameRepositories.houseRegistries().load(playerObjectId);
 		}
 	}
 

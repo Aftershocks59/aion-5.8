@@ -84,6 +84,10 @@ public final class GameRepositories {
 	private final HouseBidRepository houseBids;
 	private final PassportRepository passports;
 	private final PetitionRepository petitions;
+	private final ThievesGuildRepository thievesGuild;
+	private final AtreianBestiaryRepository atreianBestiary;
+	private final LunaShopRepository lunaShop;
+	private final HouseRegistryRepository houseRegistries;
 
 	/**
 	 * Builds every repository over one data source.
@@ -141,6 +145,10 @@ public final class GameRepositories {
 		houseBids = new JdbcHouseBidRepository(dataSource);
 		passports = new JdbcPassportRepository(dataSource);
 		petitions = new JdbcPetitionRepository(dataSource);
+		thievesGuild = new JdbcThievesGuildRepository(dataSource);
+		atreianBestiary = new JdbcAtreianBestiaryRepository(dataSource);
+		lunaShop = new JdbcLunaShopRepository(dataSource);
+		houseRegistries = new JdbcHouseRegistryRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -349,5 +357,21 @@ public final class GameRepositories {
 
 	public static PetitionRepository petitions() {
 		return getInstance().petitions;
+	}
+
+	public static ThievesGuildRepository thievesGuild() {
+		return getInstance().thievesGuild;
+	}
+
+	public static AtreianBestiaryRepository atreianBestiary() {
+		return getInstance().atreianBestiary;
+	}
+
+	public static LunaShopRepository lunaShop() {
+		return getInstance().lunaShop;
+	}
+
+	public static HouseRegistryRepository houseRegistries() {
+		return getInstance().houseRegistries;
 	}
 }

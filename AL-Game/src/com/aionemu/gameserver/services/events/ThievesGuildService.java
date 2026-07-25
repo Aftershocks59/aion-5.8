@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 import java.util.concurrent.Future;
 
@@ -25,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
-import com.aionemu.gameserver.dao.PlayerThievesListDAO;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.actions.PlayerActions;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -50,11 +50,11 @@ public class ThievesGuildService {
 			return;
 		}
 		try {
-			ThievesStatusList thieves = DAOManager.getDAO(PlayerThievesListDAO.class).loadThieves(player.getObjectId());
+			ThievesStatusList thieves = GameRepositories.thievesGuild().load(player.getObjectId());
 			if (thieves == null) {
 				player.setThieves(new ThievesStatusList(player.getObjectId(), 0, 0, 0l, 0, "Нет", 0,
 						new Timestamp(System.currentTimeMillis())));
-				DAOManager.getDAO(PlayerThievesListDAO.class).saveNewThieves(player.getThieves());
+				GameRepositories.thievesGuild().add(player.getThieves());
 			}
 			log.info("ThievesGuildService loadThievesStatus try [Player = " + player.getThieves().getPlayerId() + "]");
 		} catch (Exception ex) {
@@ -85,7 +85,7 @@ public class ThievesGuildService {
 		if (player.isThievesDuel()) {
 			return;
 		}
-		target.setThieves(DAOManager.getDAO(PlayerThievesListDAO.class).loadThieves(target.getObjectId()));
+		target.setThieves(GameRepositories.thievesGuild().load(target.getObjectId()));
 		ThievesStatusList thieves = target.getThieves();
 		if (thieves.getRevengeName().equals(player.getName()) && !PlayerActions.isAlreadyDead(target)
 				&& MathUtil.isIn3dRange(target, player, 2)) {
@@ -101,8 +101,8 @@ public class ThievesGuildService {
 		if (!CustomConfig.THIEVES_ENABLE) {
 			return;
 		}
-		player.setThieves(DAOManager.getDAO(PlayerThievesListDAO.class).loadThieves(player.getObjectId()));
-		target.setThieves(DAOManager.getDAO(PlayerThievesListDAO.class).loadThieves(target.getObjectId()));
+		player.setThieves(GameRepositories.thievesGuild().load(player.getObjectId()));
+		target.setThieves(GameRepositories.thievesGuild().load(target.getObjectId()));
 		ThievesStatusList thievesPlayer = player.getThieves();
 		ThievesStatusList thievesTarget = target.getThieves();
 		if (thievesPlayer == null || thievesTarget == null) {
@@ -125,13 +125,13 @@ public class ThievesGuildService {
 		thievesTarget.setLastThievesKinah(0l);
 		thievesTarget.setRevengeName("Нет");
 		thievesTarget.setRevengeDate(new Timestamp(System.currentTimeMillis()));
-		DAOManager.getDAO(PlayerThievesListDAO.class).storeThieves(thievesPlayer);
-		DAOManager.getDAO(PlayerThievesListDAO.class).storeThieves(thievesTarget);
+		GameRepositories.thievesGuild().save(thievesPlayer);
+		GameRepositories.thievesGuild().save(thievesTarget);
 		log.info("Aion-Unique Console: ThievesGuildService revenge [Player = " + player.getName() + "]");
 	}
 	/*
 	 * TODO private void thievesIn(Player player) {
-	 * player.setThieves(DAOManager.getDAO(PlayerThievesListDAO.class).loadThieves(
+	 * player.setThieves(GameRepositories.thievesGuild().load(
 	 * player.getObjectId())); ThievesStatusList thieves = player.getThieves(); if
 	 * (thieves.getRankId() >= 3) {
 	 * 
@@ -178,7 +178,7 @@ public class ThievesGuildService {
 			player.setStopThieves(0);
 			player.setIsThieves(false);
 			// Thieves success
-			player.setThieves(DAOManager.getDAO(PlayerThievesListDAO.class).loadThieves(player.getObjectId()));
+			player.setThieves(GameRepositories.thievesGuild().load(player.getObjectId()));
 			ThievesStatusList thieves = player.getThieves();
 			Timestamp nextTime = thieves.getRevengeDate();
 			Timestamp currentTime = new Timestamp(System.currentTimeMillis());
@@ -243,7 +243,7 @@ public class ThievesGuildService {
 				thieves.setLastThievesKinah(kinah);
 				player.getInventory().increaseKinah(kinah);
 				target.getInventory().decreaseKinah(kinah);
-				DAOManager.getDAO(PlayerThievesListDAO.class).storeThieves(thieves);
+				GameRepositories.thievesGuild().save(thieves);
 				thievesMessage(player, "You are robbed " + target.getName(), 0);
 				thievesMessage(player, "Be careful! Revenge can be swift from " + target.getName(), 0);
 				thievesMessage(player, target.getName() + " Has the ability to attack you at any time ", 0);

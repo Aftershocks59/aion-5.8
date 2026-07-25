@@ -32,7 +32,6 @@ import com.aionemu.gameserver.configs.main.LunaConfig;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -202,9 +201,7 @@ public class LunaShopService {
 
 				pls.setPersistentState(PersistentState.UPDATE_REQUIRED);
 
-				DAOManager.getDAO(PlayerLunaShopDAO.class).add(player.getObjectId(), pls.isFreeUnderpath(),
-						pls.isFreeFactory(), pls.isFreeChest(), pls.getLunaConsumePoint(), pls.getLunaConsumePoint(),
-						pls.getWardrobeSlot(), pls.getMuniKeys(), pls.getLunaDiceCount(), pls.isLunaGoldenDice());
+				GameRepositories.lunaShop().add(player.getObjectId(), pls);
 			}
 		});
 	}
@@ -257,9 +254,7 @@ public class LunaShopService {
 			PlayerLunaShop pls = new PlayerLunaShop(true, true, true);
 			pls.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			player.setPlayerLunaShop(pls);
-			DAOManager.getDAO(PlayerLunaShopDAO.class).add(player.getObjectId(), pls.isFreeUnderpath(),
-					pls.isFreeFactory(), pls.isFreeChest(), pls.getLunaConsumePoint(), pls.getLunaConsumeCount(),
-					pls.getWardrobeSlot(), pls.getMuniKeys(), pls.getLunaDiceCount(), pls.isLunaGoldenDice());
+			GameRepositories.lunaShop().add(player.getObjectId(), pls);
 		}
 
 		// PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(6));

@@ -16,13 +16,13 @@
  */
 package com.aionemu.gameserver.model.atreian_bestiary;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
@@ -62,7 +62,7 @@ public final class PlayerABList implements ABList<Player> {
 	private synchronized boolean add(Player player, int id, int killCount, int level, int claimReward,
 			PersistentState state) {
 		entry.put(id, new PlayerABEntry(id, killCount, level, claimReward, state));
-		DAOManager.getDAO(PlayerABDAO.class).store(player.getObjectId(), id, killCount, level, claimReward);
+		GameRepositories.atreianBestiary().save(player.getObjectId(), id, killCount, level, claimReward);
 		return true;
 	}
 
@@ -72,7 +72,7 @@ public final class PlayerABList implements ABList<Player> {
 		if (entries != null) {
 			entries.setPersistentState(PersistentState.DELETED);
 			entry.remove(id);
-			DAOManager.getDAO(PlayerABDAO.class).delete(player.getObjectId(), id);
+			GameRepositories.atreianBestiary().remove(player.getObjectId(), id);
 		}
 		return entry != null;
 	}
