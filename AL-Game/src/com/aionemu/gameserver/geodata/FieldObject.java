@@ -184,6 +184,26 @@ public final class FieldObject {
 		}
 	}
 
+	/** Answers the westmost edge of the box this object occupies. */
+	public float getLowX() {
+		return lowX;
+	}
+
+	/** Answers its eastmost edge. */
+	public float getHighX() {
+		return highX;
+	}
+
+	/** Answers its southmost edge. */
+	public float getLowY() {
+		return lowY;
+	}
+
+	/** Answers its northmost edge. */
+	public float getHighY() {
+		return highY;
+	}
+
 	/** Answers whether a point stands inside the box this object occupies. */
 	public boolean contains(float x, float y, float z) {
 		return measured && x >= lowX && x <= highX && y >= lowY && y <= highY && z >= lowZ && z <= highZ;

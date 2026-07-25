@@ -73,8 +73,8 @@ public final class CollisionGrid implements AutoCloseable {
 	private final FileChannel channel;
 	private final MappedByteBuffer file;
 	private final GeoVersion version;
-	private final int cols;
-	private final int rows;
+	private final int sectorsAlongY;
+	private final int sectorsAlongX;
 
 	/** Where each sector's face-count index starts, or -1 for a sector with no faces. */
 	private final int[] indexOffsets;
@@ -88,13 +88,13 @@ public final class CollisionGrid implements AutoCloseable {
 	/** Where each sub-cell's runs start, filled in the first time a sector is asked. */
 	private final int[][] subCellOffsets;
 
-	private CollisionGrid(FileChannel channel, MappedByteBuffer file, GeoVersion version, int cols, int rows,
-			int[] indexOffsets, int[] meshOffsets, int[] meshSizes) {
+	private CollisionGrid(FileChannel channel, MappedByteBuffer file, GeoVersion version, int sectorsAlongY,
+			int sectorsAlongX, int[] indexOffsets, int[] meshOffsets, int[] meshSizes) {
 		this.channel = channel;
 		this.file = file;
 		this.version = version;
-		this.cols = cols;
-		this.rows = rows;
+		this.sectorsAlongY = sectorsAlongY;
+		this.sectorsAlongX = sectorsAlongX;
 		this.indexOffsets = indexOffsets;
 		this.meshOffsets = meshOffsets;
 		this.meshSizes = meshSizes;
@@ -121,9 +121,9 @@ public final class CollisionGrid implements AutoCloseable {
 
 			GeoVersion version = GeoVersion.readHeader(file);
 
-			int cols = sectorCount(terrain.getCols());
-			int rows = sectorCount(terrain.getRows());
-			int sectors = cols * rows;
+			int alongY = sectorCount(terrain.getCellsAlongY());
+			int alongX = sectorCount(terrain.getCellsAlongX());
+			int sectors = alongY * alongX;
 
 			int[] indexOffsets = new int[sectors];
 			int[] meshOffsets = new int[sectors];
@@ -153,7 +153,7 @@ public final class CollisionGrid implements AutoCloseable {
 				throw new IOException("Left " + file.remaining() + " bytes unread at the end of " + path + ".");
 			}
 
-			return new CollisionGrid(channel, file, version, cols, rows, indexOffsets, meshOffsets, meshSizes);
+			return new CollisionGrid(channel, file, version, alongY, alongX, indexOffsets, meshOffsets, meshSizes);
 		} catch (IOException | RuntimeException e) {
 			channel.close();
 			throw e;
@@ -175,13 +175,13 @@ public final class CollisionGrid implements AutoCloseable {
 	}
 
 	/** Answers how many sectors span the world along X. */
-	public int getCols() {
-		return cols;
+	public int getSectorsAlongX() {
+		return sectorsAlongX;
 	}
 
 	/** Answers how many sectors span the world along Y. */
-	public int getRows() {
-		return rows;
+	public int getSectorsAlongY() {
+		return sectorsAlongY;
 	}
 
 	public int getSectorCount() {
@@ -201,7 +201,7 @@ public final class CollisionGrid implements AutoCloseable {
 	/**
 	 * Answers the index of the sector holding a terrain cell.
 	 * <p>
-	 * The sectors run down X in whole columns, as the height grid does. Laying
+	 * The sectors run down Y in whole columns, as the height grid does. Laying
 	 * them out the other way round puts a sector's runs under cells that are
 	 * nowhere near them; the two orders are told apart by counting, per sector,
 	 * the cells the height grid marks as carrying a mesh against the sub-cells
@@ -209,12 +209,12 @@ public final class CollisionGrid implements AutoCloseable {
 	 * tried, the other one nine tenths of them.
 	 */
 	public int sectorIndex(int cellX, int cellY) {
-		return (cellX >> SECTOR_SHIFT) * rows + (cellY >> SECTOR_SHIFT);
+		return (cellY >> SECTOR_SHIFT) * sectorsAlongX + (cellX >> SECTOR_SHIFT);
 	}
 
 	/** Answers where a terrain cell sits within its sector, in whole columns as the sectors themselves run. */
 	public static int subCellIndex(int cellX, int cellY) {
-		return (cellX & (SECTOR_CELLS - 1)) * SECTOR_CELLS + (cellY & (SECTOR_CELLS - 1));
+		return (cellY & (SECTOR_CELLS - 1)) * SECTOR_CELLS + (cellX & (SECTOR_CELLS - 1));
 	}
 
 	/**

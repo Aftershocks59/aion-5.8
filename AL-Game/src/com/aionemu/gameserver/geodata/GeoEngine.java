@@ -298,8 +298,8 @@ public final class GeoEngine implements AutoCloseable {
 		float cellX = x / HeightMap.CELL_SIZE;
 		float cellY = y / HeightMap.CELL_SIZE;
 
-		int x0 = clamp((int) Math.floor(cellX), terrain.getCols() - 1);
-		int y0 = clamp((int) Math.floor(cellY), terrain.getRows() - 1);
+		int x0 = clamp((int) Math.floor(cellX), terrain.getCellsAlongX() - 1);
+		int y0 = clamp((int) Math.floor(cellY), terrain.getCellsAlongY() - 1);
 		float alongX = clampFraction(cellX - x0);
 		float alongY = clampFraction(cellY - y0);
 

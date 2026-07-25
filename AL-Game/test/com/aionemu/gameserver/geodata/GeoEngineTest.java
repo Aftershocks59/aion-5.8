@@ -44,23 +44,26 @@ class GeoEngineTest {
 	 * Writes a terrain whose corners rise by one world unit for every step along
 	 * X, and are level along Y.
 	 * <p>
-	 * The grid runs down X in whole columns, so the corner written at index
-	 * {@code i} is the one at column {@code i / stride}.
+	 * The grid runs down Y in whole columns, so the corner written at index
+	 * {@code i} is the one at {@code i % stride} along X.
+	 *
+	 * @param alongY how many cells the world spans along Y, written first
+	 * @param alongX how many it spans along X, written second
 	 */
-	private HeightMap rampAlongX(int cols, int rows) throws IOException {
-		int stride = rows + 1;
-		int cells = (cols + 1) * stride;
+	private HeightMap rampAlongX(int alongY, int alongX) throws IOException {
+		int stride = alongX + 1;
+		int cells = (alongY + 1) * stride;
 		ByteBuffer buffer = ByteBuffer.allocate(GeoVersion.HEADER_SIZE + 8 + cells * 4).order(ByteOrder.LITTLE_ENDIAN);
 		buffer.putInt(GeoVersion.MAGIC);
 		buffer.putLong(1L);
 		buffer.putLong(2L);
 		buffer.position(GeoVersion.HEADER_SIZE);
-		buffer.putInt(cols);
-		buffer.putInt(rows);
+		buffer.putInt(alongY);
+		buffer.putInt(alongX);
 		for (int i = 0; i < cells; i++) {
 			// A height of n world units is stored as n times thirty-two, which is
 			// always a multiple of four and so leaves the surface bits clear.
-			buffer.putShort((short) ((i / stride) * 32));
+			buffer.putShort((short) ((i % stride) * 32));
 		}
 		for (int i = 0; i < cells; i++) {
 			buffer.put((byte) 0);
@@ -82,18 +85,20 @@ class GeoEngineTest {
 		// A world that is not square is the only one that tells the two ways of
 		// composing the index apart.
 		HeightMap terrain = rampAlongX(6, 10);
+		assertEquals(10, terrain.getCellsAlongX());
+		assertEquals(6, terrain.getCellsAlongY());
 		assertEquals(76, terrain.getCellCount() - 1);
-		assertEquals(terrain.getCellCount() - 1, terrain.cornerIndex(6, 10));
+		assertEquals(terrain.getCellCount() - 1, terrain.cornerIndex(10, 6));
 	}
 
 	@Test
 	@DisplayName("Reads a corner's own height where a position sits on it")
 	void readsCornerHeights() throws IOException {
 		HeightMap terrain = rampAlongX(6, 10);
-		// A cell spans two world units, so column three starts at x = 6.
+		// A cell spans two world units, so the third step along X starts at x = 6.
 		assertEquals(0.0f, GeoEngine.groundZ(terrain, 0.0f, 0.0f), EPSILON);
 		assertEquals(3.0f, GeoEngine.groundZ(terrain, 6.0f, 0.0f), EPSILON);
-		assertEquals(3.0f, GeoEngine.groundZ(terrain, 6.0f, 14.0f), EPSILON);
+		assertEquals(3.0f, GeoEngine.groundZ(terrain, 6.0f, 10.0f), EPSILON);
 	}
 
 	@Test
@@ -103,7 +108,7 @@ class GeoEngineTest {
 		assertEquals(1.5f, GeoEngine.groundZ(terrain, 3.0f, 0.0f), EPSILON);
 		assertEquals(1.25f, GeoEngine.groundZ(terrain, 2.5f, 4.0f), EPSILON);
 		// Level along Y, so moving along it changes nothing.
-		assertEquals(GeoEngine.groundZ(terrain, 3.0f, 0.0f), GeoEngine.groundZ(terrain, 3.0f, 19.0f), EPSILON);
+		assertEquals(GeoEngine.groundZ(terrain, 3.0f, 0.0f), GeoEngine.groundZ(terrain, 3.0f, 11.0f), EPSILON);
 	}
 
 	@Test
@@ -111,7 +116,7 @@ class GeoEngineTest {
 	void clampsOutsideTheWorld() throws IOException {
 		HeightMap terrain = rampAlongX(6, 10);
 		assertEquals(0.0f, GeoEngine.groundZ(terrain, -50.0f, -50.0f), EPSILON);
-		assertEquals(6.0f, GeoEngine.groundZ(terrain, 1000.0f, 1000.0f), EPSILON);
+		assertEquals(10.0f, GeoEngine.groundZ(terrain, 1000.0f, 1000.0f), EPSILON);
 	}
 
 	@Test

@@ -62,20 +62,20 @@ public final class HeightMap {
 
 	private final int tier;
 	private final GeoVersion version;
-	private final int cols;
-	private final int rows;
+	private final int alongY;
+	private final int alongX;
 	private final int stride;
 	private final short[] heights;
 	private final byte[] materials;
 	private final byte[] extra;
 
-	private HeightMap(int tier, GeoVersion version, int cols, int rows, short[] heights, byte[] materials,
+	private HeightMap(int tier, GeoVersion version, int alongY, int alongX, short[] heights, byte[] materials,
 			byte[] extra) {
 		this.tier = tier;
 		this.version = version;
-		this.cols = cols;
-		this.rows = rows;
-		this.stride = rows + 1;
+		this.alongY = alongY;
+		this.alongX = alongX;
+		this.stride = alongX + 1;
 		this.heights = heights;
 		this.materials = materials;
 		this.extra = extra;
@@ -106,17 +106,24 @@ public final class HeightMap {
 		if (buffer.remaining() < 8) {
 			throw new IOException("Read no grid size from " + file + ".");
 		}
-		int cols = buffer.getInt();
-		int rows = buffer.getInt();
-		if (cols == 0 || rows == 0) {
-			throw new IOException("Read an empty grid, " + cols + " by " + rows + ", from " + file + ".");
+		// The two counts are written the way the grid runs, which is down Y in
+		// whole columns: the first counts columns and so spans Y, the second
+		// counts what fills one and so spans X. Reading them the other way round
+		// turns every world a quarter turn, which the grid itself cannot show
+		// because it stays consistent with itself either way. What shows it is
+		// the game's own spawns, which stand on the ground only under this
+		// reading.
+		int alongY = buffer.getInt();
+		int alongX = buffer.getInt();
+		if (alongY == 0 || alongX == 0) {
+			throw new IOException("Read an empty grid, " + alongX + " by " + alongY + ", from " + file + ".");
 		}
 
 		// The grid holds the corners of the cells, so it is one wider and one
 		// taller than the cell count.
-		int cells = (cols + 1) * (rows + 1);
+		int cells = (alongY + 1) * (alongX + 1);
 		if (buffer.remaining() < cells * 3) {
-			throw new IOException("Read a grid of " + cols + " by " + rows + " from " + file
+			throw new IOException("Read a grid of " + alongX + " by " + alongY + " from " + file
 					+ ", which the file is too short to hold.");
 		}
 
@@ -133,7 +140,7 @@ public final class HeightMap {
 			buffer.get(extra);
 		}
 
-		HeightMap map = new HeightMap(tier, version, cols, rows, heights, materials, extra);
+		HeightMap map = new HeightMap(tier, version, alongY, alongX, heights, materials, extra);
 		if (tier == TIER_24) {
 			map.unpackCoarseTier();
 		}
@@ -165,12 +172,14 @@ public final class HeightMap {
 		return version;
 	}
 
-	public int getCols() {
-		return cols;
+	/** Answers how many cells the world spans along X. */
+	public int getCellsAlongX() {
+		return alongX;
 	}
 
-	public int getRows() {
-		return rows;
+	/** Answers how many cells the world spans along Y. */
+	public int getCellsAlongY() {
+		return alongY;
 	}
 
 	/** Answers how many cells one row of the grid holds. */
@@ -186,18 +195,19 @@ public final class HeightMap {
 	/**
 	 * Answers the index of one grid corner.
 	 * <p>
-	 * The grid runs down X in steps of a whole column, so a stride is the height
-	 * of a column and not the width of a row. That is what makes the last corner
-	 * land on the last cell: {@code stride * cols + rows} is exactly
-	 * {@code (cols + 1) * (rows + 1) - 1}. Multiplying the other way round only
-	 * agrees on a square world.
+	 * The grid runs down Y in steps of a whole column, so a stride is the width
+	 * of a column along X. That is what makes the last corner land on the last
+	 * cell: {@code stride * alongY + alongX} is exactly
+	 * {@code (alongY + 1) * (alongX + 1) - 1}. Multiplying the other way round
+	 * only agrees on a square world, which is why it took the game's own spawns
+	 * to tell the two apart.
 	 *
-	 * @param cellX the corner's column
-	 * @param cellY the corner's row
+	 * @param cellX the corner's position along X
+	 * @param cellY the corner's position along Y
 	 * @return the index into the grid
 	 */
 	public int cornerIndex(int cellX, int cellY) {
-		return stride * cellX + cellY;
+		return stride * cellY + cellX;
 	}
 
 	/**

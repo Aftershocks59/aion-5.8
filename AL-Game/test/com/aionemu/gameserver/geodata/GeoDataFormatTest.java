@@ -121,8 +121,8 @@ class GeoDataFormatTest {
 
 		assertNotNull(terrain);
 		assertEquals(HeightMap.TIER_40, terrain.getTier());
-		assertEquals(4, terrain.getCols());
-		assertEquals(4, terrain.getRows());
+		assertEquals(4, terrain.getCellsAlongX());
+		assertEquals(4, terrain.getCellsAlongY());
 		assertEquals(5, terrain.getStride());
 		assertEquals(25, terrain.getCellCount());
 		assertNotNull(terrain.getExtra());
@@ -138,7 +138,7 @@ class GeoDataFormatTest {
 
 		// One real world ships both at different sizes, so reading the wrong one
 		// gives the wrong sector count and walks the collision off its end.
-		assertEquals(4, HeightMap.load(world).getCols());
+		assertEquals(4, HeightMap.load(world).getCellsAlongX());
 	}
 
 	@Test
@@ -248,7 +248,7 @@ class GeoDataFormatTest {
 
 		HeightMap terrain = HeightMap.load(world);
 		try (CollisionGrid collision = CollisionGrid.load(world, terrain)) {
-			assertEquals(2, collision.getCols());
+			assertEquals(2, collision.getSectorsAlongX());
 			assertEquals(sectors, collision.getSectorCount());
 			for (int i = 0; i < sectors; i++) {
 				assertTrue(collision.isEmpty(i));

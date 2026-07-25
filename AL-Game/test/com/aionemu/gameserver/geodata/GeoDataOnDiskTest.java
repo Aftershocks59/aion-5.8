@@ -78,12 +78,12 @@ class GeoDataOnDiskTest {
 				assertNotNull(geo, "world " + worldId + " holds files but read as nothing");
 
 				HeightMap terrain = geo.getTerrain();
-				assertTrue(terrain.getCols() > 0 && terrain.getRows() > 0, "world " + worldId + " has no grid");
-				assertEquals((terrain.getCols() + 1) * (terrain.getRows() + 1), terrain.getCellCount(),
+				assertTrue(terrain.getCellsAlongX() > 0 && terrain.getCellsAlongY() > 0, "world " + worldId + " has no grid");
+				assertEquals((terrain.getCellsAlongX() + 1) * (terrain.getCellsAlongY() + 1), terrain.getCellCount(),
 						"world " + worldId + " read a grid of the wrong size");
 
 				CollisionGrid collision = geo.getCollision();
-				assertEquals(CollisionGrid.sectorCount(terrain.getCols()) * CollisionGrid.sectorCount(terrain.getRows()),
+				assertEquals(CollisionGrid.sectorCount(terrain.getCellsAlongX()) * CollisionGrid.sectorCount(terrain.getCellsAlongY()),
 						collision.getSectorCount(), "world " + worldId + " read the wrong sector count");
 
 				for (int sector = 0; sector < collision.getSectorCount(); sector++) {
@@ -178,8 +178,8 @@ class GeoDataOnDiskTest {
 				HeightMap terrain = geo.getTerrain();
 				CollisionGrid collision = geo.getCollision();
 
-				for (int cellX = 0; cellX < terrain.getCols(); cellX++) {
-					for (int cellY = 0; cellY < terrain.getRows(); cellY++) {
+				for (int cellX = 0; cellX < terrain.getCellsAlongX(); cellX++) {
+					for (int cellY = 0; cellY < terrain.getCellsAlongY(); cellY++) {
 						int sector = collision.sectorIndex(cellX, cellY);
 						if (sector >= collision.getSectorCount()) {
 							continue;
@@ -241,20 +241,27 @@ class GeoDataOnDiskTest {
 					}
 					measured++;
 
-					// Fire a ray straight through the middle of the door, at half
-					// its height. Shut, it has to stop; open, it must not.
+					// Fire a short ray through the middle of the door, across
+					// whichever way it is thinnest, so it stays inside the door's
+					// own box and meets as little of the world around it as it can.
+					// Shut, it has to stop; open, it must not.
+					float middleX = (object.getLowX() + object.getHighX()) / 2.0f;
+					float middleY = (object.getLowY() + object.getHighY()) / 2.0f;
 					float middleZ = (object.getLowZ() + object.getHighZ()) / 2.0f;
-					float[] corners = new float[9];
-					mesh.cornersOf(first, corners);
-					float x = corners[0];
-					float y = corners[1];
-					GeoTracer shut = new GeoTracer(geo);
-					if (!shut.isClear(x - 4.0f, y, middleZ, x + 4.0f, y, middleZ,
+					boolean thinAlongX = object.getHighX() - object.getLowX() <= object.getHighY() - object.getLowY();
+					float reach = (thinAlongX ? object.getHighX() - object.getLowX()
+							: object.getHighY() - object.getLowY()) / 2.0f + 0.5f;
+					float fromX = thinAlongX ? middleX - reach : middleX;
+					float toX = thinAlongX ? middleX + reach : middleX;
+					float fromY = thinAlongX ? middleY : middleY - reach;
+					float toY = thinAlongX ? middleY : middleY + reach;
+
+					if (!new GeoTracer(geo).isClear(fromX, fromY, middleZ, toX, toY, middleZ,
 							MaterialCollision.COLUMN_MOVEMENT)) {
 						blocked++;
 						java.util.Set<Integer> open = java.util.Collections
 								.singleton(Integer.valueOf(object.getEditorId()));
-						if (new GeoTracer(geo, open).isClear(x - 4.0f, y, middleZ, x + 4.0f, y, middleZ,
+						if (new GeoTracer(geo, open).isClear(fromX, fromY, middleZ, toX, toY, middleZ,
 								MaterialCollision.COLUMN_MOVEMENT)) {
 							passedWhenOpen++;
 						}
@@ -297,8 +304,8 @@ class GeoDataOnDiskTest {
 				HeightMap terrain = geo.getTerrain();
 				GeoTracer tracer = new GeoTracer(geo);
 
-				for (int cellX = 0; cellX + 1 < terrain.getCols(); cellX++) {
-					for (int cellY = 0; cellY + 1 < terrain.getRows(); cellY++) {
+				for (int cellX = 0; cellX + 1 < terrain.getCellsAlongX(); cellX++) {
+					for (int cellY = 0; cellY + 1 < terrain.getCellsAlongY(); cellY++) {
 						int code = terrain.surfaceCode(terrain.cornerIndex(cellX, cellY));
 						bases[HeightMap.baseSurface(code)]++;
 						if (HeightMap.baseSurface(code) != HeightMap.BASE_NONE || HeightMap.hasMesh(code)) {
@@ -350,9 +357,9 @@ class GeoDataOnDiskTest {
 
 				// Step across the world rather than over one corner of it, so the
 				// sample is of the whole map.
-				int step = Math.max(1, terrain.getCols() / 60);
-				for (int cellX = 0; cellX + 1 < terrain.getCols(); cellX += step) {
-					for (int cellY = 0; cellY + 1 < terrain.getRows(); cellY += step) {
+				int step = Math.max(1, terrain.getCellsAlongX() / 60);
+				for (int cellX = 0; cellX + 1 < terrain.getCellsAlongX(); cellX += step) {
+					for (int cellY = 0; cellY + 1 < terrain.getCellsAlongY(); cellY += step) {
 						float x = cellX * HeightMap.CELL_SIZE + 1.0f;
 						float y = cellY * HeightMap.CELL_SIZE + 1.0f;
 						float terrainZ = GeoEngine.groundZ(terrain, x, y);
@@ -385,6 +392,84 @@ class GeoDataOnDiskTest {
 
 		assertTrue(found * 2 > asked, "the tracer found ground under fewer than half the positions asked");
 		assertTrue(blocked > 0, "no ray was blocked anywhere in four worlds");
+	}
+
+	@Test
+	@DisplayName("Keeps run height keys in the same units as the triangles they hold")
+	void runKeysAreInWorldUnits() throws IOException {
+		assumeTrue(!worlds.isEmpty(), "no geodata installed under " + GEO_DIRECTORY);
+
+		// The height key at the head of a run is what a query culls against. If it
+		// is not the same measure as the triangles' own heights, every run is
+		// discarded before a single triangle is tried, and nothing solid is ever
+		// found. Compare the two directly.
+		long runs = 0;
+		long keyBelowTriangles = 0;
+		long keyAboveTriangles = 0;
+		double worstBelow = 0.0;
+		double worstAbove = 0.0;
+
+		int read = 0;
+		for (Path world : worlds) {
+			if (read++ == 4) {
+				break;
+			}
+			int worldId = Integer.parseInt(world.getFileName().toString());
+			try (WorldGeoData geo = WorldGeoData.load(worldId, world)) {
+				HeightMap terrain = geo.getTerrain();
+				CollisionGrid collision = geo.getCollision();
+				CollisionMesh mesh = geo.getMesh();
+
+				for (int cellX = 0; cellX < terrain.getCellsAlongX() && runs < 200000; cellX++) {
+					for (int cellY = 0; cellY < terrain.getCellsAlongY() && runs < 200000; cellY++) {
+						int sector = collision.sectorIndex(cellX, cellY);
+						if (sector >= collision.getSectorCount()) {
+							continue;
+						}
+						int subCell = CollisionGrid.subCellIndex(cellX, cellY);
+						int count = collision.faceCount(sector, subCell);
+						if (count == 0) {
+							continue;
+						}
+						java.nio.ByteBuffer buffer = collision.runsOf(sector, subCell);
+						for (int run = 0; run < count; run++) {
+							int key = buffer.getShort();
+							int entries = buffer.getShort() & 0xffff;
+							float low = Float.MAX_VALUE;
+							float high = -Float.MAX_VALUE;
+							for (int entry = 0; entry < entries; entry++) {
+								int packed = buffer.getInt();
+								int triangle = packed & CollisionGrid.ENTRY_TRIANGLE_MASK;
+								if (triangle >= mesh.getTriangleCount()) {
+									continue;
+								}
+								float[] corners = new float[9];
+								mesh.cornersOf(triangle, corners);
+								for (int corner = 2; corner < 9; corner += 3) {
+									low = Math.min(low, corners[corner]);
+									high = Math.max(high, corners[corner]);
+								}
+							}
+							if (low > high) {
+								continue;
+							}
+							runs++;
+							if (key < low - 2.0f) {
+								keyBelowTriangles++;
+								worstBelow = Math.max(worstBelow, low - key);
+							} else if (key > high + 2.0f) {
+								keyAboveTriangles++;
+								worstAbove = Math.max(worstAbove, key - high);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		System.out.println("Run keys: " + runs + " runs, " + keyBelowTriangles + " keys below their triangles (worst "
+				+ String.format("%.1f", worstBelow) + "), " + keyAboveTriangles + " above (worst "
+				+ String.format("%.1f", worstAbove) + ").");
 	}
 
 	@Test

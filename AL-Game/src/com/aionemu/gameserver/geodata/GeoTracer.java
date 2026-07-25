@@ -388,7 +388,7 @@ public final class GeoTracer {
 	/** Answers whether a cell is inside the world, corners included. */
 	private boolean holds(int cellX, int cellY) {
 		HeightMap terrain = world.getTerrain();
-		return cellX >= 0 && cellY >= 0 && cellX < terrain.getCols() && cellY < terrain.getRows()
+		return cellX >= 0 && cellY >= 0 && cellX < terrain.getCellsAlongX() && cellY < terrain.getCellsAlongY()
 				&& sectorOf(cellX, cellY) < world.getCollision().getSectorCount();
 	}
 
