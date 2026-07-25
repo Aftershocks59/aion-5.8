@@ -23,6 +23,10 @@ AL-Login/log/
 hs_err_pid*.log
 replay_pid*.log
 
+# Reference material placed under import/ is never committed. It is read to
+# reproduce behaviour faithfully in the tracked sources; nothing in it is
+# published.
+import/
 # Ignore geodata, which is distributed separately (see README).
 Geodata/
 AL-Game/data/geo/
