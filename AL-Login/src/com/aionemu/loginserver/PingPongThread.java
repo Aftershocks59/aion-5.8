@@ -112,10 +112,17 @@ public class PingPongThread implements Runnable {
     public void closeMe() {
         uptime = false;
 
-        if(SvStatsConfig.SVSTATS_ENABLE)
-		{
-			int currentID = connection.getGameServerInfo().getId();
-			LoginRepositories.serverStats().publishOffline(currentID, 0, 0);
-		}
+        if (!SvStatsConfig.SVSTATS_ENABLE) {
+            return;
+        }
+
+        // A game server that drops before it authenticates never gets one of
+        // these, and there is no server whose going offline is worth publishing.
+        GameServerInfo gameServer = connection.getGameServerInfo();
+        if (gameServer == null) {
+            return;
+        }
+
+        LoginRepositories.serverStats().publishOffline(gameServer.getId(), 0, 0);
     }
 }
