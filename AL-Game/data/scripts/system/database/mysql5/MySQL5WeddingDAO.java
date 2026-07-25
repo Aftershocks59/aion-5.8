@@ -34,7 +34,9 @@ import java.sql.SQLException;
 
 public class MySQL5WeddingDAO extends WeddingDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL5PortalCooldownsDAO.class);
+	// Named after itself: this was copied from the portal cooldown DAO and kept its
+	// logger, so every line this class wrote was filed under that one.
+	private static final Logger log = LoggerFactory.getLogger(MySQL5WeddingDAO.class);
 
 	public static final String INSERT_QUERY = "INSERT INTO `weddings` (`player1`, `player2`) VALUES (?,?)";
 	public static final String SELECT_QUERY = "SELECT `player1`, `player2` FROM `weddings` WHERE `player1`=? OR `player2`=?";

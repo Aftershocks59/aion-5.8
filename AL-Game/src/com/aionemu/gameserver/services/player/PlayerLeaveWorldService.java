@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 
 import com.aionemu.gameserver.dao.*;
@@ -106,9 +107,9 @@ public class PlayerLeaveWorldService {
 			log.debug("Update prison timer to " + prisonTimer / 1000 + " seconds !");
 		}
 		DAOManager.getDAO(PlayerEffectsDAO.class).storePlayerEffects(player);
-		DAOManager.getDAO(PlayerCooldownsDAO.class).storePlayerCooldowns(player);
-		DAOManager.getDAO(ItemCooldownsDAO.class).storeItemCooldowns(player);
-		DAOManager.getDAO(HouseObjectCooldownsDAO.class).storeHouseObjectCooldowns(player);
+		GameRepositories.skillCooldowns().store(player);
+		GameRepositories.itemCooldowns().store(player);
+		GameRepositories.houseObjectCooldowns().store(player);
 		DAOManager.getDAO(PlayerLifeStatsDAO.class).updatePlayerLifeStat(player);
 		DAOManager.getDAO(EventItemsDAO.class).storeItems(player);
 

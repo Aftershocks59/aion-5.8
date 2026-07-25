@@ -51,4 +51,61 @@ public abstract class JdbcRepositorySupport {
 	protected final Connection connection() throws SQLException {
 		return dataSource.getConnection();
 	}
+
+	/** Work to run against one connection, allowed to fail the way JDBC does. */
+	@FunctionalInterface
+	public interface ConnectionWork<T> {
+
+		T run(Connection connection) throws SQLException;
+	}
+
+	/**
+	 * Runs work inside a transaction, committing it or rolling it all back.
+	 * <p>
+	 * Several DAO methods replaced a player's rows by deleting them and inserting
+	 * the new ones on two separate connections. Nothing tied the two together, so a
+	 * failure between them left the player with nothing where they had something.
+	 * <p>
+	 * Restores auto-commit before handing the connection back. The pool resets it
+	 * too, but a connection returned mid-transaction is a trap for whoever borrows
+	 * it next.
+	 *
+	 * @param work        what to do with the connection
+	 * @param description what to say if it fails
+	 * @return whatever the work returned
+	 * @throws RepositoryException if the work failed, after rolling back
+	 */
+	protected final <T> T inTransaction(ConnectionWork<T> work, String description) {
+		Connection connection = null;
+		try {
+			connection = connection();
+			connection.setAutoCommit(false);
+			try {
+				T result = work.run(connection);
+				connection.commit();
+				return result;
+			} catch (SQLException e) {
+				connection.rollback();
+				throw e;
+			} finally {
+				connection.setAutoCommit(true);
+			}
+		} catch (SQLException e) {
+			throw new RepositoryException(description, e);
+		} finally {
+			closeQuietly(connection);
+		}
+	}
+
+	/** Closes a connection, swallowing the failure that closing itself reports. */
+	private static void closeQuietly(Connection connection) {
+		if (connection == null) {
+			return;
+		}
+		try {
+			connection.close();
+		} catch (SQLException ignored) {
+			// Nothing useful is left to do: the work has already been settled.
+		}
+	}
 }

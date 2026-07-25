@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,14 +32,11 @@ import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.BlockListDAO;
-import com.aionemu.gameserver.dao.CraftCooldownsDAO;
 import com.aionemu.gameserver.dao.EventItemsDAO;
 import com.aionemu.gameserver.dao.F2pDAO;
 import com.aionemu.gameserver.dao.FriendListDAO;
-import com.aionemu.gameserver.dao.HouseObjectCooldownsDAO;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.ItemCooldownsDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.MotionDAO;
@@ -46,7 +44,6 @@ import com.aionemu.gameserver.dao.OldNamesDAO;
 import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
 import com.aionemu.gameserver.dao.PlayerBindPointDAO;
-import com.aionemu.gameserver.dao.PlayerCooldownsDAO;
 import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerEffectsDAO;
@@ -67,7 +64,6 @@ import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.dao.PlayerTitleListDAO;
 import com.aionemu.gameserver.dao.PlayerVarsDAO;
 import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
-import com.aionemu.gameserver.dao.PortalCooldownsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.dataholders.PlayerInitialData.LocationData;
@@ -150,8 +146,8 @@ public class PlayerService {
 
 		DAOManager.getDAO(ItemStoneListDAO.class).save(player);
 		DAOManager.getDAO(MailDAO.class).storeMailbox(player);
-		DAOManager.getDAO(PortalCooldownsDAO.class).storePortalCooldowns(player);
-		DAOManager.getDAO(CraftCooldownsDAO.class).storeCraftCooldowns(player);
+		GameRepositories.portalCooldowns().store(player);
+		GameRepositories.craftCooldowns().store(player);
 		DAOManager.getDAO(PlayerNpcFactionsDAO.class).storeNpcFactions(player);
 		DAOManager.getDAO(PlayerLunaShopDAO.class).store(player);
 		DAOManager.getDAO(EventItemsDAO.class).loadItems(player);
@@ -245,12 +241,12 @@ public class PlayerService {
 		DAOManager.getDAO(PlayerPunishmentsDAO.class).loadPlayerPunishments(player, PunishmentType.GATHER);
 		player.getController().updatePassiveStats();
 		DAOManager.getDAO(PlayerEffectsDAO.class).loadPlayerEffects(player);
-		DAOManager.getDAO(PlayerCooldownsDAO.class).loadPlayerCooldowns(player);
-		DAOManager.getDAO(ItemCooldownsDAO.class).loadItemCooldowns(player);
-		DAOManager.getDAO(PortalCooldownsDAO.class).loadPortalCooldowns(player);
-		DAOManager.getDAO(HouseObjectCooldownsDAO.class).loadHouseObjectCooldowns(player);
+		GameRepositories.skillCooldowns().load(player);
+		GameRepositories.itemCooldowns().load(player);
+		GameRepositories.portalCooldowns().load(player);
+		GameRepositories.houseObjectCooldowns().load(player);
 		DAOManager.getDAO(PlayerBindPointDAO.class).loadBindPoint(player);
-		DAOManager.getDAO(CraftCooldownsDAO.class).loadCraftCooldowns(player);
+		GameRepositories.craftCooldowns().load(player);
 		DAOManager.getDAO(PlayerLunaShopDAO.class).load(player);
 		if (player.getCommonData().getBonusTitleId() > 0) {
 			TitleChangeListener.onBonusTitleChange(player.getGameStats(), player.getCommonData().getTitleId(), true);
