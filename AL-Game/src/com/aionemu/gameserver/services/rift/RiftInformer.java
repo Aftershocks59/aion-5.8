@@ -21,7 +21,6 @@ import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.aionemu.gameserver.controllers.RVController;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -41,7 +40,11 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class RiftInformer {
 	public static List<Npc> getSpawned(int worldId) {
 		List<Npc> rifts = RiftManager.getSpawned();
-		List<Npc> worldRifts = new CopyOnWriteArrayList<Npc>();
+		// Build the answer in a plain list: it is created here, handed to one
+		// caller and never shared, so the copy-on-write it used to be only bought
+		// a full array copy per rift. The list that genuinely needed to tolerate a
+		// concurrent write is the one RiftManager holds.
+		List<Npc> worldRifts = new ArrayList<Npc>();
 		for (Npc rift : rifts) {
 			if (rift.getWorldId() == worldId) {
 				worldRifts.add(rift);

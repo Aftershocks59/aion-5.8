@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.services.rift;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -42,7 +42,17 @@ import com.aionemu.gameserver.world.knownlist.NpcKnownList;
  ****/
 
 public class RiftManager {
-	private static List<Npc> rifts = new ArrayList<Npc>();
+	/**
+	 * Holds every spawned rift, read by the announce task and written when one
+	 * spawns or despawns.
+	 * <p>
+	 * Those happen on different threads, so a plain list threw
+	 * ConcurrentModificationException out of the announce task whenever a rift
+	 * closed while the packets were being built, and the players in that map got
+	 * no rift information at all. Rifts spawn rarely and are read on every
+	 * announce, which is what a copy-on-write list is for.
+	 */
+	private static List<Npc> rifts = new CopyOnWriteArrayList<Npc>();
 	private static Map<String, SpawnTemplate> riftGroups = new HashMap<String, SpawnTemplate>();
 
 	public static void addRiftSpawnTemplate(SpawnGroup2 spawn) {
