@@ -39,6 +39,10 @@ public final class GameRepositories {
 	private final PlayerCooldownRepository craftCooldowns;
 	private final PlayerCooldownRepository portalCooldowns;
 	private final PlayerCooldownRepository houseObjectCooldowns;
+	private final OldNameRepository oldNames;
+	private final PlayerVariableRepository playerVariables;
+	private final PlayerEmotionRepository playerEmotions;
+	private final PlayerMacroRepository playerMacros;
 
 	/**
 	 * Builds every repository over one data source.
@@ -51,6 +55,10 @@ public final class GameRepositories {
 		craftCooldowns = new JdbcCraftCooldownRepository(dataSource);
 		portalCooldowns = new JdbcPortalCooldownRepository(dataSource);
 		houseObjectCooldowns = new JdbcHouseObjectCooldownRepository(dataSource);
+		oldNames = new JdbcOldNameRepository(dataSource);
+		playerVariables = new JdbcPlayerVariableRepository(dataSource);
+		playerEmotions = new JdbcPlayerEmotionRepository(dataSource);
+		playerMacros = new JdbcPlayerMacroRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -79,5 +87,21 @@ public final class GameRepositories {
 
 	public static PlayerCooldownRepository houseObjectCooldowns() {
 		return getInstance().houseObjectCooldowns;
+	}
+
+	public static OldNameRepository oldNames() {
+		return getInstance().oldNames;
+	}
+
+	public static PlayerVariableRepository playerVariables() {
+		return getInstance().playerVariables;
+	}
+
+	public static PlayerEmotionRepository playerEmotions() {
+		return getInstance().playerEmotions;
+	}
+
+	public static PlayerMacroRepository playerMacros() {
+		return getInstance().playerMacros;
 	}
 }

@@ -40,18 +40,15 @@ import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.MotionDAO;
-import com.aionemu.gameserver.dao.OldNamesDAO;
 import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
 import com.aionemu.gameserver.dao.PlayerBindPointDAO;
 import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerEffectsDAO;
-import com.aionemu.gameserver.dao.PlayerEmotionListDAO;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
-import com.aionemu.gameserver.dao.PlayerMacrossesDAO;
 import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
@@ -62,7 +59,6 @@ import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.dao.PlayerTitleListDAO;
-import com.aionemu.gameserver.dao.PlayerVarsDAO;
 import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
@@ -114,7 +110,7 @@ public class PlayerService {
 	}
 
 	public static boolean isOldName(String name) {
-		return DAOManager.getDAO(OldNamesDAO.class).isOldName(name);
+		return GameRepositories.oldNames().wasUsed(name);
 	}
 
 	public static boolean storeNewPlayer(Player player, String accountName, int accountId) {
@@ -167,7 +163,7 @@ public class PlayerService {
 		if (legionMember != null) {
 			player.setLegionMember(legionMember);
 		}
-		MacroList macroses = DAOManager.getDAO(PlayerMacrossesDAO.class).restoreMacrosses(playerObjId);
+		MacroList macroses = GameRepositories.playerMacros().findAll(playerObjId);
 		player.setMacroList(macroses);
 		player.setSkillList(DAOManager.getDAO(PlayerSkillListDAO.class).loadSkillList(playerObjId));
 		player.setEquipedStigmaList(DAOManager.getDAO(PlayerStigmasEquippedDAO.class).loadItemsList(playerObjId));
@@ -184,7 +180,7 @@ public class PlayerService {
 		DAOManager.getDAO(AbyssRankDAO.class).loadAbyssRank(player);
 		DAOManager.getDAO(PlayerNpcFactionsDAO.class).loadNpcFactions(player);
 		DAOManager.getDAO(MotionDAO.class).loadMotionList(player);
-		player.setVars(DAOManager.getDAO(PlayerVarsDAO.class).load(player.getObjectId()));
+		player.setVars(GameRepositories.playerVariables().findAll(player.getObjectId()));
 		Equipment equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(player);
 		ItemService.loadItemStones(equipment.getEquippedItemsWithoutStigma());
 		equipment.setOwner(player);
@@ -252,7 +248,7 @@ public class PlayerService {
 			TitleChangeListener.onBonusTitleChange(player.getGameStats(), player.getCommonData().getTitleId(), true);
 		}
 		DAOManager.getDAO(PlayerLifeStatsDAO.class).loadPlayerLifeStat(player);
-		DAOManager.getDAO(PlayerEmotionListDAO.class).loadEmotions(player);
+		GameRepositories.playerEmotions().load(player);
 		if (CacheConfig.CACHE_PLAYERS) {
 			playerCache.put(playerObjId, player);
 		}
@@ -361,15 +357,15 @@ public class PlayerService {
 
 	public static void addMacro(Player player, int macroOrder, String macroXML) {
 		if (player.getMacroList().addMacro(macroOrder, macroXML)) {
-			DAOManager.getDAO(PlayerMacrossesDAO.class).addMacro(player.getObjectId(), macroOrder, macroXML);
+			GameRepositories.playerMacros().add(player.getObjectId(), macroOrder, macroXML);
 		} else {
-			DAOManager.getDAO(PlayerMacrossesDAO.class).updateMacro(player.getObjectId(), macroOrder, macroXML);
+			GameRepositories.playerMacros().update(player.getObjectId(), macroOrder, macroXML);
 		}
 	}
 
 	public static void removeMacro(Player player, int macroOrder) {
 		if (player.getMacroList().removeMacro(macroOrder)) {
-			DAOManager.getDAO(PlayerMacrossesDAO.class).deleteMacro(player.getObjectId(), macroOrder);
+			GameRepositories.playerMacros().remove(player.getObjectId(), macroOrder);
 		}
 	}
 

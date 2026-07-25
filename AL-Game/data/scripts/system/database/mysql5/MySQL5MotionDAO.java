@@ -19,7 +19,6 @@ package mysql5;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.MotionDAO;
 import com.aionemu.gameserver.dao.MySQL5DAOUtils;
-import com.aionemu.gameserver.dao.PlayerEmotionListDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.motion.Motion;
 import com.aionemu.gameserver.model.gameobjects.player.motion.MotionList;
@@ -36,7 +35,7 @@ import java.sql.ResultSet;
 public class MySQL5MotionDAO extends MotionDAO {
 
 	/** Logger */
-	private static final Logger log = LoggerFactory.getLogger(PlayerEmotionListDAO.class);
+	private static final Logger log = LoggerFactory.getLogger(MySQL5MotionDAO.class);
 	public static final String INSERT_QUERY = "INSERT INTO `player_motions` (`player_id`, `motion_id`, `active`,  `time`) VALUES (?,?,?,?)";
 	public static final String SELECT_QUERY = "SELECT `motion_id`, `active`, `time` FROM `player_motions` WHERE `player_id`=?";
 	public static final String DELETE_QUERY = "DELETE FROM `player_motions` WHERE `player_id`=? AND `motion_id`=?";

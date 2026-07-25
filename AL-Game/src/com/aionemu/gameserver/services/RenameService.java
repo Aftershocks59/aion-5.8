@@ -16,12 +16,12 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.Iterator;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dao.LegionDAO;
-import com.aionemu.gameserver.dao.OldNamesDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RENAME;
@@ -60,7 +60,7 @@ public class RenameService {
 			return false;
 		}
 		if (!CustomConfig.OLD_NAMES_COUPON_DISABLED) {
-			DAOManager.getDAO(OldNamesDAO.class).insertNames(player.getObjectId(), player.getName(), newName);
+			GameRepositories.oldNames().recordRename(player.getObjectId(), player.getName(), newName);
 			player.getCommonData().setName(newName);
 		}
 		Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();

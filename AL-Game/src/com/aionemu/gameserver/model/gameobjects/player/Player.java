@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -40,7 +41,6 @@ import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.controllers.movement.PlayerMoveController;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerVarsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.NpcType;
@@ -277,7 +277,6 @@ public class Player extends Creature {
 	public WorldPosition prevPos;
 	public long prevPosUT;
 	public byte prevMoveType;
-	private PlayerVarsDAO daoVars = (PlayerVarsDAO) DAOManager.getDAO(PlayerVarsDAO.class);
 	private Map<String, Object> vars = new LinkedHashMap<>();
 	private boolean robot = false;
 	private int robotId = 0;
@@ -2338,7 +2337,7 @@ public class Player extends Creature {
 	public void setVar(String key, Object value, boolean sql) {
 		vars.put(key, value);
 		if (sql) {
-			daoVars.set(this.getObjectId(), key, value);
+			GameRepositories.playerVariables().set(this.getObjectId(), key, value);
 		}
 	}
 

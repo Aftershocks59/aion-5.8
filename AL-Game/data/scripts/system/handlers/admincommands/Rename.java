@@ -16,9 +16,9 @@
  */
 package admincommands;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.OldNamesDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Friend;
@@ -72,7 +72,7 @@ public class Rename extends AdminCommand {
 				return;
 
 			if (!CustomConfig.OLD_NAMES_COMMAND_DISABLED)
-				DAOManager.getDAO(OldNamesDAO.class).insertNames(player.getObjectId(), player.getName(), rename);
+				GameRepositories.oldNames().recordRename(player.getObjectId(), player.getName(), rename);
 			recipientCommonData.setName(rename);
 			DAOManager.getDAO(PlayerDAO.class).storePlayerName(recipientCommonData);
 			if (recipientCommonData.isOnline()) {
@@ -98,7 +98,7 @@ public class Rename extends AdminCommand {
 					return;
 
 				if (!CustomConfig.OLD_NAMES_COMMAND_DISABLED)
-					DAOManager.getDAO(OldNamesDAO.class).insertNames(player.getObjectId(), player.getName(), rename);
+					GameRepositories.oldNames().recordRename(player.getObjectId(), player.getName(), rename);
 				player.getCommonData().setName(rename);
 				PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
 				DAOManager.getDAO(PlayerDAO.class).storePlayerName(player.getCommonData());
