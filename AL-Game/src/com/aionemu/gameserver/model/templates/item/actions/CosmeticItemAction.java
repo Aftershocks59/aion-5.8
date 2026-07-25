@@ -16,13 +16,13 @@
  */
 package com.aionemu.gameserver.model.templates.item.actions;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -94,7 +94,7 @@ public class CosmeticItemAction extends AbstractItemAction {
 			playerAppearance.setFace((preset.getFaceType()));
 			playerAppearance.setHeight((preset.getScale()));
 		}
-		DAOManager.getDAO(PlayerAppearanceDAO.class).store(player);
+		GameRepositories.playerAppearance().save(player);
 		player.getInventory().delete(targetItem);
 		PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
 		player.getKnownList().doOnAllPlayers(new Visitor<Player>() {

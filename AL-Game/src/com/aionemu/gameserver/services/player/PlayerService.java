@@ -31,30 +31,24 @@ import com.aionemu.gameserver.controllers.FlyController;
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.BlockListDAO;
 import com.aionemu.gameserver.dao.EventItemsDAO;
 import com.aionemu.gameserver.dao.F2pDAO;
-import com.aionemu.gameserver.dao.FriendListDAO;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.MotionDAO;
 import com.aionemu.gameserver.dao.PlayerABDAO;
-import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
-import com.aionemu.gameserver.dao.PlayerBindPointDAO;
 import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
-import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
-import com.aionemu.gameserver.dao.PlayerTitleListDAO;
 import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
@@ -111,7 +105,7 @@ public class PlayerService {
 
 	public static boolean storeNewPlayer(Player player, String accountName, int accountId) {
 		return DAOManager.getDAO(PlayerDAO.class).saveNewPlayer(player.getCommonData(), accountId, accountName)
-				&& DAOManager.getDAO(PlayerAppearanceDAO.class).store(player)
+				&& GameRepositories.playerAppearance().save(player)
 				&& DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player)
 				&& DAOManager.getDAO(InventoryDAO.class).store(player);
 	}
@@ -164,9 +158,9 @@ public class PlayerService {
 		player.setSkillList(DAOManager.getDAO(PlayerSkillListDAO.class).loadSkillList(playerObjId));
 		player.setEquipedStigmaList(DAOManager.getDAO(PlayerStigmasEquippedDAO.class).loadItemsList(playerObjId));
 		player.setKnownlist(new KnownList(player));
-		player.setFriendList(DAOManager.getDAO(FriendListDAO.class).load(player));
-		player.setBlockList(DAOManager.getDAO(BlockListDAO.class).load(player));
-		player.setTitleList(DAOManager.getDAO(PlayerTitleListDAO.class).loadTitleList(playerObjId));
+		player.setFriendList(GameRepositories.playerSocial().findFriends(player, DAOManager.getDAO(PlayerDAO.class)::loadPlayerCommonData));
+		player.setBlockList(GameRepositories.playerSocial().findBlocked(player, DAOManager.getDAO(PlayerDAO.class)::loadPlayerCommonData));
+		player.setTitleList(GameRepositories.playerTitles().findAll(playerObjId));
 		player.setCP(DAOManager.getDAO(PlayerCreativityPointsDAO.class).loadCP(player));
 		player.setEventWindow(DAOManager.getDAO(PlayerEventsWindowDAO.class).load(player));
 		player.setAtreianBestiary(DAOManager.getDAO(PlayerABDAO.class).load(player));
@@ -185,7 +179,7 @@ public class PlayerService {
 		player.setFlyController(new FlyController(player));
 		PlayerStatFunctions.addPredefinedStatFunctions(player);
 		player.setQuestStateList(DAOManager.getDAO(PlayerQuestListDAO.class).load(player));
-		player.setRecipeList(DAOManager.getDAO(PlayerRecipesDAO.class).load(player.getObjectId()));
+		player.setRecipeList(GameRepositories.playerRecipes().findAll(player.getObjectId()));
 		player.setSkillSkinList(DAOManager.getDAO(PlayerSkillSkinListDAO.class).loadSkillSkinList(playerObjId));
 
 		/**
@@ -237,7 +231,7 @@ public class PlayerService {
 		GameRepositories.itemCooldowns().load(player);
 		GameRepositories.portalCooldowns().load(player);
 		GameRepositories.houseObjectCooldowns().load(player);
-		DAOManager.getDAO(PlayerBindPointDAO.class).loadBindPoint(player);
+		GameRepositories.playerBindPoints().load(player);
 		GameRepositories.craftCooldowns().load(player);
 		DAOManager.getDAO(PlayerLunaShopDAO.class).load(player);
 		if (player.getCommonData().getBonusTitleId() > 0) {

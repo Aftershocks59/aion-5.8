@@ -16,9 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.BlockListDAO;
-import com.aionemu.gameserver.dao.FriendListDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.BlockedPlayer;
 import com.aionemu.gameserver.model.gameobjects.player.Friend;
@@ -33,7 +32,7 @@ import com.aionemu.gameserver.world.World;
 
 public class SocialService {
 	public static boolean addBlockedUser(Player player, Player blockedPlayer, String reason) {
-		if (DAOManager.getDAO(BlockListDAO.class).addBlockedUser(player.getObjectId(), blockedPlayer.getObjectId(),
+		if (GameRepositories.playerSocial().block(player.getObjectId(), blockedPlayer.getObjectId(),
 				reason)) {
 			player.getBlockList().add(new BlockedPlayer(blockedPlayer.getCommonData(), reason));
 			player.getClientConnection()
@@ -45,7 +44,7 @@ public class SocialService {
 	}
 
 	public static boolean deleteBlockedUser(Player player, int blockedUserId) {
-		if (DAOManager.getDAO(BlockListDAO.class).delBlockedUser(player.getObjectId(), blockedUserId)) {
+		if (GameRepositories.playerSocial().unblock(player.getObjectId(), blockedUserId)) {
 			player.getBlockList().remove(blockedUserId);
 			player.getClientConnection().sendPacket(new SM_BLOCK_RESPONSE(SM_BLOCK_RESPONSE.UNBLOCK_SUCCESSFUL,
 					DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(blockedUserId).getName()));
@@ -57,7 +56,7 @@ public class SocialService {
 
 	public static boolean setBlockedReason(Player player, BlockedPlayer target, String reason) {
 		if (!target.getReason().equals(reason)) {
-			if (DAOManager.getDAO(BlockListDAO.class).setReason(player.getObjectId(), target.getObjId(), reason)) {
+			if (GameRepositories.playerSocial().setBlockReason(player.getObjectId(), target.getObjId(), reason)) {
 				target.setReason(reason);
 				player.getClientConnection().sendPacket(new SM_BLOCK_LIST());
 				return true;
@@ -67,7 +66,7 @@ public class SocialService {
 	}
 
 	public static void makeFriends(Player friend1, Player friend2) {
-		DAOManager.getDAO(FriendListDAO.class).addFriends(friend1, friend2);
+		GameRepositories.playerSocial().addFriend(friend1.getObjectId(), friend2.getObjectId());
 		friend1.getFriendList().addFriend(new Friend(friend2.getCommonData()));
 		friend2.getFriendList().addFriend(new Friend(friend1.getCommonData()));
 		friend1.getClientConnection().sendPacket(new SM_FRIEND_LIST());
@@ -79,7 +78,7 @@ public class SocialService {
 	}
 
 	public static void deleteFriend(Player deleter, int exFriend2Id) {
-		if (DAOManager.getDAO(FriendListDAO.class).delFriends(deleter.getObjectId(), exFriend2Id)) {
+		if (GameRepositories.playerSocial().removeFriend(deleter.getObjectId(), exFriend2Id)) {
 			Player friend2Player = PlayerService.getCachedPlayer(exFriend2Id);
 			if (friend2Player == null) {
 				friend2Player = World.getInstance().findPlayer(exFriend2Id);
@@ -103,7 +102,7 @@ public class SocialService {
 
 	public static void setFriendNote(Player player, Friend friend, String notice) {
 		friend.setNote(notice);
-		DAOManager.getDAO(FriendListDAO.class).setFriendNote(player.getObjectId(), friend.getOid(), notice);
+		GameRepositories.playerSocial().setFriendNote(player.getObjectId(), friend.getOid(), notice);
 		player.getClientConnection().sendPacket(new SM_FRIEND_LIST());
 	}
 }

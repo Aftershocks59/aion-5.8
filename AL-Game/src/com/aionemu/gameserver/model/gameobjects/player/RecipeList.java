@@ -16,11 +16,11 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEARN_RECIPE;
@@ -49,7 +49,7 @@ public class RecipeList {
 	public void addRecipe(Player player, RecipeTemplate recipeTemplate) {
 		int recipeId = recipeTemplate.getId();
 		if (!player.getRecipeList().isRecipePresent(recipeId)) {
-			if (DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(player.getObjectId(), recipeId)) {
+			if (GameRepositories.playerRecipes().add(player.getObjectId(), recipeId)) {
 				recipeList.add(recipeId);
 				PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(recipeId));
 				PacketSendUtility.sendPacket(player,
@@ -59,14 +59,14 @@ public class RecipeList {
 	}
 
 	public void addRecipe(int playerId, int recipeId) {
-		if (DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(playerId, recipeId)) {
+		if (GameRepositories.playerRecipes().add(playerId, recipeId)) {
 			recipeList.add(recipeId);
 		}
 	}
 
 	public void deleteRecipe(Player player, int recipeId) {
 		if (recipeList.contains(recipeId)) {
-			if (DAOManager.getDAO(PlayerRecipesDAO.class).delRecipe(player.getObjectId(), recipeId)) {
+			if (GameRepositories.playerRecipes().remove(player.getObjectId(), recipeId)) {
 				recipeList.remove(recipeId);
 				PacketSendUtility.sendPacket(player, new SM_RECIPE_DELETE(recipeId));
 			}

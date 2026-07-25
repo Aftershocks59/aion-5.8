@@ -26,8 +26,6 @@ import org.slf4j.Logger;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
 import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.PlayerBindPointDAO;
-import com.aionemu.gameserver.dao.PlayerTitleListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -446,7 +444,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 		}
 		if (cnt > 0 && PlayerTransferConfig.ALLOW_TITLES) {
 			for (Title t : player.getTitleList().getTitles()) {
-				DAOManager.getDAO(PlayerTitleListDAO.class).storeTitles(player, t);
+				GameRepositories.playerTitles().add(player.getObjectId(), t);
 			}
 		}
 		String[] pos = null;
@@ -461,7 +459,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 
 		player.setBindPoint(new BindPointPosition(Integer.parseInt(pos[0]), Float.parseFloat(pos[1]),
 				Float.parseFloat(pos[2]), Float.parseFloat(pos[3]), Byte.parseByte(pos[4])));
-		DAOManager.getDAO(PlayerBindPointDAO.class).store(player);
+		GameRepositories.playerBindPoints().store(player);
 
 		int uilen = readD(), shortlen = readD();
 		byte[] ui = readB(uilen), sc = readB(shortlen);

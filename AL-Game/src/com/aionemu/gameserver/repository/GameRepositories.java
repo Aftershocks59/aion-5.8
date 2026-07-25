@@ -48,6 +48,11 @@ public final class GameRepositories {
 	private final PlayerSettingsRepository playerSettings;
 	private final PlayerEffectRepository playerEffects;
 	private final PlayerNpcFactionRepository playerNpcFactions;
+	private final PlayerAppearanceRepository playerAppearance;
+	private final PlayerBindPointRepository playerBindPoints;
+	private final PlayerTitleRepository playerTitles;
+	private final PlayerRecipeRepository playerRecipes;
+	private final PlayerSocialRepository playerSocial;
 
 	/**
 	 * Builds every repository over one data source.
@@ -69,6 +74,11 @@ public final class GameRepositories {
 		playerSettings = new JdbcPlayerSettingsRepository(dataSource);
 		playerEffects = new JdbcPlayerEffectRepository(dataSource);
 		playerNpcFactions = new JdbcPlayerNpcFactionRepository(dataSource);
+		playerAppearance = new JdbcPlayerAppearanceRepository(dataSource);
+		playerBindPoints = new JdbcPlayerBindPointRepository(dataSource);
+		playerTitles = new JdbcPlayerTitleRepository(dataSource);
+		playerRecipes = new JdbcPlayerRecipeRepository(dataSource);
+		playerSocial = new JdbcPlayerSocialRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -133,5 +143,25 @@ public final class GameRepositories {
 
 	public static PlayerNpcFactionRepository playerNpcFactions() {
 		return getInstance().playerNpcFactions;
+	}
+
+	public static PlayerAppearanceRepository playerAppearance() {
+		return getInstance().playerAppearance;
+	}
+
+	public static PlayerBindPointRepository playerBindPoints() {
+		return getInstance().playerBindPoints;
+	}
+
+	public static PlayerTitleRepository playerTitles() {
+		return getInstance().playerTitles;
+	}
+
+	public static PlayerRecipeRepository playerRecipes() {
+		return getInstance().playerRecipes;
+	}
+
+	public static PlayerSocialRepository playerSocial() {
+		return getInstance().playerSocial;
 	}
 }

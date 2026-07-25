@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.craft;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CraftConfig;
-import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
@@ -188,31 +188,31 @@ public class CraftSkillUpdateService {
 		Race race = player.getCommonData().getRace();
 		if (player.getLevel() == 10) {
 			RecipeList recipelist = null;
-			recipelist = DAOManager.getDAO(PlayerRecipesDAO.class).load(object);
+			recipelist = GameRepositories.playerRecipes().findAll(object);
 			if (race == Race.ELYOS) {
 				if (!recipelist.isRecipePresent(155000005)) { // Morph Method: Iron Ore.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155000005);
+					GameRepositories.playerRecipes().add(object, 155000005);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155000005));
 				}
 				if (!recipelist.isRecipePresent(155000002)) { // Morph Method: Inina.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155000002);
+					GameRepositories.playerRecipes().add(object, 155000002);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155000002));
 				}
 				if (!recipelist.isRecipePresent(155000001)) { // Morph Method: Aria.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155000001);
+					GameRepositories.playerRecipes().add(object, 155000001);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155000001));
 				}
 			} else if (race == Race.ASMODIANS) {
 				if (!recipelist.isRecipePresent(155005005)) { // Morph Method: Iron Ore.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155005005);
+					GameRepositories.playerRecipes().add(object, 155005005);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155005005));
 				}
 				if (!recipelist.isRecipePresent(155005002)) { // Morph Method: Conide.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155005002);
+					GameRepositories.playerRecipes().add(object, 155005002);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155005002));
 				}
 				if (!recipelist.isRecipePresent(155005001)) { // Morph Method: Azpha.
-					DAOManager.getDAO(PlayerRecipesDAO.class).addRecipe(object, 155005001);
+					GameRepositories.playerRecipes().add(object, 155005001);
 					PacketSendUtility.sendPacket(player, new SM_LEARN_RECIPE(155005001));
 				}
 			}

@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.account.Account;
@@ -223,7 +223,7 @@ public class CM_CHARACTER_EDIT extends AionClientPacket {
 				}
 				DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
 			}
-			DAOManager.getDAO(PlayerAppearanceDAO.class).store(player);
+			GameRepositories.playerAppearance().save(player);
 		}
 	}
 }

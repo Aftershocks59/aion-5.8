@@ -35,7 +35,7 @@ import java.sql.SQLException;
 
 public class MySQL5PlayerSkillSkinListDAO extends PlayerSkillSkinListDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL5PlayerTitleListDAO.class);
+    private static final Logger log = LoggerFactory.getLogger(MySQL5PlayerSkillSkinListDAO.class);
     private static final String LOAD_QUERY = "SELECT `skin_id`, `remaining`, `active` FROM `player_skill_skins` WHERE `player_id`=?";
     private static final String INSERT_QUERY = "INSERT INTO `player_skill_skins`(`player_id`,`skin_id`, `remaining`, `active`) VALUES (?,?,?,?)";
     private static final String DELETE_QUERY = "DELETE FROM `player_skill_skins` WHERE `player_id`=? AND `skin_id` =?;";

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.PlayerAppearanceRepository;
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +30,6 @@ import com.aionemu.gameserver.configs.main.CacheConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
-import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.model.Race;
@@ -138,7 +139,7 @@ public class AccountService {
 		Account account = new Account(accountId);
 
 		PlayerDAO playerDAO = DAOManager.getDAO(PlayerDAO.class);
-		PlayerAppearanceDAO appereanceDAO = DAOManager.getDAO(PlayerAppearanceDAO.class);
+		PlayerAppearanceRepository appereanceDAO = GameRepositories.playerAppearance();
 
 		List<Integer> playerIdList = playerDAO.getPlayerOidsOnAccount(accountId);
 
@@ -152,7 +153,7 @@ public class AccountService {
 							+ " has online status, but I cant find it in World. Skip online status");
 				}
 			}
-			PlayerAppearance appereance = appereanceDAO.load(playerId);
+			PlayerAppearance appereance = appereanceDAO.find(playerId);
 
 			LegionMember legionMember = DAOManager.getDAO(LegionMemberDAO.class).loadLegionMember(playerId);
 
