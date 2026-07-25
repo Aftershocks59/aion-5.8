@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.ChallengeTasksDAO;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.TownDAO;
@@ -100,7 +100,7 @@ public class ChallengeTaskService {
 		int playerTownId = TownService.getInstance().getTownResidence(player);
 		List<ChallengeTask> availableTasks = new ArrayList<ChallengeTask>();
 		if (!taskMap.containsKey(ownerId)) {
-			Map<Integer, ChallengeTask> tasks = DAOManager.getDAO(ChallengeTasksDAO.class).load(ownerId, challengeType);
+			Map<Integer, ChallengeTask> tasks = GameRepositories.challengeTasks().findAll(ownerId, challengeType);
 			taskMap.put(ownerId, tasks);
 		}
 		for (ChallengeTask ct : taskMap.get(ownerId).values()) {
@@ -120,7 +120,7 @@ public class ChallengeTaskService {
 						if (template.getPrevTask() == null) {
 							ChallengeTask task = new ChallengeTask(ownerId, template);
 							taskMap.get(ownerId).put(task.getTaskId(), task);
-							DAOManager.getDAO(ChallengeTasksDAO.class).storeTask(task);
+							GameRepositories.challengeTasks().save(task);
 							availableTasks.add(task);
 							continue;
 						} else {
@@ -130,7 +130,7 @@ public class ChallengeTaskService {
 								if (prevTask.isCompleted()) {
 									ChallengeTask task = new ChallengeTask(ownerId, template);
 									taskMap.get(ownerId).put(task.getTaskId(), task);
-									DAOManager.getDAO(ChallengeTasksDAO.class).storeTask(task);
+									GameRepositories.challengeTasks().save(task);
 									availableTasks.add(task);
 								}
 							}
@@ -173,7 +173,7 @@ public class ChallengeTaskService {
 		if (!task.isCompleted()) {
 			task.updateCompleteTime();
 			quest.increaseCompleteCount();
-			DAOManager.getDAO(ChallengeTasksDAO.class).storeTask(task);
+			GameRepositories.challengeTasks().save(task);
 			Town town = TownService.getInstance().getTownById(townId);
 			if (town != null) {
 				int oldLevel = town.getLevel();
@@ -218,7 +218,7 @@ public class ChallengeTaskService {
 		if (!task.isCompleted()) {
 			task.updateCompleteTime();
 			quest.increaseCompleteCount();
-			DAOManager.getDAO(ChallengeTasksDAO.class).storeTask(task);
+			GameRepositories.challengeTasks().save(task);
 			if (task.isCompleted()) {
 				TreeMap<Integer, List<Integer>> winnersByPoints = new TreeMap<Integer, List<Integer>>();
 				for (Integer memberObjId : player.getLegion().getLegionMembers()) {
@@ -275,7 +275,7 @@ public class ChallengeTaskService {
 		if (legionTasks.containsKey(legionId)) {
 			tasks = legionTasks.get(legionId);
 		} else {
-			tasks = DAOManager.getDAO(ChallengeTasksDAO.class).load(legionId, ChallengeType.LEGION);
+			tasks = GameRepositories.challengeTasks().findAll(legionId, ChallengeType.LEGION);
 		}
 		for (ChallengeTask task : tasks.values()) {
 			if (task.getTemplate().getMinLevel() == legionLevel && task.isCompleted()) {

@@ -16,13 +16,13 @@
  */
 package com.aionemu.gameserver.model.dorinerk_wardrobe;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
@@ -61,7 +61,7 @@ public final class PlayerWardrobeList implements WardrobeList<Player> {
 
 	private synchronized boolean addItem(Player player, int itemId, int slot, int reskin_count, PersistentState state) {
 		entry.put(itemId, new PlayerWardrobeEntry(itemId, slot, reskin_count, state));
-		DAOManager.getDAO(PlayerWardrobeDAO.class).store(player.getObjectId(), itemId, slot, reskin_count);
+		GameRepositories.playerWardrobe().save(player.getObjectId(), itemId, slot, reskin_count);
 		return true;
 	}
 
@@ -71,7 +71,7 @@ public final class PlayerWardrobeList implements WardrobeList<Player> {
 		if (entries != null) {
 			entries.setPersistentState(PersistentState.DELETED);
 			entry.remove(itemId);
-			DAOManager.getDAO(PlayerWardrobeDAO.class).delete(player.getObjectId(), itemId);
+			GameRepositories.playerWardrobe().remove(player.getObjectId(), itemId);
 		}
 		return entry != null;
 	}

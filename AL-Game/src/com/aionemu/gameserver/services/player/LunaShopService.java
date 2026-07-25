@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.repository.PlayerWardrobeRepository;
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +33,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
-import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -67,7 +68,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class LunaShopService {
 
 	private Logger log = LoggerFactory.getLogger(LunaShopService.class);
-	PlayerWardrobeDAO wDAO = DAOManager.getDAO(PlayerWardrobeDAO.class);
+	PlayerWardrobeRepository wDAO = GameRepositories.playerWardrobe();
 	private boolean dailyGenerated = true;
 	private boolean specialGenerated = true;
 	private boolean reciveBonus = false;
@@ -376,16 +377,16 @@ public class LunaShopService {
 	}
 
 	public void dorinerkWardrobeLoad(Player player) {
-		int size = DAOManager.getDAO(PlayerWardrobeDAO.class).getItemSize(player.getObjectId());
+		int size = GameRepositories.playerWardrobe().count(player.getObjectId());
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(8, player.getPlayerLunaShop().getWardrobeSlot(), size));
 	}
 
 	public void dorinerkWardrobeAct(Player player, int applySlot, int itemObjId) {
 		int itemId = player.getInventory().getItemByObjId(itemObjId).getItemId();
-		int itemOnDB = DAOManager.getDAO(PlayerWardrobeDAO.class).getWardrobeItemBySlot(player.getObjectId(),
+		int itemOnDB = GameRepositories.playerWardrobe().findItemInSlot(player.getObjectId(),
 				applySlot);
 		if (itemOnDB != 0) {
-			DAOManager.getDAO(PlayerWardrobeDAO.class).delete(player.getObjectId(), itemOnDB);
+			GameRepositories.playerWardrobe().remove(player.getObjectId(), itemOnDB);
 			player.setLunaAccount(player.getLunaAccount() - 10);
 			player.getWardrobe().addItem(player, itemId, applySlot, 0);
 			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0, player.getLunaAccount()));
@@ -397,8 +398,8 @@ public class LunaShopService {
 	}
 
 	public void dorinerkWardrobeModifyAppearance(Player player, int applySlot, int itemObjId, int isRemoving) {
-		int itemId = DAOManager.getDAO(PlayerWardrobeDAO.class).getWardrobeItemBySlot(player.getObjectId(), applySlot);
-		int reskinCount = DAOManager.getDAO(PlayerWardrobeDAO.class).getReskinCountBySlot(player.getObjectId(),
+		int itemId = GameRepositories.playerWardrobe().findItemInSlot(player.getObjectId(), applySlot);
+		int reskinCount = GameRepositories.playerWardrobe().findReskinCount(player.getObjectId(),
 				applySlot);
 		ItemTemplate it = DataManager.ITEM_DATA.getItemTemplate(itemId);
 		Storage inventory = player.getInventory();
@@ -415,7 +416,7 @@ public class LunaShopService {
 		}
 		else {
 			if (reskinCount != 0) {
-				DAOManager.getDAO(PlayerWardrobeDAO.class).setReskinCountBySlot(player.getObjectId(), applySlot,
+				GameRepositories.playerWardrobe().setReskinCount(player.getObjectId(), applySlot,
 						reskinCount + 1);
 				player.setLunaAccount(player.getLunaAccount() - 12);
 				keepItem.setItemSkinTemplate(it);
@@ -426,7 +427,7 @@ public class LunaShopService {
 				keepItem.setLunaReskin(true);
 				PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0, player.getLunaAccount()));
 			} else {
-				DAOManager.getDAO(PlayerWardrobeDAO.class).setReskinCountBySlot(player.getObjectId(), applySlot,
+				GameRepositories.playerWardrobe().setReskinCount(player.getObjectId(), applySlot,
 						reskinCount + 1);
 				keepItem.setItemSkinTemplate(it);
 				if (!keepItem.getItemTemplate().isItemDyePermitted()) {
@@ -446,7 +447,7 @@ public class LunaShopService {
 		PlayerLunaShop lunaShop = player.getPlayerLunaShop();
 
 		int currentSlot = lunaShop.getWardrobeSlot();
-		int size = DAOManager.getDAO(PlayerWardrobeDAO.class).getItemSize(player.getObjectId());
+		int size = GameRepositories.playerWardrobe().count(player.getObjectId());
 		lunaShop.setWardrobeSlot(currentSlot + 1);
 		player.setLunaAccount(player.getLunaAccount() - wardrobePrice(currentSlot + 1));
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(9, lunaShop.getWardrobeSlot(), size));

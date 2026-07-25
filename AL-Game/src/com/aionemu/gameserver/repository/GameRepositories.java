@@ -56,6 +56,8 @@ public final class GameRepositories {
 	private final PlayerMotionRepository playerMotions;
 	private final PlayerSkillSkinRepository playerSkillSkins;
 	private final PlayerPasskeyRepository playerPasskeys;
+	private final PlayerWardrobeRepository playerWardrobe;
+	private final ChallengeTaskRepository challengeTasks;
 
 	/**
 	 * Builds every repository over one data source.
@@ -85,6 +87,8 @@ public final class GameRepositories {
 		playerMotions = new JdbcPlayerMotionRepository(dataSource);
 		playerSkillSkins = new JdbcPlayerSkillSkinRepository(dataSource);
 		playerPasskeys = new JdbcPlayerPasskeyRepository(dataSource);
+		playerWardrobe = new JdbcPlayerWardrobeRepository(dataSource);
+		challengeTasks = new JdbcChallengeTaskRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -181,5 +185,13 @@ public final class GameRepositories {
 
 	public static PlayerPasskeyRepository playerPasskeys() {
 		return getInstance().playerPasskeys;
+	}
+
+	public static PlayerWardrobeRepository playerWardrobe() {
+		return getInstance().playerWardrobe;
+	}
+
+	public static ChallengeTaskRepository challengeTasks() {
+		return getInstance().challengeTasks;
 	}
 }

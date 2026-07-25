@@ -47,7 +47,6 @@ import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
-import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.dataholders.PlayerInitialData.LocationData;
@@ -162,7 +161,7 @@ public class PlayerService {
 		player.setCP(DAOManager.getDAO(PlayerCreativityPointsDAO.class).loadCP(player));
 		player.setEventWindow(DAOManager.getDAO(PlayerEventsWindowDAO.class).load(player));
 		player.setAtreianBestiary(DAOManager.getDAO(PlayerABDAO.class).load(player));
-		player.setWardrobe(DAOManager.getDAO(PlayerWardrobeDAO.class).load(player));
+		player.setWardrobe(GameRepositories.playerWardrobe().findAll(player));
 		DAOManager.getDAO(F2pDAO.class).loadF2pInfo(player);
 		GameRepositories.playerSettings().load(player);
 		DAOManager.getDAO(AbyssRankDAO.class).loadAbyssRank(player);
