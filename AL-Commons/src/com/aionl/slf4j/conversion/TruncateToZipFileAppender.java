@@ -64,6 +64,32 @@ public class TruncateToZipFileAppender extends FileAppender<Object> {
     }
 
     /**
+     * Reads the time a log was opened, which its first line carries behind a
+     * form feed.
+     * <p>
+     * A log that is empty, or was cut short before its first line was flushed,
+     * or was written by something that does not mark it, has no such time.
+     * Archiving it is still worth doing, so answer no time rather than refusing
+     * to start the server over it.
+     *
+     * @param file the log about to be archived
+     * @return the time it was opened, or an empty string
+     */
+    static String readStartTime(File file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String first = reader.readLine();
+            if (first == null) {
+                return "";
+            }
+            String[] fields = first.split("\f");
+            return fields.length > 1 ? fields[1] : "";
+        } catch (IOException e) {
+            log.warn("Could not read the start time of " + file + ".", e);
+            return "";
+        }
+    }
+
+    /**
      * This method creates archive with file instead of deleting it.
      *
      * @param file file to truncate
@@ -75,14 +101,7 @@ public class TruncateToZipFileAppender extends FileAppender<Object> {
             return;
         }
 
-        String date = "";
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            date = reader.readLine().split("\f")[1];
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String date = readStartTime(file);
 
         File zipFile = new File(backupRoot, file.getName() + "." + date + ".zip");
         ZipOutputStream zos = null;
