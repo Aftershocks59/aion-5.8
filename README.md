@@ -23,9 +23,18 @@ Gradle itself needs no installation: use the wrapper (`./gradlew`).
 ## Build
 
 ```bash
-./gradlew build          # compile and package every module
-./gradlew test           # run the unit tests
+./gradlew build           # compile and package every module
+./gradlew test            # run the unit tests
+./gradlew compileScripts  # compile the runtime script contexts
 ```
+
+`compileScripts` runs as part of `build`. `AL-Game/data/scripts/` holds thousands
+of quest, AI and instance sources the server compiles at startup, one context at
+a time, each into its own classloader. Each context is compiled separately here
+for the same reason: a shared compilation would accept references across
+contexts that the runtime classloaders reject. One bad file aborts its whole
+context at startup, so a broken quest script used to take the entire quest
+engine down with it, and only a full boot revealed it.
 
 ## Database
 
