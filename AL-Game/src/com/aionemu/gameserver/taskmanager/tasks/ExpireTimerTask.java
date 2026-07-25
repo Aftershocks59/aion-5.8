@@ -49,9 +49,14 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	public void removePlayer(Player player) {
 		writeLock();
 		try {
-			for (Map.Entry<IExpirable, Player> entry : expirables.entrySet()) {
-				if (entry.getValue() == player) {
-					expirables.remove(entry.getKey());
+			// Remove through the iterator. Removing from the map while a for-each
+			// walks it throws ConcurrentModificationException on a java.util map,
+			// where the collection this replaced tolerated it. The throw landed on
+			// the leave-world path, so a disconnect left the player half removed and
+			// unable to log back in.
+			for (Iterator<Map.Entry<IExpirable, Player>> it = expirables.entrySet().iterator(); it.hasNext();) {
+				if (it.next().getValue() == player) {
+					it.remove();
 				}
 			}
 		} finally {
