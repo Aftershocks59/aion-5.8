@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.minion.MinionDopingBag;
@@ -52,10 +52,10 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 		}
 		default:
 			do {
-				if (DAOManager.getDAO(PlayerMinionsDAO.class).PlayerMinions(masterObjectId, minionObjId)) {
+				if (GameRepositories.minions().isTaken(masterObjectId, minionObjId)) {
 					this.minionObjId = IDFactory.getInstance().nextId();
 				}
-			} while (DAOManager.getDAO(PlayerMinionsDAO.class).PlayerMinions(masterObjectId, minionObjId));
+			} while (GameRepositories.minions().isTaken(masterObjectId, minionObjId));
 			break;
 		}
 		this.minionId = minionId;

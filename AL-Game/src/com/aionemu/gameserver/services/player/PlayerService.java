@@ -35,7 +35,6 @@ import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.dataholders.PlayerInitialData.LocationData;
@@ -150,7 +149,7 @@ public class PlayerService {
 		player.setBlockList(GameRepositories.playerSocial().findBlocked(player, DAOManager.getDAO(PlayerDAO.class)::loadPlayerCommonData));
 		player.setTitleList(GameRepositories.playerTitles().findAll(playerObjId));
 		player.setCP(GameRepositories.creativityPoints().load(player.getObjectId()));
-		player.setEventWindow(DAOManager.getDAO(PlayerEventsWindowDAO.class).load(player));
+		player.setEventWindow(GameRepositories.eventWindows().load(player.getPlayerAccount().getId()));
 		player.setAtreianBestiary(GameRepositories.atreianBestiary().load(player.getObjectId()));
 		player.setWardrobe(GameRepositories.playerWardrobe().findAll(player));
 		GameRepositories.f2p().load(player);

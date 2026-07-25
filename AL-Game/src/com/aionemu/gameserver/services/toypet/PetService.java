@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.toypet;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -70,7 +70,7 @@ public class PetService {
 		Pet pet = player.getPet();
 		if (pet != null) {
 			pet.getCommonData().setName(name);
-			DAOManager.getDAO(PlayerPetsDAO.class).updatePetName(pet.getCommonData());
+			GameRepositories.pets().rename(pet.getCommonData());
 			PacketSendUtility.broadcastPacket(player, new SM_PET(10, pet), true);
 		}
 	}
@@ -143,7 +143,7 @@ public class PetService {
 				ItemService.addItem(player, reward.getItem(), 1);
 				commonData.setReFoodTime(flavour.getCooldDown() * 60000);
 				commonData.setCurentTime(System.currentTimeMillis());
-				DAOManager.getDAO(PlayerPetsDAO.class).setTime(player, pet.getPetId(), System.currentTimeMillis());
+				GameRepositories.pets().setReuseTime(player.getObjectId(), pet.getPetId(), System.currentTimeMillis());
 				progress.reset();
 			} else if (count > 0) {
 				schedule(pet, player, item, count, action);

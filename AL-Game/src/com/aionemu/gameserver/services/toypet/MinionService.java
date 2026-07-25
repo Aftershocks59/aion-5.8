@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.toypet;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +29,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.MinionController;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
-import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.TaskId;
@@ -320,7 +320,7 @@ public class MinionService {
 		} else {
 			playerMinion.setMinionGrowthPoint(playerMinion.getMinionGrowthPoint() + growthPoint);
 		}
-		DAOManager.getDAO(PlayerMinionsDAO.class).updatePlayerMinionGrowthPoint(player, playerMinion);
+		GameRepositories.minions().setGrowthPoints(playerMinion);
 		PacketSendUtility.broadcastPacket(player, new SM_MINIONS(7, playerMinion), true);
 		for (int matObjt2 : material) {
 			deleteMinion(player, matObjt2, true);
@@ -349,7 +349,7 @@ public class MinionService {
 		minion.setMinionId(minion.getMinionId() + 1);
 		minion.setMinionLevel(minion.getMinionLevel() + 1);
 		minion.setMinionGrowthPoint(0);
-		DAOManager.getDAO(PlayerMinionsDAO.class).evolutionMinion(player, minion);
+		GameRepositories.minions().evolve(minion);
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(1, minion, 1));
 		player.getMinionList().updateMinionsList();
 	}
@@ -368,11 +368,11 @@ public class MinionService {
 		MinionCommonData minion = player.getMinionList().getMinion(minionObjId);
 		if (lock == 1) {
 			minion.setLock(true);
-			DAOManager.getDAO(PlayerMinionsDAO.class).lockMinions(player, minionObjId, 1);
+			GameRepositories.minions().setLocked(player.getObjectId(), minionObjId, true);
 			PacketSendUtility.broadcastPacket(player, new SM_MINIONS(4, minion), true);
 		} else {
 			minion.setLock(false);
-			DAOManager.getDAO(PlayerMinionsDAO.class).lockMinions(player, minionObjId, 0);
+			GameRepositories.minions().setLocked(player.getObjectId(), minionObjId, false);
 			PacketSendUtility.broadcastPacket(player, new SM_MINIONS(4, minion), true);
 		}
 	}
@@ -380,7 +380,7 @@ public class MinionService {
 	public void renameMinion(Player player, int minionObjId, String name) {
 		MinionCommonData minion = player.getMinionList().getMinion(minionObjId);
 		minion.setName(name);
-		DAOManager.getDAO(PlayerMinionsDAO.class).updateMinionName(minion);
+		GameRepositories.minions().rename(minion);
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_MINIONS(3, minion));
 	}
 
@@ -431,7 +431,7 @@ public class MinionService {
 		for (int a : minions.getCommonData().getDopingBag().getScrollsUsed()) {
 			System.out.println("Minion Bag scroll:" + a);
 		}
-		DAOManager.getDAO(PlayerMinionsDAO.class).saveDopingBag(player, minions.getCommonData(),
+		GameRepositories.minions().saveDopingBag(player.getObjectId(), minions.getCommonData().getObjectId(),
 				minions.getCommonData().getDopingBag());
 		PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 0, minionObjectId, itemId, targetSlot, 0), true);
 	}

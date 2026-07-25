@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Pet;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -68,7 +68,7 @@ public class PetController extends VisibleObjectController<Pet> {
 							PacketSendUtility.sendPacket(player, new SM_PET(pet, 4, 0));
 						}
 
-						DAOManager.getDAO(PlayerPetsDAO.class).savePetMoodData(pet.getCommonData());
+						GameRepositories.pets().saveMood(pet.getCommonData());
 						saved = true;
 						startTime = System.currentTimeMillis();
 					}
@@ -81,7 +81,7 @@ public class PetController extends VisibleObjectController<Pet> {
 					// Save if it reaches 100% after player snuggles the pet, not by the scheduler
 					// itself
 					if (!saved) {
-						DAOManager.getDAO(PlayerPetsDAO.class).savePetMoodData(pet.getCommonData());
+						GameRepositories.pets().saveMood(pet.getCommonData());
 					}
 				}
 			} catch (Exception ex) {

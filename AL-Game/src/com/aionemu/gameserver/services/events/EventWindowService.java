@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.LinkedHashMap;
 
 import java.sql.Timestamp;
@@ -26,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.event.EventsWindow;
@@ -96,19 +96,18 @@ public class EventWindowService {
 		}
 		getActiveEvents(player);
 		final int accountId = player.getPlayerAccount().getId();
-		final PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
 		for (final EventsWindow eventsWindow : activeEventsForPlayer.values()) {
-			final int elapsed = playerEventsWindowDAO.getElapsed(accountId, eventsWindow.getId());
-			final int recivedCount = playerEventsWindowDAO.getRewardRecivedCount(accountId, eventsWindow.getId());
+			final int elapsed = GameRepositories.eventWindows().findElapsed(accountId, eventsWindow.getId());
+			final int recivedCount = GameRepositories.eventWindows().findRewardCount(accountId, eventsWindow.getId());
 			if (!eventsWindow.getPeriodStart().isBeforeNow() || !eventsWindow.getPeriodEnd().isAfterNow()) {
 				continue;
 			}
 			sendActiveEventsForPlayer.put(eventsWindow.getId(), eventsWindow);
-			if (!playerEventsWindowDAO.getEventsWindow(accountId).contains(eventsWindow.getId())) {
-				playerEventsWindowDAO.insert(accountId, eventsWindow.getId(),
+			if (!GameRepositories.eventWindows().findEventIds(accountId).contains(eventsWindow.getId())) {
+				GameRepositories.eventWindows().add(accountId, eventsWindow.getId(),
 						new Timestamp(System.currentTimeMillis()));
 			} else {
-				playerEventsWindowDAO.store(accountId, eventsWindow.getId(), new Timestamp(System.currentTimeMillis()),
+				GameRepositories.eventWindows().save(accountId, eventsWindow.getId(), new Timestamp(System.currentTimeMillis()),
 						elapsed); // Temp for updating TiemStamp
 			}
 			log.info("Start counting id " + eventsWindow.getId() + " time " + eventsWindow.getRemainingTime()
@@ -122,9 +121,8 @@ public class EventWindowService {
 							sendActiveEventsForPlayer.remove(eventsWindow.getId());
 							return;
 						}
-						playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(),
-								(recivedCount + 1)); // It also Set elapsed to 0 and updates TimeStamp
-														// (MySQL5PlayerEventsWindowDAO)
+						GameRepositories.eventWindows().setRewardCount(accountId, eventsWindow.getId(),
+								(recivedCount + 1)); // Also clears the elapsed time and stamps it anew
 						ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
 						PacketSendUtility.sendPacket(player,
 								SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
@@ -142,8 +140,7 @@ public class EventWindowService {
 
 	public void restartTimer(final Player player, final int eventId) {
 		final int accountId = player.getPlayerAccount().getId();
-		final PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
-		final int recivedCount = playerEventsWindowDAO.getRewardRecivedCount(accountId, eventId);
+		final int recivedCount = GameRepositories.eventWindows().findRewardCount(accountId, eventId);
 		for (final EventsWindow eventsWindow : sendActiveEventsForPlayer.values()) {
 			if (!eventsWindow.getPeriodStart().isBeforeNow() || !eventsWindow.getPeriodEnd().isAfterNow()) {
 				continue;
@@ -157,7 +154,7 @@ public class EventWindowService {
 								sendActiveEventsForPlayer.remove(eventsWindow.getId());
 								return;
 							}
-							playerEventsWindowDAO.setRewardRecivedCount(accountId, eventsWindow.getId(),
+							GameRepositories.eventWindows().setRewardCount(accountId, eventsWindow.getId(),
 									(recivedCount + 1));
 							ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
 							PacketSendUtility.sendPacket(player,
@@ -176,14 +173,13 @@ public class EventWindowService {
 	 */
 	public void onLogout(Player player) {
 		int accountId = player.getPlayerAccount().getId();
-		PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
 		for (final EventsWindow eventsWindow : activeEventsForPlayer.values()) {
-			if (playerEventsWindowDAO.getEventsWindow(accountId).contains(eventsWindow.getId()) && player.isOnline()) {
-				tStart = (playerEventsWindowDAO.getLastStamp(accountId, eventsWindow.getId()).getTime() / 1000);
+			if (GameRepositories.eventWindows().findEventIds(accountId).contains(eventsWindow.getId()) && player.isOnline()) {
+				tStart = (GameRepositories.eventWindows().findLastStamp(accountId, eventsWindow.getId()).getTime() / 1000);
 				tEnd = (System.currentTimeMillis() / 1000);
-				int d2 = playerEventsWindowDAO.getElapsed(accountId, eventsWindow.getId());
+				int d2 = GameRepositories.eventWindows().findElapsed(accountId, eventsWindow.getId());
 				int time = (int) (((tEnd - tStart) / 60) + d2);
-				playerEventsWindowDAO.updateElapsed(accountId, eventsWindow.getId(), time);
+				GameRepositories.eventWindows().setElapsed(accountId, eventsWindow.getId(), time);
 			}
 		}
 		activeEventsForPlayer.clear();

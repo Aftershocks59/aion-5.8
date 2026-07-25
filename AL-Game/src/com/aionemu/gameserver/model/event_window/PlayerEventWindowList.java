@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.event_window;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
@@ -55,7 +55,7 @@ public class PlayerEventWindowList implements EventWindowList<Player> {
 	private synchronized boolean add(Player player, int remaining, Timestamp timestamp, int Time,
 			PersistentState persistentState) {
 		entry.put(remaining, new PlayerEventWindowEntry(remaining, timestamp, Time, persistentState));
-		DAOManager.getDAO(PlayerEventsWindowDAO.class).store(player.getPlayerAccount().getId(), remaining, timestamp,
+		GameRepositories.eventWindows().save(player.getPlayerAccount().getId(), remaining, timestamp,
 				Time);
 		return true;
 	}
@@ -74,7 +74,7 @@ public class PlayerEventWindowList implements EventWindowList<Player> {
 		if (playerEventWindowEntry != null) {
 			playerEventWindowEntry.setPersistentState(PersistentState.DELETED);
 			entry.remove(remaining);
-			DAOManager.getDAO(PlayerEventsWindowDAO.class).delete(player.getPlayerAccount().getId(), remaining);
+			GameRepositories.eventWindows().remove(player.getPlayerAccount().getId(), remaining);
 		}
 		return entry != null;
 	}

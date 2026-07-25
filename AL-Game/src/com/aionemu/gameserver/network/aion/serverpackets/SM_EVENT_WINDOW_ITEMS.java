@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 import java.util.Collection;
 
@@ -23,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.model.templates.event.EventsWindow;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
@@ -40,12 +40,11 @@ public class SM_EVENT_WINDOW_ITEMS extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection aionConnection) {
 		int playerAccountId = aionConnection.getActivePlayer().getPlayerAccount().getId();
-		PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
 		writeC(1); // Do not Change !!!
 		writeH(active_events_packet.size());
 		for (EventsWindow eventsWindow : active_events_packet) {
-			int dbRecivedCount = playerEventsWindowDAO.getRewardRecivedCount(playerAccountId, eventsWindow.getId());
-			int elapsed = playerEventsWindowDAO.getElapsed(playerAccountId, eventsWindow.getId());
+			int dbRecivedCount = GameRepositories.eventWindows().findRewardCount(playerAccountId, eventsWindow.getId());
+			int elapsed = GameRepositories.eventWindows().findElapsed(playerAccountId, eventsWindow.getId());
 			int displayTime = (eventsWindow.getRemainingTime() - elapsed);
 			log.info("event id " + eventsWindow.getId() + " remain " + eventsWindow.getRemainingTime() + " start-time "
 					+ new Timestamp(eventsWindow.getPeriodStart().getMillis()).getTime() / 1000 + " end-time "

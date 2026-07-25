@@ -16,13 +16,13 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import java.util.Collection;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MINIONS;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -39,7 +39,7 @@ public class MinionList {
 	}
 
 	public void loadMinions() {
-		for (MinionCommonData minionCommonData : DAOManager.getDAO(PlayerMinionsDAO.class).getPlayerMinions(player)) {
+		for (MinionCommonData minionCommonData : GameRepositories.minions().findAll(player.getObjectId())) {
 			if (minionCommonData.getExpireTime() > 0) {
 				ExpireTimerTask.getInstance().addTask(minionCommonData, player);
 			}
@@ -53,7 +53,7 @@ public class MinionList {
 
 	public void updateMinionsList() {
 		minions.clear();
-		for (MinionCommonData minionCommonData : DAOManager.getDAO(PlayerMinionsDAO.class).getPlayerMinions(player)) {
+		for (MinionCommonData minionCommonData : GameRepositories.minions().findAll(player.getObjectId())) {
 			minions.put(minionCommonData.getObjectId(), minionCommonData);
 		}
 		if (minions != null) {
@@ -68,8 +68,8 @@ public class MinionList {
 
 	public MinionCommonData addNewMinion(Player player, int minionId, String name, String grade, int level) {
 		MinionCommonData minionCommonData = new MinionCommonData(minionId, player.getObjectId(), name, grade, level, 0);
-		DAOManager.getDAO(PlayerMinionsDAO.class).insertPlayerMinion(minionCommonData);
-		DAOManager.getDAO(PlayerMinionsDAO.class).saveBirthday(minionCommonData);
+		GameRepositories.minions().add(minionCommonData);
+		GameRepositories.minions().loadBirthday(minionCommonData);
 		minions.put(minionId, minionCommonData);
 		return minionCommonData;
 	}
@@ -80,7 +80,7 @@ public class MinionList {
 
 	public void deleteMinion(int minionObjId) {
 		if (hasMinion(minionObjId)) {
-			DAOManager.getDAO(PlayerMinionsDAO.class).removePlayerMinion(player, minionObjId);
+			GameRepositories.minions().remove(player.getObjectId(), minionObjId);
 			minions.remove(minionObjId);
 		}
 	}

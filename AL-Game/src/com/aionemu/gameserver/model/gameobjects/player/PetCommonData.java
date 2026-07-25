@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
@@ -270,7 +270,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	}
 
 	public void savePetMoodData() {
-		DAOManager.getDAO(PlayerPetsDAO.class).savePetMoodData(this);
+		GameRepositories.pets().saveMood(this);
 	}
 
 	public PetFeedProgress getFeedProgress() {

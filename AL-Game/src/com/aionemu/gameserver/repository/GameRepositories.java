@@ -91,6 +91,9 @@ public final class GameRepositories {
 	private final LadderRepository ladder;
 	private final InGameShopRepository inGameShop;
 	private final HouseRepository houses;
+	private final PetRepository pets;
+	private final MinionRepository minions;
+	private final EventWindowRepository eventWindows;
 
 	/**
 	 * Builds every repository over one data source.
@@ -155,6 +158,9 @@ public final class GameRepositories {
 		ladder = new JdbcLadderRepository(dataSource);
 		inGameShop = new JdbcInGameShopRepository(dataSource);
 		houses = new JdbcHouseRepository(dataSource);
+		pets = new JdbcPetRepository(dataSource);
+		minions = new JdbcMinionRepository(dataSource);
+		eventWindows = new JdbcEventWindowRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -391,5 +397,17 @@ public final class GameRepositories {
 
 	public static HouseRepository houses() {
 		return getInstance().houses;
+	}
+
+	public static PetRepository pets() {
+		return getInstance().pets;
+	}
+
+	public static MinionRepository minions() {
+		return getInstance().minions;
+	}
+
+	public static EventWindowRepository eventWindows() {
+		return getInstance().eventWindows;
 	}
 }
