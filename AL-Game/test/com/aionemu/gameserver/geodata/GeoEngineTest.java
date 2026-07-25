@@ -16,6 +16,7 @@ package com.aionemu.gameserver.geodata;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -120,7 +121,10 @@ class GeoEngineTest {
 		assertEquals(0, engine.getWorldCount());
 		assertFalse(engine.knows(210010000));
 		assertNull(engine.getWorld(210010000));
-		assertEquals(123.5f, engine.getGroundZ(210010000, 100.0f, 100.0f, 123.5f), EPSILON);
+		assertEquals(123.5f, engine.getGroundZ(210010000, 100.0f, 100.0f, 40.0f, 123.5f), EPSILON);
+		assertEquals(123.5f, engine.getTerrainZ(210010000, 100.0f, 100.0f, 123.5f), EPSILON);
+		assertTrue(engine.isClear(210010000, 0.0f, 0.0f, 0.0f, 100.0f, 100.0f, 0.0f,
+				MaterialCollision.COLUMN_MOVEMENT));
 	}
 
 	@Test

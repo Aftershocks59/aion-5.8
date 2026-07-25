@@ -126,24 +126,78 @@ public final class GeoEngine implements AutoCloseable {
 	}
 
 	/**
-	 * Answers the height of the ground under a position.
+	 * Answers the height of the surface nearest a position, ground and collision
+	 * mesh together.
+	 *
+	 * @param worldId  which world
+	 * @param x        world position along X
+	 * @param y        world position along Y
+	 * @param z        the height to measure nearness from
+	 * @param fallback what to answer where there is no surface to find
+	 * @return the surface height in world units
+	 */
+	public float getGroundZ(int worldId, float x, float y, float z, float fallback) {
+		WorldGeoData world = worlds.get(Integer.valueOf(worldId));
+		if (world == null) {
+			return fallback;
+		}
+		float found = new GeoTracer(world).groundZ(x, y, z);
+		return RayTriangle.hit(found) ? found : fallback;
+	}
+
+	/**
+	 * Answers the height of the terrain under a position, ignoring anything laid
+	 * over it.
 	 * <p>
 	 * The grid stores a height at every cell corner, so a position between four
 	 * of them is interpolated across the two it lies between on each axis. A
 	 * position off the edge of the world is answered with its nearest corner.
+	 * <p>
+	 * This is the answer to give where there is no height to measure nearness
+	 * from, and so no way to choose between the floors of a building.
 	 *
 	 * @param worldId  which world
 	 * @param x        world position along X
 	 * @param y        world position along Y
 	 * @param fallback what to answer where the world has no geodata
-	 * @return the ground height in world units
+	 * @return the terrain height in world units
 	 */
-	public float getGroundZ(int worldId, float x, float y, float fallback) {
+	public float getTerrainZ(int worldId, float x, float y, float fallback) {
 		WorldGeoData world = worlds.get(Integer.valueOf(worldId));
 		if (world == null) {
 			return fallback;
 		}
 		return groundZ(world.getTerrain(), x, y);
+	}
+
+	/**
+	 * Answers whether nothing stands between two points.
+	 *
+	 * @param column which column of the material table decides what blocks, in
+	 *               practice {@link MaterialCollision#COLUMN_MOVEMENT} for
+	 *               movement and creature sight
+	 * @return true where the way is clear, and where the world has no geodata
+	 */
+	public boolean isClear(int worldId, float x, float y, float z, float toX, float toY, float toZ, int column) {
+		WorldGeoData world = worlds.get(Integer.valueOf(worldId));
+		if (world == null) {
+			return true;
+		}
+		return new GeoTracer(world).isClear(x, y, z, toX, toY, toZ, column);
+	}
+
+	/**
+	 * Answers how far along the way between two points something first stands.
+	 *
+	 * @return the fraction of the way, or {@link RayTriangle#MISS} where nothing
+	 *         does
+	 */
+	public float firstHit(int worldId, float x, float y, float z, float toX, float toY, float toZ, int column) {
+		WorldGeoData world = worlds.get(Integer.valueOf(worldId));
+		if (world == null) {
+			return RayTriangle.MISS;
+		}
+		return new GeoTracer(world).firstHit(x, y, z, toX, toY, toZ, column);
 	}
 
 	/** Interpolates the ground height across the four corners a position falls between. */

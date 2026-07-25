@@ -211,6 +211,73 @@ public final class HeightMap {
 		return cornerIndex(x >> CELL_SHIFT, y >> CELL_SHIFT);
 	}
 
+	/** The base surface of a cell whose corners describe a sloped square. */
+	public static final int BASE_QUAD = 0;
+
+	/** The base surface of a cell that is level across its whole square. */
+	public static final int BASE_FLAT = 1;
+
+	/** The other value that means a sloped square, which the client treats the same. */
+	public static final int BASE_QUAD_ALTERNATE = 2;
+
+	/** The base surface of a cell that has no ground of its own at all. */
+	public static final int BASE_NONE = 3;
+
+	/**
+	 * Answers the four-bit code that says what a cell is made of.
+	 * <p>
+	 * The code is split across two grids. Its top half always sits in the bottom
+	 * two bits of the elevation. Its bottom half sits in the third grid where
+	 * there is one, and in the top two bits of the surface byte where there is
+	 * not: the coarse tier carries no third grid and is spread into that layout
+	 * as it is read, so putting the halves back together recovers exactly the
+	 * value that tier held.
+	 * <p>
+	 * That the third grid is where the finest tier keeps them is not guesswork.
+	 * Its bit one is set on exactly the cells the collision index gives runs
+	 * for, sector after sector, across every world tried; no other bit of any of
+	 * the three grids comes close.
+	 *
+	 * @param index the cell
+	 * @return the code, between zero and fifteen
+	 */
+	public int surfaceCode(int index) {
+		int low = extra != null ? extra[index] & 3 : (materials[index] & 0xff) >>> 6;
+		return ((heights[index] & 3) << 2) | low;
+	}
+
+	/**
+	 * Answers what ground a cell carries of its own, before any mesh laid over it.
+	 *
+	 * @param code a cell's surface code
+	 * @return {@link #BASE_QUAD}, {@link #BASE_FLAT}, {@link #BASE_QUAD_ALTERNATE}
+	 *         or {@link #BASE_NONE}
+	 */
+	public static int baseSurface(int code) {
+		return code >> 2;
+	}
+
+	/** Answers whether a cell's ground is a square drawn through its four corners. */
+	public static boolean hasQuad(int code) {
+		int base = baseSurface(code);
+		return base == BASE_QUAD || base == BASE_QUAD_ALTERNATE;
+	}
+
+	/** Answers whether a cell's ground is level across the whole square. */
+	public static boolean isFlat(int code) {
+		return baseSurface(code) == BASE_FLAT;
+	}
+
+	/** Answers whether a cell carries collision triangles over its ground. */
+	public static boolean hasMesh(int code) {
+		return (code & 2) != 0;
+	}
+
+	/** Answers whether a cell carries objects whose collision can move. */
+	public static boolean hasObjects(int code) {
+		return (code & 1) != 0;
+	}
+
 	/** Answers the raw cell, elevation and surface bits together. */
 	public int rawCell(int index) {
 		return heights[index] & 0xffff;

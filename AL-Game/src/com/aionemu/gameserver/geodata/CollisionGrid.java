@@ -61,6 +61,15 @@ public final class CollisionGrid implements AutoCloseable {
 	/** How long a sector's face-count index runs, one short per sub-cell. */
 	public static final int INDEX_SIZE = SUB_CELLS * 2;
 
+	/** How many bytes one triangle entry of a run takes. */
+	public static final int RUN_ENTRY_SIZE = 4;
+
+	/** Marks a triangle entry the client leaves out of collision. */
+	public static final int ENTRY_IGNORED = 0x80000000;
+
+	/** Masks a triangle entry down to the triangle it names. */
+	public static final int ENTRY_TRIANGLE_MASK = 0x7fffffff;
+
 	private final FileChannel channel;
 	private final MappedByteBuffer file;
 	private final GeoVersion version;
@@ -76,6 +85,9 @@ public final class CollisionGrid implements AutoCloseable {
 	/** How many bytes of faces each sector owns. */
 	private final int[] meshSizes;
 
+	/** Where each sub-cell's runs start, filled in the first time a sector is asked. */
+	private final int[][] subCellOffsets;
+
 	private CollisionGrid(FileChannel channel, MappedByteBuffer file, GeoVersion version, int cols, int rows,
 			int[] indexOffsets, int[] meshOffsets, int[] meshSizes) {
 		this.channel = channel;
@@ -86,6 +98,7 @@ public final class CollisionGrid implements AutoCloseable {
 		this.indexOffsets = indexOffsets;
 		this.meshOffsets = meshOffsets;
 		this.meshSizes = meshSizes;
+		this.subCellOffsets = new int[meshSizes.length][];
 	}
 
 	/**
@@ -185,9 +198,23 @@ public final class CollisionGrid implements AutoCloseable {
 		return meshSizes[sector];
 	}
 
-	/** Answers the index of the sector holding a terrain cell. */
+	/**
+	 * Answers the index of the sector holding a terrain cell.
+	 * <p>
+	 * The sectors run down X in whole columns, as the height grid does. Laying
+	 * them out the other way round puts a sector's runs under cells that are
+	 * nowhere near them; the two orders are told apart by counting, per sector,
+	 * the cells the height grid marks as carrying a mesh against the sub-cells
+	 * the index gives runs for. This order matches every sector of every world
+	 * tried, the other one nine tenths of them.
+	 */
 	public int sectorIndex(int cellX, int cellY) {
-		return (cellY >> SECTOR_SHIFT) * cols + (cellX >> SECTOR_SHIFT);
+		return (cellX >> SECTOR_SHIFT) * rows + (cellY >> SECTOR_SHIFT);
+	}
+
+	/** Answers where a terrain cell sits within its sector, in whole columns as the sectors themselves run. */
+	public static int subCellIndex(int cellX, int cellY) {
+		return (cellX & (SECTOR_CELLS - 1)) * SECTOR_CELLS + (cellY & (SECTOR_CELLS - 1));
 	}
 
 	/**
@@ -202,6 +229,56 @@ public final class CollisionGrid implements AutoCloseable {
 			return 0;
 		}
 		return file.getShort(indexOffsets[sector] + subCell * 2) & 0xffff;
+	}
+
+	/**
+	 * Answers where each sub-cell's runs start within a sector.
+	 * <p>
+	 * A run says how long it is rather than sitting at a known offset, so the
+	 * only way to the tenth sub-cell is over the nine before it. That is walked
+	 * once a sector and kept, because a sector a player stands in is asked about
+	 * over and over.
+	 *
+	 * @param sector the sector
+	 * @return one offset per sub-cell, relative to the sector's faces
+	 */
+	private int[] subCellOffsets(int sector) {
+		int[] offsets = subCellOffsets[sector];
+		if (offsets != null) {
+			return offsets;
+		}
+
+		offsets = new int[SUB_CELLS];
+		ByteBuffer faces = faces(sector);
+		for (int subCell = 0; subCell < SUB_CELLS; subCell++) {
+			offsets[subCell] = faces.position();
+			int runs = faceCount(sector, subCell);
+			for (int run = 0; run < runs; run++) {
+				// A run is a height key, a count, and that many triangle entries.
+				faces.getShort();
+				int entries = faces.getShort() & 0xffff;
+				faces.position(faces.position() + entries * RUN_ENTRY_SIZE);
+			}
+		}
+
+		subCellOffsets[sector] = offsets;
+		return offsets;
+	}
+
+	/**
+	 * Answers a sub-cell's runs, positioned at the first of them.
+	 *
+	 * @param sector  the sector
+	 * @param subCell the sub-cell, row-major within the sector
+	 * @return a buffer at the first run, or null where the sub-cell has none
+	 */
+	public ByteBuffer runsOf(int sector, int subCell) {
+		if (isEmpty(sector) || faceCount(sector, subCell) == 0) {
+			return null;
+		}
+		ByteBuffer faces = faces(sector);
+		faces.position(subCellOffsets(sector)[subCell]);
+		return faces;
 	}
 
 	/**
