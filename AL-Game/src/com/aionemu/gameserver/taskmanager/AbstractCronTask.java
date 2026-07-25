@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.taskmanager;
 
+import com.aionemu.gameserver.repository.GameRepositories;
+import com.aionemu.gameserver.repository.ServerVariableRepository;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -23,7 +25,6 @@ import org.quartz.CronExpression;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public abstract class AbstractCronTask implements Runnable {
@@ -68,8 +69,8 @@ public abstract class AbstractCronTask implements Runnable {
 		if (cronExpression == null)
 			throw new NullPointerException("cronExpressionString");
 		cronExpressionString = cronExpression;
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
-		runTime = dao.load(getServerTimeVariable());
+		ServerVariableRepository dao = GameRepositories.serverVariables();
+		runTime = dao.find(getServerTimeVariable());
 		preInit();
 		runExpression = new CronExpression(cronExpressionString);
 		Date nextDate = runExpression.getTimeAfter(new Date());
@@ -92,9 +93,9 @@ public abstract class AbstractCronTask implements Runnable {
 
 	private void saveNextRunTime() {
 		Date nextDate = runExpression.getTimeAfter(new Date());
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
+		ServerVariableRepository dao = GameRepositories.serverVariables();
 		runTime = (int) (nextDate.getTime() / 1000);
-		dao.store(getServerTimeVariable(), runTime);
+		dao.set(getServerTimeVariable(), runTime);
 	}
 
 	@Override

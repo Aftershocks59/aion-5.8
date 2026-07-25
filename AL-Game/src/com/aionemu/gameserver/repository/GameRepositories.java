@@ -43,6 +43,11 @@ public final class GameRepositories {
 	private final PlayerVariableRepository playerVariables;
 	private final PlayerEmotionRepository playerEmotions;
 	private final PlayerMacroRepository playerMacros;
+	private final ServerVariableRepository serverVariables;
+	private final PlayerLifeStatRepository playerLifeStats;
+	private final PlayerSettingsRepository playerSettings;
+	private final PlayerEffectRepository playerEffects;
+	private final PlayerNpcFactionRepository playerNpcFactions;
 
 	/**
 	 * Builds every repository over one data source.
@@ -59,6 +64,11 @@ public final class GameRepositories {
 		playerVariables = new JdbcPlayerVariableRepository(dataSource);
 		playerEmotions = new JdbcPlayerEmotionRepository(dataSource);
 		playerMacros = new JdbcPlayerMacroRepository(dataSource);
+		serverVariables = new JdbcServerVariableRepository(dataSource);
+		playerLifeStats = new JdbcPlayerLifeStatRepository(dataSource);
+		playerSettings = new JdbcPlayerSettingsRepository(dataSource);
+		playerEffects = new JdbcPlayerEffectRepository(dataSource);
+		playerNpcFactions = new JdbcPlayerNpcFactionRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -103,5 +113,25 @@ public final class GameRepositories {
 
 	public static PlayerMacroRepository playerMacros() {
 		return getInstance().playerMacros;
+	}
+
+	public static ServerVariableRepository serverVariables() {
+		return getInstance().serverVariables;
+	}
+
+	public static PlayerLifeStatRepository playerLifeStats() {
+		return getInstance().playerLifeStats;
+	}
+
+	public static PlayerSettingsRepository playerSettings() {
+		return getInstance().playerSettings;
+	}
+
+	public static PlayerEffectRepository playerEffects() {
+		return getInstance().playerEffects;
+	}
+
+	public static PlayerNpcFactionRepository playerNpcFactions() {
+		return getInstance().playerNpcFactions;
 	}
 }

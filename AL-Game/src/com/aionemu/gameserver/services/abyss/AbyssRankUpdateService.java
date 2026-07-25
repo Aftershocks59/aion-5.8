@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import com.aionemu.gameserver.repository.GameRepositories;
+import com.aionemu.gameserver.repository.ServerVariableRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,7 +33,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.RankingConfig;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -58,8 +59,8 @@ public class AbyssRankUpdateService {
 	}
 
 	public void scheduleUpdateHour() {
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
-		int nextTime = dao.load("abyssRankUpdate");
+		ServerVariableRepository dao = GameRepositories.serverVariables();
+		int nextTime = dao.find("abyssRankUpdate");
 		if (nextTime < System.currentTimeMillis() / 1000) {
 			performUpdate();
 		}
@@ -73,8 +74,8 @@ public class AbyssRankUpdateService {
 	}
 
 	public void scheduleUpdateMinute() {
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
-		int nextTime = dao.load("abyssRankUpdate");
+		ServerVariableRepository dao = GameRepositories.serverVariables();
+		int nextTime = dao.find("abyssRankUpdate");
 		if (nextTime < System.currentTimeMillis() / 1000) {
 			performUpdate();
 		}

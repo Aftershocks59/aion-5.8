@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.ServerVariableRepository;
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.LinkedHashMap;
 
 import java.sql.Timestamp;
@@ -39,7 +41,6 @@ import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.dao.HouseBidsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
@@ -117,8 +118,8 @@ public class HousingBidService extends AbstractCronTask {
 			registerDateExpr = new CronExpression(registerEndExpression);
 		} catch (ParseException e) {
 		}
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
-		timeProlonged = dao.load("auctionProlonged");
+		ServerVariableRepository dao = GameRepositories.serverVariables();
+		timeProlonged = dao.find("auctionProlonged");
 	}
 
 	private HousingBidService() throws ParseException {
@@ -381,9 +382,9 @@ public class HousingBidService extends AbstractCronTask {
 
 	@Override
 	protected void postRun() {
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
+		ServerVariableRepository dao = GameRepositories.serverVariables();
 		timeProlonged = 0;
-		dao.store("auctionProlonged", timeProlonged);
+		dao.set("auctionProlonged", timeProlonged);
 	}
 
 	public long getAuctionStartTime() {
@@ -610,7 +611,7 @@ public class HousingBidService extends AbstractCronTask {
 			ThreadPoolManager.getInstance().execute(new Runnable() {
 				@Override
 				public void run() {
-					DAOManager.getDAO(ServerVariablesDAO.class).store("auctionProlonged", timeProlonged);
+					GameRepositories.serverVariables().set("auctionProlonged", timeProlonged);
 				}
 			});
 		} else if (!isBiddingAllowed()) {

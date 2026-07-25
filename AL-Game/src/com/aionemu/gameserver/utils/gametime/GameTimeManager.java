@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.utils.gametime;
 
+import com.aionemu.gameserver.repository.ServerVariableRepository;
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class GameTimeManager {
@@ -30,8 +31,8 @@ public class GameTimeManager {
 	private static boolean clockStarted = false;
 
 	static {
-		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
-		instance = new GameTime(dao.load("time"));
+		ServerVariableRepository dao = GameRepositories.serverVariables();
+		instance = new GameTime(dao.find("time"));
 	}
 
 	public static GameTime getGameTime() {
@@ -48,7 +49,7 @@ public class GameTimeManager {
 	}
 
 	public static boolean saveTime() {
-		return DAOManager.getDAO(ServerVariablesDAO.class).store("time", getGameTime().getTime());
+		return GameRepositories.serverVariables().set("time", getGameTime().getTime());
 	}
 
 	public static void reloadTime(int time) {

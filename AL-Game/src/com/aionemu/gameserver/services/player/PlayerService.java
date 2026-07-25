@@ -45,16 +45,12 @@ import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
 import com.aionemu.gameserver.dao.PlayerBindPointDAO;
 import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerEffectsDAO;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
-import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
-import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
-import com.aionemu.gameserver.dao.PlayerSettingsDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
 import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
@@ -124,7 +120,7 @@ public class PlayerService {
 		DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
 		DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player);
 		DAOManager.getDAO(PlayerStigmasEquippedDAO.class).storeItems(player);
-		DAOManager.getDAO(PlayerSettingsDAO.class).saveSettings(player);
+		GameRepositories.playerSettings().save(player);
 		DAOManager.getDAO(PlayerQuestListDAO.class).store(player);
 		DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);
 		DAOManager.getDAO(PlayerPunishmentsDAO.class).storePlayerPunishments(player, PunishmentType.PRISON);
@@ -144,7 +140,7 @@ public class PlayerService {
 		DAOManager.getDAO(MailDAO.class).storeMailbox(player);
 		GameRepositories.portalCooldowns().store(player);
 		GameRepositories.craftCooldowns().store(player);
-		DAOManager.getDAO(PlayerNpcFactionsDAO.class).storeNpcFactions(player);
+		GameRepositories.playerNpcFactions().store(player);
 		DAOManager.getDAO(PlayerLunaShopDAO.class).store(player);
 		DAOManager.getDAO(EventItemsDAO.class).loadItems(player);
 		DAOManager.getDAO(PlayerCreativityPointsDAO.class).store(player);
@@ -176,9 +172,9 @@ public class PlayerService {
 		player.setAtreianBestiary(DAOManager.getDAO(PlayerABDAO.class).load(player));
 		player.setWardrobe(DAOManager.getDAO(PlayerWardrobeDAO.class).load(player));
 		DAOManager.getDAO(F2pDAO.class).loadF2pInfo(player);
-		DAOManager.getDAO(PlayerSettingsDAO.class).loadSettings(player);
+		GameRepositories.playerSettings().load(player);
 		DAOManager.getDAO(AbyssRankDAO.class).loadAbyssRank(player);
-		DAOManager.getDAO(PlayerNpcFactionsDAO.class).loadNpcFactions(player);
+		GameRepositories.playerNpcFactions().load(player);
 		DAOManager.getDAO(MotionDAO.class).loadMotionList(player);
 		player.setVars(GameRepositories.playerVariables().findAll(player.getObjectId()));
 		Equipment equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(player);
@@ -236,7 +232,7 @@ public class PlayerService {
 		DAOManager.getDAO(PlayerPunishmentsDAO.class).loadPlayerPunishments(player, PunishmentType.PRISON);
 		DAOManager.getDAO(PlayerPunishmentsDAO.class).loadPlayerPunishments(player, PunishmentType.GATHER);
 		player.getController().updatePassiveStats();
-		DAOManager.getDAO(PlayerEffectsDAO.class).loadPlayerEffects(player);
+		GameRepositories.playerEffects().load(player);
 		GameRepositories.skillCooldowns().load(player);
 		GameRepositories.itemCooldowns().load(player);
 		GameRepositories.portalCooldowns().load(player);
@@ -247,7 +243,7 @@ public class PlayerService {
 		if (player.getCommonData().getBonusTitleId() > 0) {
 			TitleChangeListener.onBonusTitleChange(player.getGameStats(), player.getCommonData().getTitleId(), true);
 		}
-		DAOManager.getDAO(PlayerLifeStatsDAO.class).loadPlayerLifeStat(player);
+		GameRepositories.playerLifeStats().load(player);
 		GameRepositories.playerEmotions().load(player);
 		if (CacheConfig.CACHE_PLAYERS) {
 			playerCache.put(playerObjId, player);

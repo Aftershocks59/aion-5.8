@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.transfers;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -26,7 +27,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.PlayerBindPointDAO;
-import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
 import com.aionemu.gameserver.dao.PlayerTitleListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Gender;
@@ -386,7 +386,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 			}
 		}
 		if (cnt > 0 && PlayerTransferConfig.ALLOW_NPCFACTIONS) {
-			DAOManager.getDAO(PlayerNpcFactionsDAO.class).storeNpcFactions(player);
+			GameRepositories.playerNpcFactions().store(player);
 		}
 		cnt = readD();
 		textLog.info("Pets:" + cnt);

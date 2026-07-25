@@ -106,11 +106,11 @@ public class PlayerLeaveWorldService {
 			player.setPrisonTimer(prisonTimer);
 			log.debug("Update prison timer to " + prisonTimer / 1000 + " seconds !");
 		}
-		DAOManager.getDAO(PlayerEffectsDAO.class).storePlayerEffects(player);
+		GameRepositories.playerEffects().store(player);
 		GameRepositories.skillCooldowns().store(player);
 		GameRepositories.itemCooldowns().store(player);
 		GameRepositories.houseObjectCooldowns().store(player);
-		DAOManager.getDAO(PlayerLifeStatsDAO.class).updatePlayerLifeStat(player);
+		GameRepositories.playerLifeStats().save(player);
 		DAOManager.getDAO(EventItemsDAO.class).storeItems(player);
 
 		// LUNA
