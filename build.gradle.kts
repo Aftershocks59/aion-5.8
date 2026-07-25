@@ -23,8 +23,8 @@ subprojects {
                 resources.setSrcDirs(emptyList<String>())
             }
             named("test") {
-                java.setSrcDirs(emptyList<String>())
-                resources.setSrcDirs(emptyList<String>())
+                java.setSrcDirs(listOf("test"))
+                resources.setSrcDirs(listOf("test-resources"))
             }
         }
 
@@ -38,6 +38,14 @@ subprojects {
 
         tasks.withType<Jar>().configureEach {
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
+
+        // Run tests on the JUnit 5 platform.
+        tasks.withType<Test>().configureEach {
+            useJUnitPlatform()
+            testLogging {
+                events("passed", "skipped", "failed")
+            }
         }
     }
 }

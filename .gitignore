@@ -10,14 +10,19 @@ bin/
 AL-Game/cache/
 log/
 *.log
-AL-Game/log/
+
+# Ignore JVM crash and heap dumps.
+*.hprof
+hs_err_pid*.log
+replay_pid*.log
 
 # Ignore geodata, which is distributed separately (see README).
 Geodata/
+AL-Game/data/geo/
 *.geo
 
-# Track the shared IntelliJ configuration, ignore the per-developer parts.
-# See .idea/.gitignore for the exclusions inside that directory.
+# Ignore IDE files: they are developer-specific and Gradle regenerates them.
+.idea/
 *.iml
 .classpath
 .project
