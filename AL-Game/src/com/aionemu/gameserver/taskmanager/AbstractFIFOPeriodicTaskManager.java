@@ -57,7 +57,13 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 			writeUnlock();
 		}
 
-		for (T task; (task = activeTasks.removeFirst()) != null;) {
+		// Drain on emptiness, not on a null return. LinkedHashSet.removeFirst throws
+		// NoSuchElementException when empty, where the collection this replaced
+		// returned null. Reading the loop condition as a null check let the last
+		// iteration throw, and a scheduled task that throws is cancelled for good:
+		// the manager stopped running the moment its queue first ran dry.
+		while (!activeTasks.isEmpty()) {
+			final T task = activeTasks.removeFirst();
 			final long begin = System.nanoTime();
 
 			try {
