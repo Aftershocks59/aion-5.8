@@ -179,6 +179,11 @@ A world may carry `HeightMap32.Dat` or `HeightMap24.Dat` instead of
 `HeightMap40.Dat`; the finest tier present is the one read. Worlds with no
 directory simply have no geodata, and are queried as if geodata were off.
 
+Switched on, the server answers ground height, line of sight and movement from
+these files. Doors and anything else whose collision moves are not answered
+yet: the files say which triangles belong to one, but its state lives in the
+running server and the mesh is not rebuilt for it.
+
 ## Static data cache
 
 `AL-Game/data/static_data/` holds several hundred megabytes of XML. Parsing it
