@@ -191,6 +191,60 @@ class GeoDataOnDiskTest {
 	}
 
 	@Test
+	@DisplayName("Leaves a cell coded as holding no ground without any")
+	void cellsWithNoBaseSurfaceHaveNoGround() throws IOException {
+		assumeTrue(!worlds.isEmpty(), "no geodata installed under " + GEO_DIRECTORY);
+
+		// Terrain is solid wherever it is there at all: the base surface carries no
+		// material and is never looked up in the collision table. What decides
+		// whether a player falls through is the surface code alone, so a cell coded
+		// as holding no ground must answer none. Getting those two bits wrong is
+		// the one way to turn a hole into a floor, or a floor into a hole.
+		long[] bases = new long[4];
+		long holes = 0;
+		long holesWithGround = 0;
+
+		int read = 0;
+		for (Path world : worlds) {
+			if (read++ == 6) {
+				break;
+			}
+			int worldId = Integer.parseInt(world.getFileName().toString());
+			try (WorldGeoData geo = WorldGeoData.load(worldId, world)) {
+				HeightMap terrain = geo.getTerrain();
+				GeoTracer tracer = new GeoTracer(geo);
+
+				for (int cellX = 0; cellX + 1 < terrain.getCols(); cellX++) {
+					for (int cellY = 0; cellY + 1 < terrain.getRows(); cellY++) {
+						int code = terrain.surfaceCode(terrain.cornerIndex(cellX, cellY));
+						bases[HeightMap.baseSurface(code)]++;
+						if (HeightMap.baseSurface(code) != HeightMap.BASE_NONE || HeightMap.hasMesh(code)) {
+							continue;
+						}
+						holes++;
+						float x = cellX * HeightMap.CELL_SIZE + 1.0f;
+						float y = cellY * HeightMap.CELL_SIZE + 1.0f;
+						if (RayTriangle.hit(tracer.groundZ(x, y, 0.0f))) {
+							holesWithGround++;
+						}
+					}
+				}
+			}
+		}
+
+		System.out.println("Base surfaces: quad " + bases[HeightMap.BASE_QUAD] + ", flat " + bases[HeightMap.BASE_FLAT]
+				+ ", quad again " + bases[HeightMap.BASE_QUAD_ALTERNATE] + ", none " + bases[HeightMap.BASE_NONE]
+				+ ". Bare holes " + holes + ", of which " + holesWithGround + " answered ground.");
+
+		// All four codings have to turn up. A decode that read the wrong two bits
+		// would collapse them, and one of them being empty is how that shows.
+		for (int base = 0; base < bases.length; base++) {
+			assertTrue(bases[base] > 0, "no cell anywhere is coded with base surface " + base);
+		}
+		assertEquals(0L, holesWithGround, "cells coded as holding no ground answered ground anyway");
+	}
+
+	@Test
 	@DisplayName("Finds ground under a real world, and walls across it")
 	void tracesRealWorlds() throws IOException {
 		assumeTrue(!worlds.isEmpty(), "no geodata installed under " + GEO_DIRECTORY);
