@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.LinkedHashMap;
 
@@ -39,7 +40,6 @@ import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.configs.schedule.SiegeSchedule;
 import com.aionemu.gameserver.configs.schedule.SiegeSchedule.Fortress;
-import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -105,7 +105,7 @@ public class SiegeService {
 			artifacts = DataManager.SIEGE_LOCATION_DATA.getArtifacts();
 			fortresses = DataManager.SIEGE_LOCATION_DATA.getFortress();
 			locations = DataManager.SIEGE_LOCATION_DATA.getSiegeLocations();
-			DAOManager.getDAO(SiegeDAO.class).loadSiegeLocations(locations);
+			GameRepositories.sieges().load(locations);
 			log.info("[SiegeService] Loaded " + locations.size() + " siege locations.");
 		} else {
 			artifacts = Collections.emptyMap();

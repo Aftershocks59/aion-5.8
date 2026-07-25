@@ -39,7 +39,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
-import com.aionemu.gameserver.dao.HouseBidsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
@@ -199,7 +198,7 @@ public class HousingBidService extends AbstractCronTask {
 	}
 
 	private void loadBidData() {
-		Set<PlayerHouseBid> playerBidData = DAOManager.getDAO(HouseBidsDAO.class).loadBids();
+		Set<PlayerHouseBid> playerBidData = GameRepositories.houseBids().findAll();
 		List<PlayerHouseBid> sortedBids = new ArrayList<PlayerHouseBid>(playerBidData);
 		Collections.sort(sortedBids);
 		Map<Integer, House> housesById = new LinkedHashMap<>();
@@ -371,7 +370,7 @@ public class HousingBidService extends AbstractCronTask {
 		}
 		for (HouseBidEntry houseBid : copy) {
 			House house = HousingService.getInstance().getHouseByAddress(houseBid.getAddress());
-			DAOManager.getDAO(HouseBidsDAO.class).deleteHouseBids(house.getObjectId());
+			GameRepositories.houseBids().removeAll(house.getObjectId());
 			if (house.getOwnerId() == 0) {
 				house.setStatus(HouseStatus.NOSALE);
 				addHouseToAuction(house);
@@ -504,7 +503,7 @@ public class HousingBidService extends AbstractCronTask {
 			house.setSellStarted(time);
 		}
 		house.save();
-		return DAOManager.getDAO(HouseBidsDAO.class).addBid(0, house.getObjectId(), initialPrice, time);
+		return GameRepositories.houseBids().add(0, house.getObjectId(), initialPrice, time);
 	}
 
 	public boolean removeHouseFromAuction(House house, boolean noSale) {
@@ -546,7 +545,7 @@ public class HousingBidService extends AbstractCronTask {
 			MailFormatter.sendHouseAuctionMail(house, pcd, AuctionResult.CANCELED_BID, System.currentTimeMillis(),
 					playerBid.getBidPrice());
 		}
-		DAOManager.getDAO(HouseBidsDAO.class).deleteHouseBids(house.getObjectId());
+		GameRepositories.houseBids().removeAll(house.getObjectId());
 		house.save();
 		return true;
 	}
@@ -637,7 +636,7 @@ public class HousingBidService extends AbstractCronTask {
 			entry.setBidPrice(bidOffer);
 			HouseBidEntry playerBid = (HouseBidEntry) entry.Clone();
 			playerBids.put(player.getObjectId(), playerBid);
-			DAOManager.getDAO(HouseBidsDAO.class).addBid(player.getObjectId(), bidHouse.getObjectId(), bidOffer, time);
+			GameRepositories.houseBids().add(player.getObjectId(), bidHouse.getObjectId(), bidOffer, time);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_PRICE_CHANGE(bidOffer));
 			PacketSendUtility.sendPacket(player, new SM_RECEIVE_BIDS(0));
 		}

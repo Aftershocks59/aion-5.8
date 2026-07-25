@@ -16,8 +16,8 @@
  */
 package admincommands;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PetitionDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.PetitionType;
@@ -74,7 +74,7 @@ public class Petitions extends AdminCommand {
 			return;
 		}
 
-		Petition petition = DAOManager.getDAO(PetitionDAO.class).getPetitionById(petitionId);
+		Petition petition = GameRepositories.petitions().findById(petitionId);
 
 		if (petition == null) {
 			PacketSendUtility.sendMessage(admin, "There is no petition with id #" + petitionId);

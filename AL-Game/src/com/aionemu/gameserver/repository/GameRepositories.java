@@ -80,6 +80,10 @@ public final class GameRepositories {
 	private final SpecialLandingRepository specialLandings;
 	private final WebRewardRepository webRewards;
 	private final HouseScriptRepository houseScripts;
+	private final SiegeRepository sieges;
+	private final HouseBidRepository houseBids;
+	private final PassportRepository passports;
+	private final PetitionRepository petitions;
 
 	/**
 	 * Builds every repository over one data source.
@@ -133,6 +137,10 @@ public final class GameRepositories {
 		specialLandings = new JdbcSpecialLandingRepository(dataSource);
 		webRewards = new JdbcWebRewardRepository(dataSource);
 		houseScripts = new JdbcHouseScriptRepository(dataSource);
+		sieges = new JdbcSiegeRepository(dataSource);
+		houseBids = new JdbcHouseBidRepository(dataSource);
+		passports = new JdbcPassportRepository(dataSource);
+		petitions = new JdbcPetitionRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -325,5 +333,21 @@ public final class GameRepositories {
 
 	public static HouseScriptRepository houseScripts() {
 		return getInstance().houseScripts;
+	}
+
+	public static SiegeRepository sieges() {
+		return getInstance().sieges;
+	}
+
+	public static HouseBidRepository houseBids() {
+		return getInstance().houseBids;
+	}
+
+	public static PassportRepository passports() {
+		return getInstance().passports;
+	}
+
+	public static PetitionRepository petitions() {
+		return getInstance().petitions;
 	}
 }

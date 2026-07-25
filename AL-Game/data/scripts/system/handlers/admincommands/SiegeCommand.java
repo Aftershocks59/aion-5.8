@@ -16,9 +16,9 @@
  */
 package admincommands;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -185,7 +185,7 @@ public class SiegeCommand extends AdminCommand
 			loc.setRace(sr);
 			loc.setLegionId(legion != null ? legion.getLegionId() : 0);
 			SiegeService.getInstance().spawnNpcs(siegeLocationId, sr, SiegeModType.PEACE);
-			DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(loc);
+			GameRepositories.sieges().save(loc);
 			switch (siegeLocationId) {
 				//Siel's Western Fortress.
 				case 1131:

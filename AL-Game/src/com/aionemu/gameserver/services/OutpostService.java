@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
-import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -168,7 +167,7 @@ public class OutpostService {
 		loc.setRace(sr);
 		loc.setLegionId(0);
 		SiegeService.getInstance().spawnNpcs(getOutpostLocation(id).getArtifactId(), sr, SiegeModType.SIEGE);
-		DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(loc);
+		GameRepositories.sieges().save(loc);
 	}
 
 	public boolean isActive(int id) {

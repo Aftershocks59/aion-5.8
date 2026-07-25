@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,6 @@ import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -197,7 +197,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 			}
 			giveRewardsToPlayers(getSiegeCounter().getRaceCounter(getSiegeLocation().getRace()));
 		}
-		DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(getSiegeLocation());
+		GameRepositories.sieges().save(getSiegeLocation());
 		getSiegeLocation().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {

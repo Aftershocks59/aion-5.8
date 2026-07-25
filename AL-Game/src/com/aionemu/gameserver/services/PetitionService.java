@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PetitionDAO;
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PETITION;
@@ -49,7 +49,7 @@ public class PetitionService {
 
 	public PetitionService() {
 		log.info("Loading PetitionService ...");
-		Set<Petition> petitions = DAOManager.getDAO(PetitionDAO.class).getPetitions();
+		Set<Petition> petitions = GameRepositories.petitions().findOpen();
 		for (Petition p : petitions) {
 			registeredPetitions.put(p.getPetitionId(), p);
 		}
@@ -72,7 +72,7 @@ public class PetitionService {
 				registeredPetitions.remove(p.getPetitionId());
 			}
 		}
-		DAOManager.getDAO(PetitionDAO.class).deletePetition(playerObjId);
+		GameRepositories.petitions().removeOpenFor(playerObjId);
 		if (playerObjId > 0 && World.getInstance().findPlayer(playerObjId) != null) {
 			Player p = World.getInstance().findPlayer(playerObjId);
 			PacketSendUtility.sendPacket(p, new SM_PETITION());
@@ -82,7 +82,7 @@ public class PetitionService {
 
 	public void setPetitionReplied(int petitionId) {
 		int playerObjId = registeredPetitions.get(petitionId).getPlayerObjId();
-		DAOManager.getDAO(PetitionDAO.class).setReplied(petitionId);
+		GameRepositories.petitions().markReplied(petitionId);
 		registeredPetitions.remove(petitionId);
 		rebroadcastPlayerData();
 		if (playerObjId > 0 && World.getInstance().findPlayer(playerObjId) != null) {
@@ -93,9 +93,9 @@ public class PetitionService {
 
 	public synchronized Petition registerPetition(Player sender, int typeId, String title, String contentText,
 			String additionalData) {
-		int id = DAOManager.getDAO(PetitionDAO.class).getNextAvailableId();
+		int id = GameRepositories.petitions().nextId();
 		Petition ptt = new Petition(id, sender.getObjectId(), typeId, title, contentText, additionalData, 0);
-		DAOManager.getDAO(PetitionDAO.class).insertPetition(ptt);
+		GameRepositories.petitions().add(ptt, System.currentTimeMillis() / 1000L);
 		registeredPetitions.put(ptt.getPetitionId(), ptt);
 		broadcastMessageToGM(sender, ptt.getPetitionId());
 		return ptt;

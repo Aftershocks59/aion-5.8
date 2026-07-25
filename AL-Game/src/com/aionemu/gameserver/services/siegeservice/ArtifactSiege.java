@@ -16,11 +16,11 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.landing.LandingPointsEnum;
@@ -65,7 +65,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 			log.error("Artifact siege (artifactId:" + getSiegeLocationId() + ") ended without killing a boss.");
 		}
 		spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.PEACE);
-		DAOManager.getDAO(SiegeDAO.class).updateLocation(getSiegeLocation());
+		GameRepositories.sieges().save(getSiegeLocation());
 		getSiegeLocation().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {

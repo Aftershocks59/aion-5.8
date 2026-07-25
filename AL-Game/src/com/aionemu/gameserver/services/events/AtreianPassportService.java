@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -26,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerPassportsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.event.AtreianPassport;
@@ -48,7 +48,7 @@ public class AtreianPassportService {
 
 	public Map<Integer, AtreianPassport> getPlayerPassports(int accountId) {
 		Map<Integer, AtreianPassport> passports = new HashMap<Integer, AtreianPassport>();
-		List<Integer> ids = DAOManager.getDAO(PlayerPassportsDAO.class).getPassports(accountId);
+		List<Integer> ids = GameRepositories.passports().findPassports(accountId);
 		for (Integer i : ids) {
 			passports.put(i, data.get(i));
 		}
@@ -61,12 +61,11 @@ public class AtreianPassportService {
 		}
 		int atreianId = 8;
 		int accountId = player.getPlayerAccount().getId();
-		PlayerPassportsDAO dao = DAOManager.getDAO(PlayerPassportsDAO.class);
 		Map<Integer, AtreianPassport> playerPassports = getPlayerPassports(accountId);
 
 		// Added reset if all Stamps are received
-		if (dao.getStamps(accountId, atreianId) == 28) {
-			dao.updatePassport(accountId, atreianId, 0, true, new Timestamp(System.currentTimeMillis() - 86400000L));
+		if (GameRepositories.passports().findStamps(accountId, atreianId) == 28) {
+			GameRepositories.passports().update(accountId, atreianId, 0, true, new Timestamp(System.currentTimeMillis() - 86400000L));
 		}
 
 		Calendar cal = Calendar.getInstance();
@@ -76,14 +75,15 @@ public class AtreianPassportService {
 
 		if (!playerPassports.containsKey(atreianId)) {
 			final Timestamp now = new Timestamp(System.currentTimeMillis() - 86400000L);
-			dao.insertPassport(accountId, atreianId, 0, now);
+			GameRepositories.passports().add(accountId, atreianId, 0, now);
 			PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(atreianId, 0, 1, false, month + 1, year)); // NEW
 		} else {
-			int stamps = dao.getStamps(accountId, atreianId);
+			int stamps = GameRepositories.passports().findStamps(accountId, atreianId);
 			Timestamp now2 = new Timestamp(System.currentTimeMillis());
-			Timestamp lastStamp = dao.getLastStamp(accountId, atreianId);
-			if (now2.getTime() - lastStamp.getTime() >= 86400000L) {
-				DAOManager.getDAO(PlayerPassportsDAO.class).updatePassport(accountId, atreianId, stamps, false,
+			// No row means the passport has never been stamped, so the stamp is due.
+			Timestamp lastStamp = GameRepositories.passports().findLastStamp(accountId, atreianId);
+			if (now2.getTime() - stampedAt(lastStamp) >= 86400000L) {
+				GameRepositories.passports().update(accountId, atreianId, stamps, false,
 						lastStamp);
 				PacketSendUtility.sendPacket(player,
 						new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, false, month + 1, year));
@@ -112,23 +112,22 @@ public class AtreianPassportService {
 	public void getReward(Player player, int atreianId) {
 		AtreianPassport loginRewardTemplate = DataManager.ATREIAN_PASSPORT_DATA.getAtreianPassportId(atreianId);
 		int accountId = player.getPlayerAccount().getId();
-		PlayerPassportsDAO dao = DAOManager.getDAO(PlayerPassportsDAO.class);
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(player.getCreationDate());
 		int month = cal.get(Calendar.MONTH);
 		int year = cal.get(Calendar.YEAR);
-		int stamps = dao.getStamps(accountId, atreianId);
+		int stamps = GameRepositories.passports().findStamps(accountId, atreianId);
 		for (AtreianPassportRewards component : loginRewardTemplate.getAtreianPassportRewards()) {
 			Timestamp now = new Timestamp(System.currentTimeMillis());
-			Timestamp lastStamp = dao.getLastStamp(accountId, atreianId);
-			if (now.getTime() - lastStamp.getTime() >= 86400000L) {
+			Timestamp lastStamp = GameRepositories.passports().findLastStamp(accountId, atreianId);
+			if (now.getTime() - stampedAt(lastStamp) >= 86400000L) {
 				if (component.getRewardItemNum() == stamps + 1) {
 					ItemService.addItem(player, component.getRewardItem(), component.getRewardItemCount());
 					// PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(atreianId,
 					// stamps + 1, (int) now.getTime(), true, month + 1, year)); //OLD
 					PacketSendUtility.sendPacket(player,
 							new SM_ATREIAN_PASSPORT(atreianId, stamps + 1, 1, true, month + 1, year)); // NEW
-					DAOManager.getDAO(PlayerPassportsDAO.class).updatePassport(accountId, atreianId, stamps + 1, true,
+					GameRepositories.passports().update(accountId, atreianId, stamps + 1, true,
 							now);
 				}
 			}
@@ -183,4 +182,11 @@ public class AtreianPassportService {
 	public static AtreianPassportService getInstance() {
 		return SingletonHolder.instance;
 	}
-}
+
+	/**
+	 * Answers when a passport was last stamped, treating a passport that has
+	 * never been stamped as stamped long ago.
+	 */
+	private static long stampedAt(Timestamp lastStamp) {
+		return lastStamp == null ? 0L : lastStamp.getTime();
+	}}
