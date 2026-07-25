@@ -20,6 +20,16 @@ Three servers make up a running installation:
 
 Gradle itself needs no installation: use the wrapper (`./gradlew`).
 
+On Windows, let git write long paths before cloning:
+
+```bash
+git config --global core.longpaths true
+```
+
+Some quest and AI script names run to 129 characters. Without this, cloning
+into anything but a short directory stops partway through with "Filename too
+long", having already reported success.
+
 ## Build
 
 ```bash
