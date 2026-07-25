@@ -22,6 +22,9 @@ public class CM_PRIVATE_STORE extends AionClientPacket {
 	 */
 	private Player activePlayer;
 	private TradePSItem[] tradePSItems;
+	/** Counts the wire bytes one store entry occupies: objId, itemId, count, price, unknown. */
+	private static final int BYTES_PER_ITEM = 4 + 4 + 2 + 4 + 4;
+
 	private int itemCount;
 	private boolean cancelStore;
 
@@ -35,10 +38,15 @@ public class CM_PRIVATE_STORE extends AionClientPacket {
 		 * Define who wants to create a private store
 		 */
 		activePlayer = getConnection().getActivePlayer();
-		int level = activePlayer.getLevel();
+
+		// Check before dereferencing. The null test used to sit one line below
+		// getLevel(), so it guarded nothing: a packet arriving between login and
+		// world entry threw rather than returning.
 		if (activePlayer == null) {
 			return;
 		}
+
+		int level = activePlayer.getLevel();
 		if (activePlayer.isInPrison()) {
 			cancelStore = true;
 			PacketSendUtility.sendMessage(activePlayer, "You can't open Private Shop in prison!");
@@ -80,6 +88,16 @@ public class CM_PRIVATE_STORE extends AionClientPacket {
 			return;
 		}
 		itemCount = readH();
+
+		// Size the array on what the packet can actually describe, not on the count
+		// the client claims. Each entry costs eighteen bytes on the wire, so a small
+		// packet declaring 65535 items cannot be honest, and sizing on its word
+		// would allocate half a megabyte per packet on demand.
+		int describable = getRemainingBytes() / BYTES_PER_ITEM;
+		if (itemCount > describable) {
+			itemCount = describable;
+		}
+
 		tradePSItems = new TradePSItem[itemCount];
 
 		if (activePlayer.getMoveController().isInMove()) {
@@ -96,8 +114,19 @@ public class CM_PRIVATE_STORE extends AionClientPacket {
 			long price = readD();
 			readD();// unk 4.7
 			Item item = activePlayer.getInventory().getItemByObjId(itemObjId);
-			if ((price < 0 || item == null || item.getItemId() != itemId || item.getItemCount() < count)
-					&& !cancelStore) {
+
+			// Reject an unknown item before anything dereferences it. The guard used
+			// to be folded into a condition ending in "&& !cancelStore", so once a
+			// first bad entry had set that flag, a second entry naming an item the
+			// player does not own fell through to the else branch and dereferenced
+			// null. Two crafted entries were enough to kill the packet thread.
+			if (item == null) {
+				PacketSendUtility.sendMessage(activePlayer, "Invalid item.");
+				cancelStore = true;
+				continue;
+			}
+
+			if ((price < 0 || item.getItemId() != itemId || item.getItemCount() < count) && !cancelStore) {
 				PacketSendUtility.sendMessage(activePlayer, "Invalid item.");
 				cancelStore = true;
 			} else if (!item.isTradeable(activePlayer)) {

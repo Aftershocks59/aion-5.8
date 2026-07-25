@@ -92,10 +92,12 @@ public class AionPacketHandler {
 		res.setBuffer(buf);
 		res.setConnection(con);
 
-		if (con.getState().equals(State.IN_GAME) && con.getActivePlayer().getPlayerAccount().getMembership() == 10) {
-			PacketSendUtility.sendMessage(con.getActivePlayer(),
-					"0x" + Integer.toHexString(res.getOpcode()).toUpperCase() + " : " + res.getPacketName());
-		}
+		// A second packet dump used to sit here, keyed on membership == 10 and gated
+		// by no configuration at all. It duplicated the block above with a worse
+		// criterion, membership being a subscription tier rather than an access
+		// level, and it dereferenced getActivePlayer() without the null check the
+		// block above performs, on the path every single packet takes.
+
 		return res;
 	}
 

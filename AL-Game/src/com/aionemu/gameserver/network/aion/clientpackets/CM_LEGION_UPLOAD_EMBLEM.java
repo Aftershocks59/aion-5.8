@@ -38,9 +38,20 @@ public class CM_LEGION_UPLOAD_EMBLEM extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		size = readD();
-		data = new byte[size];
-		data = readB(size);
+		int declared = readD();
+
+		// Refuse a chunk larger than the packet carrying it. The client declares this
+		// length, so an unchecked new byte[declared] hands any logged-in player a way
+		// to exhaust the heap. readB guards this too; stating it here keeps the
+		// intent visible at the call site and drops the chunk instead of truncating.
+		if (declared < 0 || declared > getRemainingBytes()) {
+			size = 0;
+			data = null;
+			return;
+		}
+
+		size = declared;
+		data = readB(declared);
 	}
 
 	@Override

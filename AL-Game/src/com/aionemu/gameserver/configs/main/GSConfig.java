@@ -64,7 +64,7 @@ public class GSConfig {
 	/**
 	 * Memory Optimization Configs
 	 */
-	@Property(key = "gameserver.gc.enable", defaultValue = "true")
+	@Property(key = "gameserver.gc.enable", defaultValue = "false")
 	public static boolean ENABLE_MEMORY_GC;
 	@Property(key = "gameserver.gc.optimization.time", defaultValue = "5")
 	public static int GC_OPTIMIZATION_TIME;

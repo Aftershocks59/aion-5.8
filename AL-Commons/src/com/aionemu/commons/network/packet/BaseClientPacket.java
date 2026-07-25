@@ -261,6 +261,24 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
      * @return byte[]
      */
     protected final byte[] readB(int length) {
+        // Never size an allocation on a length the client chose. Several packets
+        // pass a value they just read straight in, so a crafted packet could ask
+        // for two gigabytes and exhaust the heap, or ask for a negative length and
+        // kill the packet thread. A packet can never legitimately hold more bytes
+        // than it carries, which makes the remaining count the exact bound.
+        if (length <= 0) {
+            if (length < 0) {
+                log.warn("Rejected a negative byte[] length of {} for: {}", length, this);
+            }
+            return EMPTY_BYTES;
+        }
+
+        int available = buf.remaining();
+        if (length > available) {
+            log.warn("Truncated a byte[] read of {} to the {} bytes remaining for: {}", length, available, this);
+            length = available;
+        }
+
         byte[] result = new byte[length];
         try {
             buf.get(result);
@@ -269,6 +287,9 @@ public abstract class BaseClientPacket<T extends AConnection> extends BasePacket
         }
         return result;
     }
+
+    /** Serves every rejected or empty byte[] read, so none of them allocates. */
+    private static final byte[] EMPTY_BYTES = new byte[0];
 
     /**
      * Execute this packet action.
