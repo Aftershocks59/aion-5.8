@@ -18,49 +18,79 @@
 
 package com.aionemu.loginserver.controller;
 
-import java.util.LinkedHashMap;
-
 import java.sql.Timestamp;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.loginserver.dao.BannedMacDAO;
+import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.model.base.BannedMacEntry;
+import com.aionemu.loginserver.repository.BannedMacRepository;
+import com.aionemu.loginserver.repository.JdbcBannedMacRepository;
 
 /**
+ * Keeps the banned MAC addresses in memory, backed by the repository.
  *
  * @author KID
- *
  */
 public class BannedMacManager {
 
-    private static BannedMacManager manager = new BannedMacManager();
-    private Map<String, BannedMacEntry> bannedList = new LinkedHashMap<String, BannedMacEntry>();
+	private static BannedMacManager manager;
 
-    public static BannedMacManager getInstance() {
-        return manager;
-    }
-    private BannedMacDAO dao = DAOManager.getDAO(BannedMacDAO.class);
+	private final BannedMacRepository repository;
+	private final Map<String, BannedMacEntry> bannedList;
 
-    public BannedMacManager() {
-        bannedList = dao.load();
-    }
+	/**
+	 * Builds a manager over the given store.
+	 * <p>
+	 * Takes the repository rather than looking one up, so the ban logic can be
+	 * exercised without a database.
+	 *
+	 * @param repository where the bans live
+	 */
+	public BannedMacManager(BannedMacRepository repository) {
+		this.repository = repository;
+		this.bannedList = new LinkedHashMap<String, BannedMacEntry>(repository.findAll());
+	}
 
-    public void unban(String address, String details) {
-        if (bannedList.containsKey(address)) {
-            bannedList.remove(address);
-            dao.remove(address);
-        }
-    }
+	/**
+	 * Answers the shared manager, building it on first use.
+	 * <p>
+	 * Built lazily because it reads the bans straight away, which needs the
+	 * connection pool to be open.
+	 */
+	public static synchronized BannedMacManager getInstance() {
+		if (manager == null) {
+			manager = new BannedMacManager(new JdbcBannedMacRepository(DatabaseFactory.getDataSource()));
+		}
+		return manager;
+	}
 
-    public void ban(String address, long time, String details) {
-        BannedMacEntry mac = new BannedMacEntry(address, new Timestamp(time), details);
-        this.bannedList.put(address, mac);
-        this.dao.update(mac);
-    }
+	/**
+	 * Lifts the ban on an address.
+	 *
+	 * @param address the address to unban
+	 * @param details why it was lifted, kept for the caller's audit trail
+	 */
+	public void unban(String address, String details) {
+		if (bannedList.remove(address) != null) {
+			repository.remove(address);
+		}
+	}
 
-    public final Map<String, BannedMacEntry> getMap() {
-        return this.bannedList;
-    }
+	/**
+	 * Bans an address until the given moment.
+	 *
+	 * @param address the address to ban
+	 * @param time    when the ban ends
+	 * @param details why it was banned
+	 */
+	public void ban(String address, long time, String details) {
+		BannedMacEntry entry = new BannedMacEntry(address, new Timestamp(time), details);
+		bannedList.put(address, entry);
+		repository.save(entry);
+	}
+
+	public final Map<String, BannedMacEntry> getMap() {
+		return bannedList;
+	}
 }

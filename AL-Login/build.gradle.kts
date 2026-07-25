@@ -11,6 +11,7 @@ dependencies {
     implementation(libs.bcrypt)
 
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockito.junit)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 

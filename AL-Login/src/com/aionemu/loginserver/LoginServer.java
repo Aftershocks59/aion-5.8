@@ -46,7 +46,7 @@ import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.controller.BannedIpController;
 import com.aionemu.loginserver.controller.PremiumController;
-import com.aionemu.loginserver.dao.BannedMacDAO;
+import com.aionemu.loginserver.repository.JdbcBannedMacRepository;
 import com.aionemu.loginserver.network.NetConnector;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
 import com.aionemu.loginserver.service.PlayerTransferService;
@@ -144,7 +144,7 @@ public class LoginServer {
 
         GameServerTable.load();
         BannedIpController.start();
-        DAOManager.getDAO(BannedMacDAO.class).cleanExpiredBans();
+        new JdbcBannedMacRepository(DatabaseFactory.getDataSource()).removeExpired();
 
         NetConnector.getInstance().connect();
         PlayerTransferService.getInstance();

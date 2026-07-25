@@ -31,6 +31,8 @@ package com.aionemu.commons.database;
 
 import com.aionemu.commons.configs.DatabaseConfig;
 import com.zaxxer.hikari.HikariConfig;
+import javax.sql.DataSource;
+
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,6 +145,20 @@ public class DatabaseFactory {
         }
 
         log.info("Successfully connected to database");
+    }
+
+    /**
+     * Hands out the pool itself, for the repositories that take their data source
+     * by constructor rather than reaching for a static one.
+     *
+     * @return the pool, never null once init has run
+     * @throws IllegalStateException if the pool has not been opened yet
+     */
+    public static DataSource getDataSource() {
+        if (connectionPool == null) {
+            throw new IllegalStateException("The connection pool is not open. Call DatabaseFactory.init() first.");
+        }
+        return connectionPool;
     }
 
     /**
