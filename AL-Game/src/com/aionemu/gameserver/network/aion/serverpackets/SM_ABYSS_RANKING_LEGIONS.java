@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class SM_ABYSS_RANKING_LEGIONS extends AionServerPacket {
 	private int updateTime;
 	private int sendData = 0;
 
-	public SM_ABYSS_RANKING_LEGIONS(int updateTime, ArrayList<AbyssRankingResult> data, Race race) {
+	public SM_ABYSS_RANKING_LEGIONS(int updateTime, List<AbyssRankingResult> data, Race race) {
 		this.updateTime = updateTime;
 		this.data = data;
 		this.race = race;

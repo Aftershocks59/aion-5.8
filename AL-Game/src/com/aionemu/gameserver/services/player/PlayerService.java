@@ -30,7 +30,6 @@ import com.aionemu.gameserver.configs.main.CacheConfig;
 import com.aionemu.gameserver.controllers.FlyController;
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.MailDAO;
@@ -103,7 +102,7 @@ public class PlayerService {
 		GameRepositories.equippedStigmas().save(player);
 		GameRepositories.playerSettings().save(player);
 		GameRepositories.playerQuests().save(player);
-		DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);
+		GameRepositories.abyssRanks().save(player.getObjectId(), player.getAbyssRank());
 		GameRepositories.playerPunishments().save(player, PunishmentType.PRISON);
 		GameRepositories.playerPunishments().save(player, PunishmentType.GATHER);
 		DAOManager.getDAO(InventoryDAO.class).store(player);
@@ -154,7 +153,7 @@ public class PlayerService {
 		player.setWardrobe(GameRepositories.playerWardrobe().findAll(player));
 		GameRepositories.f2p().load(player);
 		GameRepositories.playerSettings().load(player);
-		DAOManager.getDAO(AbyssRankDAO.class).loadAbyssRank(player);
+		player.setAbyssRank(GameRepositories.abyssRanks().load(player.getObjectId()));
 		GameRepositories.playerNpcFactions().load(player);
 		GameRepositories.playerMotions().load(player);
 		player.setVars(GameRepositories.playerVariables().findAll(player.getObjectId()));

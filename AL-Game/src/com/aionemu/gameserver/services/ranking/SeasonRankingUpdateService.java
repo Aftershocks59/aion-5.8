@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.ranking;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -26,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.SeasonRankingDAO;
 import com.aionemu.gameserver.model.ranking.SeasonRankingEnum;
 import com.aionemu.gameserver.model.ranking.SeasonRankingResult;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SEASON_RANKING;
@@ -58,7 +58,7 @@ public class SeasonRankingUpdateService {
 	}
 
 	private List<SM_SEASON_RANKING> loadRankPacket(int tableid) {
-		ArrayList<SeasonRankingResult> list = getDAO().getCompetitionRankingPlayers(tableid);
+		List<SeasonRankingResult> list = GameRepositories.seasonRankings().findLeaderboard(tableid);
 		List<SM_SEASON_RANKING> playerPackets = new ArrayList<SM_SEASON_RANKING>();
 		for (int i = 0; i < list.size(); i += 94) {
 			if (list.size() > i + 94) {
@@ -74,10 +74,6 @@ public class SeasonRankingUpdateService {
 
 	public List<SM_SEASON_RANKING> getPlayers(int tableId) {
 		return players.get(tableId);
-	}
-
-	private SeasonRankingDAO getDAO() {
-		return DAOManager.getDAO(SeasonRankingDAO.class);
 	}
 
 	public static final SeasonRankingUpdateService getInstance() {

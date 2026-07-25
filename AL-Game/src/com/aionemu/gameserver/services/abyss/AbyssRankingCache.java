@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.LinkedHashMap;
 
 import java.util.ArrayList;
@@ -27,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.model.AbyssRankingResult;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -47,7 +47,7 @@ public class AbyssRankingCache {
 	public void reloadRankings() {
 		log.info("Updating abyss ranking cache");
 		this.lastUpdate = (int) (System.currentTimeMillis() / 1000);
-		getDAO().updateRankList();
+		GameRepositories.abyssRanks().updateRankPositions();
 		renewPlayerRanking(Race.ASMODIANS);
 		renewPlayerRanking(Race.ELYOS);
 		renewLegionRanking();
@@ -61,8 +61,8 @@ public class AbyssRankingCache {
 
 	private void renewLegionRanking() {
 		Map<Integer, Integer> newLegionRankingCache = new HashMap<Integer, Integer>();
-		ArrayList<AbyssRankingResult> elyosRanking = getDAO().getAbyssRankingLegions(Race.ELYOS);
-		ArrayList<AbyssRankingResult> asmoRanking = getDAO().getAbyssRankingLegions(Race.ASMODIANS);
+		List<AbyssRankingResult> elyosRanking = GameRepositories.abyssRanks().findRankedLegions(Race.ELYOS);
+		List<AbyssRankingResult> asmoRanking = GameRepositories.abyssRanks().findRankedLegions(Race.ASMODIANS);
 		legions.clear();
 		legions.put(Race.ASMODIANS, new SM_ABYSS_RANKING_LEGIONS(lastUpdate, asmoRanking, Race.ASMODIANS));
 		legions.put(Race.ELYOS, new SM_ABYSS_RANKING_LEGIONS(lastUpdate, elyosRanking, Race.ELYOS));
@@ -83,7 +83,7 @@ public class AbyssRankingCache {
 	}
 
 	private List<SM_ABYSS_RANKING_PLAYERS> generatePacketsForRace(Race race) {
-		ArrayList<AbyssRankingResult> list = getDAO().getAbyssRankingPlayers(race);
+		List<AbyssRankingResult> list = GameRepositories.abyssRanks().findRankedPlayers(race);
 		int page = 1;
 		List<SM_ABYSS_RANKING_PLAYERS> playerPackets = new ArrayList<SM_ABYSS_RANKING_PLAYERS>();
 		for (int i = 0; i < list.size(); i += 44) {
@@ -108,10 +108,6 @@ public class AbyssRankingCache {
 
 	public int getLastUpdate() {
 		return lastUpdate;
-	}
-
-	private AbyssRankDAO getDAO() {
-		return DAOManager.getDAO(AbyssRankDAO.class);
 	}
 
 	public static final AbyssRankingCache getInstance() {

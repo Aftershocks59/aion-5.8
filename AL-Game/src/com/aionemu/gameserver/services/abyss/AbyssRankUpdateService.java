@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.RankingConfig;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -99,7 +98,7 @@ public class AbyssRankUpdateService {
 			public void visit(Player player) {
 				AbyssPointsService.AbyssRankCheck(player);
 				player.getAbyssRank().doUpdate();
-				DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);
+				GameRepositories.abyssRanks().save(player.getObjectId(), player.getAbyssRank());
 			}
 		});
 		updateLimitedGpRanks();
@@ -180,7 +179,7 @@ public class AbyssRankUpdateService {
 	}
 
 	private void updateAllRanksGpForRace(Race race, int gpLimit, int activeAfterDays) {
-		Map<Integer, Integer> playerGpMap = DAOManager.getDAO(AbyssRankDAO.class).loadPlayersGp(race, gpLimit,
+		Map<Integer, Integer> playerGpMap = GameRepositories.abyssRanks().findGloryPoints(race, gpLimit,
 				activeAfterDays);
 		List<Entry<Integer, Integer>> playerGpEntries = new ArrayList<Entry<Integer, Integer>>(playerGpMap.entrySet());
 		Collections.sort(playerGpEntries, new PlayerGpComparator<Integer, Integer>());
@@ -239,7 +238,7 @@ public class AbyssRankUpdateService {
 				AbyssPointsService.checkRankChanged(onlinePlayer, currentRank, newRank);
 			}
 		} else {
-			DAOManager.getDAO(AbyssRankDAO.class).updateAbyssRank(playerId, newRank);
+			GameRepositories.abyssRanks().setGrade(playerId, newRank);
 		}
 	}
 
@@ -254,7 +253,7 @@ public class AbyssRankUpdateService {
 				AbyssPointsService.checkRankGpChanged(onlinePlayer, currentRank, newRank);
 			}
 		} else {
-			DAOManager.getDAO(AbyssRankDAO.class).updateAbyssRank(playerId, newRank);
+			GameRepositories.abyssRanks().setGrade(playerId, newRank);
 		}
 	}
 

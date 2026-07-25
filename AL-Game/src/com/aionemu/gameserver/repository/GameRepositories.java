@@ -94,6 +94,8 @@ public final class GameRepositories {
 	private final PetRepository pets;
 	private final MinionRepository minions;
 	private final EventWindowRepository eventWindows;
+	private final AbyssRankRepository abyssRanks;
+	private final SeasonRankingRepository seasonRankings;
 
 	/**
 	 * Builds every repository over one data source.
@@ -161,6 +163,8 @@ public final class GameRepositories {
 		pets = new JdbcPetRepository(dataSource);
 		minions = new JdbcMinionRepository(dataSource);
 		eventWindows = new JdbcEventWindowRepository(dataSource);
+		abyssRanks = new JdbcAbyssRankRepository(dataSource);
+		seasonRankings = new JdbcSeasonRankingRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -409,5 +413,13 @@ public final class GameRepositories {
 
 	public static EventWindowRepository eventWindows() {
 		return getInstance().eventWindows;
+	}
+
+	public static AbyssRankRepository abyssRanks() {
+		return getInstance().abyssRanks;
+	}
+
+	public static SeasonRankingRepository seasonRankings() {
+		return getInstance().seasonRankings;
 	}
 }

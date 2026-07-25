@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.services.ranking;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.SeasonRankingDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.ranking.Arena6V6Ranking;
 import com.aionemu.gameserver.model.gameobjects.player.ranking.ArenaOfTenacityRank;
@@ -47,7 +47,7 @@ public class SeasonRankingService {
 	}
 
 	public void loadGoldArenaScore(Player player) {
-		GoldArenaRank rank = getDAO().loadGoldArenaRank(player.getObjectId(),
+		GoldArenaRank rank = GameRepositories.seasonRankings().loadGoldArena(player.getObjectId(),
 				SeasonRankingEnum.HALL_OF_TENACITY.getId());
 		player.setArenaGoldRank(rank);
 		PacketSendUtility.sendPacket(player,
@@ -55,7 +55,7 @@ public class SeasonRankingService {
 	}
 
 	public void loadTowerScore(Player player) {
-		TowerOfChallengeRank rank = getDAO().loadTowerOfChallengeRank(player.getObjectId(),
+		TowerOfChallengeRank rank = GameRepositories.seasonRankings().loadTower(player.getObjectId(),
 				SeasonRankingEnum.TOWER_OF_CHALLENGE.getId());
 		player.setTowerRank(rank);
 		PacketSendUtility.sendPacket(player,
@@ -63,14 +63,14 @@ public class SeasonRankingService {
 	}
 
 	public void loadArena6v6Score(Player player) {
-		Arena6V6Ranking rank = getDAO().loadArena6v6Rank(player.getObjectId(), SeasonRankingEnum.ARENA_6V6.getId());
+		Arena6V6Ranking rank = GameRepositories.seasonRankings().load6v6(player.getObjectId(), SeasonRankingEnum.ARENA_6V6.getId());
 		player.set6v6Rank(rank);
 		PacketSendUtility.sendPacket(player,
 				new SM_MY_HISTORY(SeasonRankingEnum.ARENA_6V6.getId(), player.get6v6Rank()));
 	}
 
 	public void loadArenaOfTenacityScore(Player player) {
-		ArenaOfTenacityRank rank = getDAO().loadArenaOfTenacityRank(player.getObjectId(),
+		ArenaOfTenacityRank rank = GameRepositories.seasonRankings().loadTenacity(player.getObjectId(),
 				SeasonRankingEnum.ARENA_OF_TENACITY.getId());
 		player.setTenacityRank(rank);
 		PacketSendUtility.sendPacket(player,
@@ -94,11 +94,7 @@ public class SeasonRankingService {
 		// add curren time
 		rank.setCurrentTime(newTime);
 		// save to database
-		DAOManager.getDAO(SeasonRankingDAO.class).storeTowerRank(player);
-	}
-
-	private SeasonRankingDAO getDAO() {
-		return DAOManager.getDAO(SeasonRankingDAO.class);
+		GameRepositories.seasonRankings().saveTower(player.getObjectId(), player.getTowerRank());
 	}
 
 	public static final SeasonRankingService getInstance() {

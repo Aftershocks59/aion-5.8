@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CleaningConfig;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.model.AbyssRankingResult;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -62,11 +62,9 @@ public class AbyssRankCleaningService {
 	}
 
 	private void runAbyssRankingCleaning() {
-		ArrayList<AbyssRankingResult> rankingsElyos = DAOManager.getDAO(AbyssRankDAO.class)
-				.getAbyssRankingPlayers(Race.ELYOS);
-		ArrayList<AbyssRankingResult> rankingsAsmos = DAOManager.getDAO(AbyssRankDAO.class)
-				.getAbyssRankingPlayers(Race.ASMODIANS);
-		List<Player> ToArray = new ArrayList<Player>();
+		List<AbyssRankingResult> rankingsElyos = GameRepositories.abyssRanks().findRankedPlayers(Race.ELYOS);
+		List<AbyssRankingResult> rankingsAsmos = GameRepositories.abyssRanks().findRankedPlayers(Race.ASMODIANS);
+		List<Integer> ToArray = new ArrayList<Integer>();
 		for (AbyssRankingResult result : rankingsElyos) {
 			Player p = World.getInstance().findPlayer(result.getPlayerName());
 			if (p == null) {
@@ -75,7 +73,7 @@ public class AbyssRankCleaningService {
 			Timestamp t = p.getCommonData().getLastOnline();
 			boolean isOutOfDate = (t.getTime() / 1000) >= 43200 ? true : false; // Every 30 Days
 			if (isOutOfDate) {
-				ToArray.add(p);
+				ToArray.add(p.getObjectId());
 			}
 		}
 
@@ -88,12 +86,12 @@ public class AbyssRankCleaningService {
 			Timestamp t = p.getCommonData().getLastOnline();
 			boolean isOutOfDate = (t.getTime() / 1000) >= 43200 ? true : false;
 			if (isOutOfDate) {
-				ToArray.add(p);
+				ToArray.add(p.getObjectId());
 			}
 		}
 
 		if (ToArray.size() > 0) {
-			DAOManager.getDAO(AbyssRankDAO.class).removePlayer(ToArray);
+			GameRepositories.abyssRanks().removeAll(ToArray);
 			AbyssRankingCache.getInstance().reloadRankings();
 			log.info("Cleaned  " + ToArray.size() + " Abyss Ranking Rows in"
 					+ (System.currentTimeMillis() - startTime) / 1000L + " seconds!");
