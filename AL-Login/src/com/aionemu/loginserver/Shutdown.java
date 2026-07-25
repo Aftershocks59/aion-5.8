@@ -28,7 +28,7 @@ import com.aionemu.loginserver.network.NetConnector;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.configs.SvStatsConfig;
-import com.aionemu.loginserver.dao.SvStatsDAO;
+import com.aionemu.loginserver.repository.LoginRepositories;
 
 /**
  * @author -Nemesiss-, nrg
@@ -106,11 +106,11 @@ public class Shutdown extends Thread {
         if (restartOnly) {
             Runtime.getRuntime().halt(ExitCode.CODE_RESTART);
             if(SvStatsConfig.SVSTATS_ENABLE)
-				DAOManager.getDAO(SvStatsDAO.class).update_SvStats_All_Offline(0, 0);
+				LoginRepositories.serverStats().publishAllOffline(0, 0);
         } else {
             Runtime.getRuntime().halt(ExitCode.CODE_NORMAL);
             if(SvStatsConfig.SVSTATS_ENABLE)
-				DAOManager.getDAO(SvStatsDAO.class).update_SvStats_All_Offline(0, 0);
+				LoginRepositories.serverStats().publishAllOffline(0, 0);
         }
     }
 }

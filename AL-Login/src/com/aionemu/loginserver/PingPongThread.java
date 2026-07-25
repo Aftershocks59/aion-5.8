@@ -27,7 +27,7 @@ import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PING;
 import com.aionemu.loginserver.configs.SvStatsConfig;
-import com.aionemu.loginserver.dao.SvStatsDAO;
+import com.aionemu.loginserver.repository.LoginRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
 
 /**
@@ -71,7 +71,7 @@ public class PingPongThread implements Runnable {
 					int currentID = this.connection.getGameServerInfo().getId();
 					int currentPlayer = this.connection.getGameServerInfo().getCurrentPlayers();
 					int currentMax = this.connection.getGameServerInfo().getMaxPlayers();
-						DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Online(currentID, 1, currentPlayer, currentMax);
+						LoginRepositories.serverStats().publishOnline(currentID, 1, currentPlayer, currentMax);
 				}
             } catch (Exception ex) {
                 log.error("PingThread#" + connection.getGameServerInfo().getId(), ex);
@@ -92,7 +92,7 @@ public class PingPongThread implements Runnable {
             if(SvStatsConfig.SVSTATS_ENABLE)
 			{
 				int currentID = connection.getGameServerInfo().getId();
-				DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Offline(currentID, 0, 0);
+				LoginRepositories.serverStats().publishOffline(currentID, 0, 0);
 			}
             connection.close(false);
             if (killProcess && serverPID != -1) {
@@ -116,7 +116,7 @@ public class PingPongThread implements Runnable {
         if(SvStatsConfig.SVSTATS_ENABLE)
 		{
 			int currentID = connection.getGameServerInfo().getId();
-			DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Offline(currentID, 0, 0);
+			LoginRepositories.serverStats().publishOffline(currentID, 0, 0);
 		}
     }
 }

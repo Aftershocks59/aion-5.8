@@ -18,6 +18,7 @@
 
 package com.aionemu.loginserver.service;
 
+import com.aionemu.loginserver.repository.LoginRepositories;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -32,7 +33,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.controller.AccountController;
-import com.aionemu.loginserver.dao.AccountDAO;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.repository.JdbcPlayerTransferRepository;
 import com.aionemu.loginserver.repository.PlayerTransferRepository;
@@ -159,8 +159,8 @@ public class PlayerTransferService {
 
         account.setActivated((byte) 0);
         saccount.setActivated((byte) 0);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(account);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(saccount);
+        LoginRepositories.accounts().update(account);
+        LoginRepositories.accounts().update(saccount);
 
         targetServer.getConnection().sendPacket(new SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus.SEND_INFO, request));
         log.info("player transfer account " + task.targetServerId + " became active.");
@@ -193,8 +193,8 @@ public class PlayerTransferService {
 
         request.account.setActivated((byte) 1);
         request.saccount.setActivated((byte) 1);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(request.account);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(request.saccount);
+        LoginRepositories.accounts().update(request.account);
+        LoginRepositories.accounts().update(request.saccount);
 
         targetServer.getConnection().sendPacket(new SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus.ERROR, taskId, reason));
     }
@@ -216,8 +216,8 @@ public class PlayerTransferService {
 
         request.account.setActivated((byte) 1);
         request.saccount.setActivated((byte) 1);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(request.account);
-        DAOManager.getDAO(AccountDAO.class).updateAccount(request.saccount);
+        LoginRepositories.accounts().update(request.account);
+        LoginRepositories.accounts().update(request.saccount);
         log.info("transfer #" + taskId + " went onOK!");
         sourceServer.getConnection().sendPacket(new SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus.OK, request));
     }

@@ -18,8 +18,8 @@
 
 package com.aionemu.loginserver.taskmanager.handler.implementations;
 
+import com.aionemu.loginserver.repository.LoginRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.loginserver.dao.AccountDAO;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +46,6 @@ public class CleanAccountsHandler extends TaskFromDBHandler {
     public void trigger() {
         daysOfInactivity = Integer.parseInt(params[0]);
         log.info("Deleting all accounts, older as " + daysOfInactivity + " days");
-        DAOManager.getDAO(AccountDAO.class).deleteInactiveAccounts(daysOfInactivity);
+        LoginRepositories.accounts().deleteInactive(daysOfInactivity);
     }
 }

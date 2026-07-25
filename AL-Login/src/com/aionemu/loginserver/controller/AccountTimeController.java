@@ -18,13 +18,9 @@
 
 package com.aionemu.loginserver.controller;
 
+import com.aionemu.loginserver.repository.LoginRepositories;
 import java.sql.Timestamp;
 
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.loginserver.dao.AccountTimeDAO;
-import com.aionemu.loginserver.repository.AccountPlayTimeRepository;
-import com.aionemu.loginserver.repository.JdbcAccountPlayTimeRepository;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.AccountTime;
 
@@ -36,16 +32,6 @@ import com.aionemu.loginserver.model.AccountTime;
  * @author EvilSpirit
  */
 public class AccountTimeController {
-
-    /** Built on first use, since it needs the connection pool to be open. */
-    private static AccountPlayTimeRepository playTimeRepository;
-
-    private static synchronized AccountPlayTimeRepository playTimeRepository() {
-        if (playTimeRepository == null) {
-            playTimeRepository = new JdbcAccountPlayTimeRepository(DatabaseFactory.getDataSource());
-        }
-        return playTimeRepository;
-    }
 
     /**
      * Update account time when character logins. The following field are being
@@ -74,7 +60,7 @@ public class AccountTimeController {
          * timings should be nulled.
          */
         if (lastLoginDay < currentDay) {
-      		playTimeRepository().accumulate(account.getId(), accountTime.getAccumulatedOnlineTime());
+      		LoginRepositories.playTimes().accumulate(account.getId(), accountTime.getAccumulatedOnlineTime());
             accountTime.setAccumulatedOnlineTime(0);
             accountTime.setAccumulatedRestTime(0);
         } else {
@@ -85,7 +71,7 @@ public class AccountTimeController {
 
         accountTime.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
 
-        DAOManager.getDAO(AccountTimeDAO.class).updateAccountTime(account.getId(), accountTime);
+        LoginRepositories.accountTimes().save(account.getId(), accountTime);
         account.setAccountTime(accountTime);
 
         if (currentDay >= returnday && account.getReturn() == 0){
@@ -111,7 +97,7 @@ public class AccountTimeController {
 
         accountTime.setSessionDuration(System.currentTimeMillis() - accountTime.getLastLoginTime().getTime());
         accountTime.setAccumulatedOnlineTime(accountTime.getAccumulatedOnlineTime() + accountTime.getSessionDuration());
-        DAOManager.getDAO(AccountTimeDAO.class).updateAccountTime(account.getId(), accountTime);
+        LoginRepositories.accountTimes().save(account.getId(), accountTime);
         account.setAccountTime(accountTime);
     }
 

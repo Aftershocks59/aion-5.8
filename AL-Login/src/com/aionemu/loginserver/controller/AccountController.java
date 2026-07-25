@@ -18,18 +18,15 @@
 
 package com.aionemu.loginserver.controller;
 
+import com.aionemu.loginserver.repository.LoginRepositories;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.NetworkUtils;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.dao.AccountDAO;
-import com.aionemu.loginserver.dao.AccountTimeDAO;
-import com.aionemu.loginserver.dao.PremiumDAO;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.ReconnectingAccount;
 import com.aionemu.loginserver.network.aion.AionAuthResponse;
@@ -102,10 +99,10 @@ public class AccountController {
             gsi.addAccountToGameServer(acc);
 
             acc.setLastServer(gsi.getId());
-            getAccountDAO().updateLastServer(acc.getId(), acc.getLastServer());
+            LoginRepositories.accounts().updateLastServer(acc.getId(), acc.getLastServer());
 
-            long toll = DAOManager.getDAO(PremiumDAO.class).getPoints(acc.getId());
-            long luna = DAOManager.getDAO(PremiumDAO.class).getLuna(acc.getId());
+            long toll = LoginRepositories.premium().claimAndGetPoints(acc.getId());
+            long luna = LoginRepositories.premium().getLuna(acc.getId());
             /**
              * Send response to GameServer
              */
@@ -232,9 +229,9 @@ public class AccountController {
         AccountTimeController.updateOnLogin(account);
 
         // if everything was OK
-        getAccountDAO().updateLastIp(account.getId(), connection.getIP());
+        LoginRepositories.accounts().updateLastIp(account.getId(), connection.getIP());
         // last mac is updated after receiving packet from gameserver
-        getAccountDAO().updateMembership(account.getId());
+        LoginRepositories.accounts().restoreExpiredMembership(account.getId());
 
         return AionAuthResponse.AUTHED;
     }
@@ -267,7 +264,7 @@ public class AccountController {
      * @return refreshed or not
      */
     public static boolean refreshAccountsLastMac(int accountId, String address) {
-        return getAccountDAO().updateLastMac(accountId, address);
+        return LoginRepositories.accounts().updateLastMac(accountId, address);
     }
 
     /**
@@ -278,17 +275,17 @@ public class AccountController {
      * @return loaded account or null
      */
     public static Account loadAccount(String name) {
-        Account account = getAccountDAO().getAccount(name);
+        Account account = LoginRepositories.accounts().findByName(name);
         if (account != null) {
-            account.setAccountTime(getAccountTimeDAO().getAccountTime(account.getId()));
+            account.setAccountTime(LoginRepositories.accountTimes().find(account.getId()));
         }
         return account;
     }
 
     public static Account loadAccount(int id) {
-        Account account = getAccountDAO().getAccount(id);
+        Account account = LoginRepositories.accounts().findById(id);
         if (account != null) {
-            account.setAccountTime(getAccountTimeDAO().getAccountTime(id));
+            account.setAccountTime(LoginRepositories.accountTimes().find(id));
         }
         return account;
     }
@@ -313,29 +310,10 @@ public class AccountController {
         account.setReturn((byte)0);
         account.setReturnEnd(new Timestamp(System.currentTimeMillis()));
 
-        if (getAccountDAO().insertAccount(account)) {
+        if (LoginRepositories.accounts().save(account)) {
             return account;
         }
         return null;
-    }
-
-    /**
-     * Returns {@link com.aionemu.loginserver.dao.AccountDAO}, just a shortcut
-     *
-     * @return {@link com.aionemu.loginserver.dao.AccountDAO}
-     */
-    private static AccountDAO getAccountDAO() {
-        return DAOManager.getDAO(AccountDAO.class);
-    }
-
-    /**
-     * Returns {@link com.aionemu.loginserver.dao.AccountTimeDAO}, just a
-     * shortcut
-     *
-     * @return {@link com.aionemu.loginserver.dao.AccountTimeDAO}
-     */
-    private static AccountTimeDAO getAccountTimeDAO() {
-        return DAOManager.getDAO(AccountTimeDAO.class);
     }
 
     /**

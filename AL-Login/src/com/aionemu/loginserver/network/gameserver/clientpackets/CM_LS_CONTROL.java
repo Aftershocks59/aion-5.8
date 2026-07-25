@@ -18,8 +18,8 @@
 
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+import com.aionemu.loginserver.repository.LoginRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.loginserver.dao.AccountDAO;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_LS_CONTROL_RESPONSE;
@@ -55,7 +55,7 @@ public class CM_LS_CONTROL extends GsClientPacket {
     @Override
     protected void runImpl() {
 
-        Account account = DAOManager.getDAO(AccountDAO.class).getAccount(accountName);
+        Account account = LoginRepositories.accounts().findByName(accountName);
         switch (type) {
             case 1:
                 account.setAccessLevel((byte) param);
@@ -64,7 +64,7 @@ public class CM_LS_CONTROL extends GsClientPacket {
                 account.setMembership((byte) param);
                 break;
         }
-        result = DAOManager.getDAO(AccountDAO.class).updateAccount(account);
+        result = LoginRepositories.accounts().update(account);
         sendPacket(new SM_LS_CONTROL_RESPONSE(type, result, playerName, account.getId(), param, adminName));
     }
 }

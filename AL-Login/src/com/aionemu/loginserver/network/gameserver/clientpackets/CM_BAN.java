@@ -18,6 +18,7 @@
 
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+import com.aionemu.loginserver.repository.LoginRepositories;
 import java.sql.Timestamp;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -25,8 +26,6 @@ import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.controller.BannedIpController;
-import com.aionemu.loginserver.dao.AccountDAO;
-import com.aionemu.loginserver.dao.AccountTimeDAO;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.AccountTime;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
@@ -103,9 +102,9 @@ public class CM_BAN extends GsClientPacket {
                 account.setAccountTime(accountTime);
                 result = true;
             } else {
-                AccountTime accountTime = DAOManager.getDAO(AccountTimeDAO.class).getAccountTime(accountId);
+                AccountTime accountTime = LoginRepositories.accountTimes().find(accountId);
                 accountTime.setPenaltyEnd(newTime);
-                result = DAOManager.getDAO(AccountTimeDAO.class).updateAccountTime(accountId, accountTime);
+                result = LoginRepositories.accountTimes().save(accountId, accountTime);
             }
         }
 
@@ -113,7 +112,7 @@ public class CM_BAN extends GsClientPacket {
         if (type == 2 || type == 3) {
             if (accountId != 0) // If we got account ID, then ban last IP
             {
-                String newip = DAOManager.getDAO(AccountDAO.class).getLastIp(accountId);
+                String newip = LoginRepositories.accounts().findLastIp(accountId);
                 if (!newip.isEmpty()) {
                     ip = newip;
                 }
