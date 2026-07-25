@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -53,6 +54,10 @@ public class MySQL5PlayerSettingsDAO extends PlayerSettingsDAO {
 			PreparedStatement statement = con.prepareStatement("SELECT * FROM player_settings WHERE player_id = ?");
 			statement.setInt(1, playerId);
 			ResultSet resultSet = statement.executeQuery();
+			// The settings column is a blob for every type. The two numeric types are
+			// written with setInt, so the driver stores their decimal text; read them
+			// back the same way. Asking the driver for an int worked only because the
+			// MySQL connector converted silently, where MariaDB rejects the blob.
 			while (resultSet.next()) {
 				int type = resultSet.getInt("settings_type");
 				switch (type) {
@@ -66,10 +71,10 @@ public class MySQL5PlayerSettingsDAO extends PlayerSettingsDAO {
 						playerSettings.setHouseBuddies(resultSet.getBytes("settings"));
 						break;
 					case -1:
-						playerSettings.setDisplay(resultSet.getInt("settings"));
+						playerSettings.setDisplay(readIntFromBlob(resultSet));
 						break;
 					case -2:
-						playerSettings.setDeny(resultSet.getInt("settings"));
+						playerSettings.setDeny(readIntFromBlob(resultSet));
 						break;
 				}
 			}
@@ -166,5 +171,27 @@ public class MySQL5PlayerSettingsDAO extends PlayerSettingsDAO {
 	@Override
 	public boolean supports(String databaseName, int majorVersion, int minorVersion) {
 		return MySQL5DAOUtils.supports(databaseName, majorVersion, minorVersion);
+	}
+
+	/**
+	 * Reads the settings blob of the current row as an integer.
+	 *
+	 * @param resultSet row positioned on a numeric settings type
+	 * @return the stored value, or 0 when the blob is absent or unreadable
+	 * @throws SQLException if the column cannot be read
+	 */
+	private static int readIntFromBlob(ResultSet resultSet) throws SQLException {
+		byte[] raw = resultSet.getBytes("settings");
+
+		if (raw == null || raw.length == 0) {
+			return 0;
+		}
+
+		try {
+			return Integer.parseInt(new String(raw, StandardCharsets.US_ASCII).trim());
+		} catch (NumberFormatException e) {
+			log.warn("Ignored an unreadable numeric player setting: " + new String(raw, StandardCharsets.US_ASCII));
+			return 0;
+		}
 	}
 }
