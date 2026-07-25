@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.model.items;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -107,7 +107,7 @@ public class IdianStone extends ItemStone {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401652, new DescriptionId(item.getNameId())));
 			item.setIdianStone(null);
 			setPersistentState(PersistentState.DELETED);
-			DAOManager.getDAO(ItemStoneListDAO.class).storeIdianStones(this);
+			GameRepositories.itemStones().saveIdianStone(this);
 		}
 	}
 

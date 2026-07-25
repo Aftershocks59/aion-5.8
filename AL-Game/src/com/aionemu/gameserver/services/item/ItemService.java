@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -65,7 +65,7 @@ public class ItemService {
 
 	public static void loadItemStones(Collection<Item> itemList) {
 		if (itemList != null && itemList.size() > 0) {
-			DAOManager.getDAO(ItemStoneListDAO.class).load(itemList);
+			GameRepositories.itemStones().load(itemList);
 		}
 	}
 

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.List;
 
 import java.util.Iterator;
@@ -27,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
 import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
@@ -75,7 +75,7 @@ public class PeriodicSaveService {
 					/**
 					 * 2. save item stones
 					 */
-					DAOManager.getDAO(ItemStoneListDAO.class).save(allItems);
+					GameRepositories.itemStones().save(allItems);
 				} catch (Exception ex) {
 					log.error("Exception during periodic saving of legion WH", ex);
 				}

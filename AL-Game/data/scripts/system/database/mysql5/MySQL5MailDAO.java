@@ -16,12 +16,12 @@
  */
 package mysql5;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.DB;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.IUStH;
 import com.aionemu.commons.database.ParamReadStH;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.MySQL5DAOUtils;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -79,7 +79,7 @@ public class MySQL5MailDAO extends MailDAO {
 						for (Item item : mailboxItems) {
 							if (item.getObjectId() == attachedItemId) {
 								if (item.getItemTemplate().isArmor() || item.getItemTemplate().isWeapon()) {
-									DAOManager.getDAO(ItemStoneListDAO.class).load(Collections.singletonList(item));
+									GameRepositories.itemStones().load(Collections.singletonList(item));
 								}
 								attachedItem = item;
 							}

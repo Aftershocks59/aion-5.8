@@ -16,13 +16,13 @@
  */
 package mysql5;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.DB;
 import com.aionemu.commons.database.IUStH;
 import com.aionemu.commons.database.ReadStH;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.BrokerDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.MySQL5DAOUtils;
 import com.aionemu.gameserver.model.broker.BrokerRace;
 import com.aionemu.gameserver.model.gameobjects.BrokerItem;
@@ -49,7 +49,7 @@ public class MySQL5BrokerDAO extends BrokerDAO {
         final List<Item> items = getBrokerItems();
         
         if (items != null && items.size() > 0) {
-            DAOManager.getDAO(ItemStoneListDAO.class).load(items);
+            GameRepositories.itemStones().load(items);
         }
 
         DB.select("SELECT * FROM broker", new ReadStH() {

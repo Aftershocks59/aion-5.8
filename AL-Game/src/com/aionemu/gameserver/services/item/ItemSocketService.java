@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.TaskId;
@@ -203,7 +203,7 @@ public class ItemSocketService {
 		ManaStone stone = new ManaStone(item.getObjectId(), itemId, nextSlot, PersistentState.NEW);
 		manaStones.add(stone);
 		Set<ManaStone> itemStones = item.getFusionStones();
-		DAOManager.getDAO(ItemStoneListDAO.class).storeFusionStones(itemStones);
+		GameRepositories.itemStones().saveFusionStones(itemStones);
 		return stone;
 	}
 
@@ -243,19 +243,19 @@ public class ItemSocketService {
 
 			if (ms.getSlot() == slotNum) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeManaStones(Collections.singleton(ms));
+				GameRepositories.itemStones().saveManaStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
 			if (ms.getSlot() > specialSlotCount) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeManaStones(Collections.singleton(ms));
+				GameRepositories.itemStones().saveManaStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
 			if (ms.getSlot() > slotNum && ms.getSlot() < specialSlotCount) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeManaStones(Collections.singleton(ms));
+				GameRepositories.itemStones().saveManaStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
@@ -285,19 +285,19 @@ public class ItemSocketService {
 			}
 			if (ms.getSlot() == slotNum) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeFusionStones(Collections.singleton(ms));
+				GameRepositories.itemStones().saveFusionStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
 			if (ms.getSlot() > specialSlotCount) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeFusionStones(Collections.singleton(ms));
+				GameRepositories.itemStones().saveFusionStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
 			if (ms.getSlot() > slotNum && ms.getSlot() < specialSlotCount) {
 				ms.setPersistentState(PersistentState.DELETED);
-				DAOManager.getDAO(ItemStoneListDAO.class).storeFusionStones(Collections.singleton(ms));
+				GameRepositories.itemStones().saveFusionStones(Collections.singleton(ms));
 				itemStones.remove(ms);
 				break;
 			}
@@ -317,7 +317,7 @@ public class ItemSocketService {
 		for (ManaStone ms : itemStones) {
 			ms.setPersistentState(PersistentState.DELETED);
 		}
-		DAOManager.getDAO(ItemStoneListDAO.class).storeManaStones(itemStones);
+		GameRepositories.itemStones().saveManaStones(itemStones);
 		itemStones.clear();
 		ItemPacketService.updateItemAfterInfoChange(player, item);
 	}
@@ -334,7 +334,7 @@ public class ItemSocketService {
 		for (ManaStone ms : fusionStones) {
 			ms.setPersistentState(PersistentState.DELETED);
 		}
-		DAOManager.getDAO(ItemStoneListDAO.class).storeFusionStones(fusionStones);
+		GameRepositories.itemStones().saveFusionStones(fusionStones);
 		fusionStones.clear();
 		ItemPacketService.updateItemAfterInfoChange(player, item);
 	}

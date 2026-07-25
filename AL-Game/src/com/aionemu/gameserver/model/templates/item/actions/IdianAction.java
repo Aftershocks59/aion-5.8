@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.templates.item.actions;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -23,7 +24,6 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.TaskId;
@@ -124,7 +124,7 @@ public class IdianAction extends AbstractItemAction {
 					idianStone.onUnEquip(player);
 					targetItem.setIdianStone(null);
 					idianStone.setPersistentState(PersistentState.DELETED);
-					DAOManager.getDAO(ItemStoneListDAO.class).storeIdianStones(idianStone);
+					GameRepositories.itemStones().saveIdianStone(idianStone);
 				}
 				idianStone = new IdianStone(parentItemId, PersistentState.NEW, targetItem, bonus.getTemplateNumber(),
 						1000000);

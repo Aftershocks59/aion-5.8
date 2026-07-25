@@ -96,6 +96,7 @@ public final class GameRepositories {
 	private final EventWindowRepository eventWindows;
 	private final AbyssRankRepository abyssRanks;
 	private final SeasonRankingRepository seasonRankings;
+	private final ItemStoneRepository itemStones;
 
 	/**
 	 * Builds every repository over one data source.
@@ -165,6 +166,7 @@ public final class GameRepositories {
 		eventWindows = new JdbcEventWindowRepository(dataSource);
 		abyssRanks = new JdbcAbyssRankRepository(dataSource);
 		seasonRankings = new JdbcSeasonRankingRepository(dataSource);
+		itemStones = new JdbcItemStoneRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -421,5 +423,9 @@ public final class GameRepositories {
 
 	public static SeasonRankingRepository seasonRankings() {
 		return getInstance().seasonRankings;
+	}
+
+	public static ItemStoneRepository itemStones() {
+		return getInstance().itemStones;
 	}
 }
