@@ -21,7 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Holds the geodata of one world: its terrain, its materials and its collision.
+ * Holds the geodata of one world: its terrain, its collision mesh and the grid
+ * that tiles it.
  *
  * @author Oraion
  */
@@ -31,13 +32,13 @@ public final class WorldGeoData implements AutoCloseable {
 
 	private final int worldId;
 	private final HeightMap terrain;
-	private final MeshMaterialTable materials;
+	private final CollisionMesh mesh;
 	private final CollisionGrid collision;
 
-	private WorldGeoData(int worldId, HeightMap terrain, MeshMaterialTable materials, CollisionGrid collision) {
+	private WorldGeoData(int worldId, HeightMap terrain, CollisionMesh mesh, CollisionGrid collision) {
 		this.worldId = worldId;
 		this.terrain = terrain;
-		this.materials = materials;
+		this.mesh = mesh;
 		this.collision = collision;
 	}
 
@@ -59,21 +60,21 @@ public final class WorldGeoData implements AutoCloseable {
 			return null;
 		}
 
-		MeshMaterialTable materials = MeshMaterialTable.load(worldDirectory);
+		CollisionMesh mesh = CollisionMesh.load(worldDirectory);
 		// A world whose files were exported at different times does not describe
 		// one consistent world. The original only says so and carries on.
-		if (!materials.getVersion().equals(terrain.getVersion())) {
-			log.warn("World " + worldId + ": " + MeshMaterialTable.FILE_NAME + " was exported at a different version"
+		if (!mesh.getVersion().equals(terrain.getVersion())) {
+			log.warn("World " + worldId + ": " + CollisionMesh.FILE_NAME + " was exported at a different version"
 					+ " from " + HeightMap.TIER_FILES[terrain.getTier()] + ".");
 		}
 
 		CollisionGrid collision = CollisionGrid.load(worldDirectory, terrain);
-		if (!collision.getVersion().equals(materials.getVersion())) {
+		if (!collision.getVersion().equals(mesh.getVersion())) {
 			log.warn("World " + worldId + ": " + CollisionGrid.FILE_NAME + " was exported at a different version"
-					+ " from " + MeshMaterialTable.FILE_NAME + ".");
+					+ " from " + CollisionMesh.FILE_NAME + ".");
 		}
 
-		return new WorldGeoData(worldId, terrain, materials, collision);
+		return new WorldGeoData(worldId, terrain, mesh, collision);
 	}
 
 	public int getWorldId() {
@@ -84,8 +85,9 @@ public final class WorldGeoData implements AutoCloseable {
 		return terrain;
 	}
 
-	public MeshMaterialTable getMaterials() {
-		return materials;
+	/** Answers the triangles the world's collision is built from. */
+	public CollisionMesh getMesh() {
+		return mesh;
 	}
 
 	public CollisionGrid getCollision() {

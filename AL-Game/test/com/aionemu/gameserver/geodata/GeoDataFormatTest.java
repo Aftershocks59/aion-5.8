@@ -13,6 +13,7 @@
  */
 package com.aionemu.gameserver.geodata;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -303,37 +304,51 @@ class GeoDataFormatTest {
 		assertThrows(IOException.class, () -> CollisionGrid.load(world, terrain));
 	}
 
-	@Test
-	@DisplayName("Reads the materials, the groups and the shape-changing objects")
-	void readsTheMaterials() throws IOException {
-		Path world = world("materials");
-		byte[] name = "Door".getBytes(java.nio.charset.StandardCharsets.US_ASCII);
-		byte[] label = "AbyssDoor12".getBytes(java.nio.charset.StandardCharsets.US_ASCII);
-
+	/** Writes a mesh of four vertices and two triangles, plus one door. */
+	private static void writeMesh(Path file) throws IOException {
 		ByteBuffer buffer = buffer(512);
 		writeHeader(buffer, 1L, 2L);
+
+		buffer.putInt(4);
+		buffer.putFloat(10.0f).putFloat(20.0f).putFloat(30.0f);
+		buffer.putFloat(11.0f).putFloat(20.0f).putFloat(30.0f);
+		buffer.putFloat(11.0f).putFloat(21.0f).putFloat(30.0f);
+		buffer.putFloat(10.0f).putFloat(21.0f).putFloat(30.0f);
+
 		buffer.putInt(2);
-		buffer.put(new byte[2 * MeshMaterialTable.MATERIAL_ENTRY_SIZE]);
-		buffer.putInt(3);
-		buffer.put(new byte[3 * MeshMaterialTable.GROUP_ENTRY_SIZE]);
-		buffer.put(new byte[3]);
+		// The first triangle starts at vertex zero and reaches the next two.
+		buffer.putInt(0).putInt((6 << 16) | 3);
+		// The second starts at vertex two and reaches back to vertices three and zero.
+		buffer.putInt(6).putInt(((-6 & 0xffff) << 16) | 3);
+		buffer.put((byte) 0).put((byte) 4);
+
+		byte[] className = "Door".getBytes(java.nio.charset.StandardCharsets.US_ASCII);
+		byte[] name = "AbyssDoor12".getBytes(java.nio.charset.StandardCharsets.US_ASCII);
 		buffer.putInt(1);
 		buffer.putInt(42);
+		buffer.put(className).put((byte) 0);
 		buffer.put(name).put((byte) 0);
-		buffer.put(label).put((byte) 0);
 		buffer.putInt(FieldObject.PAYLOAD_SIZE);
 		buffer.put(new byte[FieldObject.PAYLOAD_SIZE]);
-		write(world.resolve(MeshMaterialTable.FILE_NAME), buffer);
 
-		MeshMaterialTable materials = MeshMaterialTable.load(world);
+		write(file, buffer);
+	}
 
-		assertEquals(2, materials.getMaterialCount());
-		assertEquals(2 * MeshMaterialTable.MATERIAL_ENTRY_SIZE, materials.getMaterials().length);
-		assertEquals(3, materials.getGroupCount());
-		assertEquals(3, materials.getGroupFlags().length);
-		assertEquals(1, materials.getFieldObjects().size());
+	@Test
+	@DisplayName("Reads the vertices, the triangles and the shape-changing objects")
+	void readsTheMesh() throws IOException {
+		Path world = world("mesh");
+		writeMesh(world.resolve(CollisionMesh.FILE_NAME));
 
-		FieldObject door = materials.getFieldObjects().get(0);
+		CollisionMesh mesh = CollisionMesh.load(world);
+
+		assertEquals(4, mesh.getVertexCount());
+		assertEquals(2, mesh.getTriangleCount());
+		assertEquals(0, mesh.materialOf(0));
+		assertEquals(4, mesh.materialOf(1));
+		assertEquals(1, mesh.getFieldObjects().size());
+
+		FieldObject door = mesh.getFieldObjects().get(0);
 		assertEquals(42, door.getEditorId());
 		assertEquals("Door", door.getClassName());
 		assertEquals("AbyssDoor12", door.getName());
@@ -341,18 +356,60 @@ class GeoDataFormatTest {
 	}
 
 	@Test
-	@DisplayName("Refuses a materials file with bytes left over")
+	@DisplayName("Reaches a triangle's other two corners by offset from its first")
+	void readsATriangleByOffset() throws IOException {
+		Path world = world("corners");
+		writeMesh(world.resolve(CollisionMesh.FILE_NAME));
+
+		CollisionMesh mesh = CollisionMesh.load(world);
+		float[] corners = new float[9];
+		mesh.cornersOf(0, corners);
+
+		assertArrayEquals(new float[] { 10f, 20f, 30f, 11f, 20f, 30f, 11f, 21f, 30f }, corners, 0f);
+	}
+
+	@Test
+	@DisplayName("Reaches backwards when a triangle's corners come before its first")
+	void readsATriangleBackwards() throws IOException {
+		Path world = world("backwards");
+		writeMesh(world.resolve(CollisionMesh.FILE_NAME));
+
+		CollisionMesh mesh = CollisionMesh.load(world);
+		float[] corners = new float[9];
+		mesh.cornersOf(1, corners);
+
+		// The two offsets are signed, so a triangle can name a corner it has
+		// already passed.
+		assertArrayEquals(new float[] { 11f, 21f, 30f, 10f, 21f, 30f, 10f, 20f, 30f }, corners, 0f);
+	}
+
+	@Test
+	@DisplayName("Refuses a mesh file with bytes left over")
 	void refusesTrailingBytes() throws IOException {
 		Path world = world("trailing");
 		ByteBuffer buffer = buffer(256);
 		writeHeader(buffer, 1L, 2L);
 		buffer.putInt(1);
-		buffer.put(new byte[MeshMaterialTable.MATERIAL_ENTRY_SIZE]);
+		buffer.put(new byte[CollisionMesh.VERTEX_STRIDE]);
 		buffer.putInt(0);
 		buffer.putInt(0);
 		buffer.putInt(0xdeadbeef);
-		write(world.resolve(MeshMaterialTable.FILE_NAME), buffer);
+		write(world.resolve(CollisionMesh.FILE_NAME), buffer);
 
-		assertThrows(IOException.class, () -> MeshMaterialTable.load(world));
+		assertThrows(IOException.class, () -> CollisionMesh.load(world));
+	}
+
+	@Test
+	@DisplayName("Refuses a mesh claiming more triangles than it holds")
+	void refusesAnOverlongTriangleCount() throws IOException {
+		Path world = world("overlong");
+		ByteBuffer buffer = buffer(256);
+		writeHeader(buffer, 1L, 2L);
+		buffer.putInt(1);
+		buffer.put(new byte[CollisionMesh.VERTEX_STRIDE]);
+		buffer.putInt(1000000);
+		write(world.resolve(CollisionMesh.FILE_NAME), buffer);
+
+		assertThrows(IOException.class, () -> CollisionMesh.load(world));
 	}
 }

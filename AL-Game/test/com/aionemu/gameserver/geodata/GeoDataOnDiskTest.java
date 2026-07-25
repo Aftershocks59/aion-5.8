@@ -68,6 +68,9 @@ class GeoDataOnDiskTest {
 		int read = 0;
 		long faces = 0;
 		long doors = 0;
+		long triangles = 0;
+		long vertices = 0;
+		long[] materials = new long[256];
 
 		for (Path world : worlds) {
 			int worldId = Integer.parseInt(world.getFileName().toString());
@@ -89,7 +92,21 @@ class GeoDataOnDiskTest {
 					}
 				}
 
-				for (FieldObject object : geo.getMaterials().getFieldObjects()) {
+				CollisionMesh mesh = geo.getMesh();
+				int floats = mesh.getVertices().length;
+				for (int triangle = 0; triangle < mesh.getTriangleCount(); triangle++) {
+					// A corner that lands outside the vertex array, or off the three
+					// floats a vertex takes, means the triangles are not being read
+					// the way the client wrote them.
+					checkCorner(worldId, mesh.firstVertexOf(triangle), floats);
+					checkCorner(worldId, mesh.secondVertexOf(triangle), floats);
+					checkCorner(worldId, mesh.thirdVertexOf(triangle), floats);
+					materials[mesh.materialOf(triangle)]++;
+				}
+				triangles += mesh.getTriangleCount();
+				vertices += mesh.getVertexCount();
+
+				for (FieldObject object : mesh.getFieldObjects()) {
 					assertEquals(FieldObject.PAYLOAD_SIZE, object.getPayload().length,
 							"world " + worldId + " carries a shape-changing object of another size");
 					if (object.getClassName().endsWith("Door")) {
@@ -106,5 +123,26 @@ class GeoDataOnDiskTest {
 		// to the byte, since every one is walked to its exact end.
 		assertTrue(doors > 0, "no door was read from any world");
 		assertTrue(faces >= 0);
+		assertTrue(triangles > 0 && vertices > 0);
+
+		// Which materials the worlds are actually made of settles how many rows the
+		// collision flag table needs. Report the lot rather than the first
+		// surprise, so one run answers the question.
+		StringBuilder used = new StringBuilder();
+		for (int material = 0; material < materials.length; material++) {
+			if (materials[material] > 0) {
+				used.append(used.length() == 0 ? "" : ", ").append(material).append('=').append(materials[material]);
+			}
+		}
+		System.out.println("Geodata read: " + read + " worlds, " + vertices + " vertices, " + triangles
+				+ " triangles, " + doors + " doors.");
+		System.out.println("Triangles by material: " + used);
+	}
+
+	private static void checkCorner(int worldId, int offset, int floats) {
+		assertTrue(offset >= 0 && offset + CollisionMesh.VERTEX_FLOATS <= floats,
+				"world " + worldId + " names a corner at float " + offset + " of " + floats);
+		assertEquals(0, offset % CollisionMesh.VERTEX_FLOATS,
+				"world " + worldId + " names a corner at float " + offset + ", which is not a vertex boundary");
 	}
 }
