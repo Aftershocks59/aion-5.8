@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
-import com.aionemu.gameserver.dao.HouseScriptsDAO;
 import com.aionemu.gameserver.model.house.PlayerScript;
 import com.aionemu.gameserver.utils.xml.CompressUtil;
 
@@ -132,9 +132,9 @@ public class PlayerScripts {
 		script.setData(compressedXML, size);
 
 		if (bytes == null) {
-			DAOManager.getDAO(HouseScriptsDAO.class).addScript(houseObjId, position, content);
+			GameRepositories.houseScripts().add(houseObjId, position, content);
 		} else {
-			DAOManager.getDAO(HouseScriptsDAO.class).updateScript(houseObjId, position, content);
+			GameRepositories.houseScripts().update(houseObjId, position, content);
 		}
 
 		if (HousingConfig.HOUSE_SCRIPT_DEBUG) {
@@ -154,7 +154,7 @@ public class PlayerScripts {
 			return false;
 		} else {
 			script.setData(null, -1);
-			DAOManager.getDAO(HouseScriptsDAO.class).deleteScript(houseObjId, position);
+			GameRepositories.houseScripts().remove(houseObjId, position);
 		}
 		return true;
 	}

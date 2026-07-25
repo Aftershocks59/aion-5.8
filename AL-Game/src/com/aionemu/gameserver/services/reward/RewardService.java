@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.reward;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -32,7 +32,6 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 
 
 public class RewardService {
-	private RewardServiceDAO dao;
 	private static RewardService controller = new RewardService();
 	private static final Logger log = LoggerFactory.getLogger(RewardService.class);
 
@@ -41,11 +40,10 @@ public class RewardService {
 	}
 
 	public RewardService() {
-		dao = DAOManager.getDAO(RewardServiceDAO.class);
 	}
 
 	public void verify(Player player) {
-		List<RewardEntryItem> list = dao.getAvailable(player.getObjectId());
+		List<RewardEntryItem> list = GameRepositories.webRewards().findUnclaimed(player.getObjectId());
 		if (list.size() == 0 || player.getMailbox() == null) {
 			return;
 		}
@@ -72,7 +70,7 @@ public class RewardService {
 			}
 		}
 		if (rewarded.size() > 0) {
-			dao.uncheckAvailable(rewarded);
+			GameRepositories.webRewards().markClaimed(rewarded);
 		}
 	}
 }

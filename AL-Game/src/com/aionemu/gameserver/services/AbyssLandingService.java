@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.List;
@@ -26,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.AbyssLandingConfig;
-import com.aionemu.gameserver.dao.AbyssLandingDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
@@ -61,7 +61,7 @@ public class AbyssLandingService {
 
 	public void initLandingLocations() {
 		abyssLanding = DataManager.LANDING_LOCATION_DATA.getLandingLocations();
-		DAOManager.getDAO(AbyssLandingDAO.class).loadLandingLocations(abyssLanding);
+		GameRepositories.abyssLandings().load(abyssLanding);
 		for (LandingLocation loc : getLandingLocations().values()) {
 			startLanding(loc.getId());
 		}
@@ -523,12 +523,8 @@ public class AbyssLandingService {
 	}
 
 	public void onUpdate() {
-		getDAO().updateLocation(getLandingLocation(redemptionLanding().getId()));
-		getDAO().updateLocation(getLandingLocation(harbingerLanding().getId()));
-	}
-
-	private AbyssLandingDAO getDAO() {
-		return DAOManager.getDAO(AbyssLandingDAO.class);
+		GameRepositories.abyssLandings().save(getLandingLocation(redemptionLanding().getId()));
+		GameRepositories.abyssLandings().save(getLandingLocation(harbingerLanding().getId()));
 	}
 
 	public void sendPacketToPlayer(Player player) {

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.house;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -32,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.controllers.HouseController;
-import com.aionemu.gameserver.dao.HouseScriptsDAO;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
@@ -158,7 +158,7 @@ public class House extends VisibleObject {
 	}
 
 	public synchronized void spawn(int instanceId) {
-		playerScripts = DAOManager.getDAO(HouseScriptsDAO.class).getPlayerScripts(getObjectId());
+		playerScripts = GameRepositories.houseScripts().load(getObjectId());
 		if (playerObjectId > 0 && status == HouseStatus.ACTIVE || status == HouseStatus.SELL_WAIT) {
 			DAOManager.getDAO(PlayerRegisteredItemsDAO.class).loadRegistry(playerObjectId);
 		}

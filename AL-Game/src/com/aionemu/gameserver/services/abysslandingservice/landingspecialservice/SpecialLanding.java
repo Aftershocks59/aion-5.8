@@ -19,7 +19,6 @@ package com.aionemu.gameserver.services.abysslandingservice.landingspecialservic
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialStateType;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
@@ -84,9 +83,5 @@ public abstract class SpecialLanding<RL extends LandingSpecialLocation> {
 
 	public void setType(LandingSpecialStateType tp) {
 		this.type = tp;
-	}
-
-	private AbyssSpecialLandingDAO getDAO() {
-		return DAOManager.getDAO(AbyssSpecialLandingDAO.class);
 	}
 }

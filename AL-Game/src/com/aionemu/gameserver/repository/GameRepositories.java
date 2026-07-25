@@ -76,6 +76,10 @@ public final class GameRepositories {
 	private final CreativityPointRepository creativityPoints;
 	private final ShugoSweepRepository shugoSweeps;
 	private final PlayerSkillRepository playerSkills;
+	private final AbyssLandingRepository abyssLandings;
+	private final SpecialLandingRepository specialLandings;
+	private final WebRewardRepository webRewards;
+	private final HouseScriptRepository houseScripts;
 
 	/**
 	 * Builds every repository over one data source.
@@ -125,6 +129,10 @@ public final class GameRepositories {
 		creativityPoints = new JdbcCreativityPointRepository(dataSource);
 		shugoSweeps = new JdbcShugoSweepRepository(dataSource);
 		playerSkills = new JdbcPlayerSkillRepository(dataSource);
+		abyssLandings = new JdbcAbyssLandingRepository(dataSource);
+		specialLandings = new JdbcSpecialLandingRepository(dataSource);
+		webRewards = new JdbcWebRewardRepository(dataSource);
+		houseScripts = new JdbcHouseScriptRepository(dataSource);
 	}
 
 	/** Answers the shared set, building it over the pool on first use. */
@@ -301,5 +309,21 @@ public final class GameRepositories {
 
 	public static PlayerSkillRepository playerSkills() {
 		return getInstance().playerSkills;
+	}
+
+	public static AbyssLandingRepository abyssLandings() {
+		return getInstance().abyssLandings;
+	}
+
+	public static SpecialLandingRepository specialLandings() {
+		return getInstance().specialLandings;
+	}
+
+	public static WebRewardRepository webRewards() {
+		return getInstance().webRewards;
+	}
+
+	public static HouseScriptRepository houseScripts() {
+		return getInstance().houseScripts;
 	}
 }

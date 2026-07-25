@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -7,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -35,8 +35,7 @@ public class WebshopService {
 				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player pl) {
-						List<RewardEntryItem> liste = DAOManager.getDAO(RewardServiceDAO.class)
-								.getAvailable(pl.getObjectId());
+						List<RewardEntryItem> liste = GameRepositories.webRewards().findUnclaimed(pl.getObjectId());
 						if (liste.isEmpty()) {
 							return;
 						} else {
@@ -46,9 +45,9 @@ public class WebshopService {
 									PacketSendUtility.sendPacket(pl, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 									return;
 								} else {
-									if (DAOManager.getDAO(RewardServiceDAO.class).setUpdate(item.unique)) {
+									if (GameRepositories.webRewards().markClaimed(item.unique)) {
 										if (ItemService.addItem(pl, item.id, item.count) != 0) {
-											DAOManager.getDAO(RewardServiceDAO.class).setUpdateDown(item.unique);
+											GameRepositories.webRewards().markUnclaimed(item.unique);
 										} else {
 											i++;
 										}

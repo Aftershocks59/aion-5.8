@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.services.abysslandingservice.landingspecialservice;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialStateType;
 
@@ -36,7 +36,7 @@ public class SPLanding extends SpecialLanding<LandingSpecialLocation> {
 	}
 
 	public void saveLanding() {
-		DAOManager.getDAO(AbyssSpecialLandingDAO.class).updateLocation(getSpecialLandingLocation());
+		GameRepositories.specialLandings().save(getSpecialLandingLocation());
 	}
 
 	@Override
