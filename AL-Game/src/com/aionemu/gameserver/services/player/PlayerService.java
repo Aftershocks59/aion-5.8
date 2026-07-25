@@ -37,7 +37,6 @@ import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dao.MailDAO;
-import com.aionemu.gameserver.dao.MotionDAO;
 import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -47,7 +46,6 @@ import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
-import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -169,7 +167,7 @@ public class PlayerService {
 		GameRepositories.playerSettings().load(player);
 		DAOManager.getDAO(AbyssRankDAO.class).loadAbyssRank(player);
 		GameRepositories.playerNpcFactions().load(player);
-		DAOManager.getDAO(MotionDAO.class).loadMotionList(player);
+		GameRepositories.playerMotions().load(player);
 		player.setVars(GameRepositories.playerVariables().findAll(player.getObjectId()));
 		Equipment equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(player);
 		ItemService.loadItemStones(equipment.getEquippedItemsWithoutStigma());
@@ -180,7 +178,7 @@ public class PlayerService {
 		PlayerStatFunctions.addPredefinedStatFunctions(player);
 		player.setQuestStateList(DAOManager.getDAO(PlayerQuestListDAO.class).load(player));
 		player.setRecipeList(GameRepositories.playerRecipes().findAll(player.getObjectId()));
-		player.setSkillSkinList(DAOManager.getDAO(PlayerSkillSkinListDAO.class).loadSkillSkinList(playerObjId));
+		player.setSkillSkinList(GameRepositories.playerSkillSkins().findAll(playerObjId));
 
 		/**
 		 * Account warehouse should be already loaded in account

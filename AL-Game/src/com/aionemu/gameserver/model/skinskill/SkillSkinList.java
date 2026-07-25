@@ -16,13 +16,13 @@
  */
 package com.aionemu.gameserver.model.skinskill;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import java.util.Collection;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.SkillSkinTemplate;
@@ -81,7 +81,7 @@ public class SkillSkinList {
 				if (time != 0) {
 					ExpireTimerTask.getInstance().addTask(skillSkin, owner);
 				}
-				DAOManager.getDAO(PlayerSkillSkinListDAO.class).storeSkillSkins(owner, skillSkin);
+				GameRepositories.playerSkillSkins().add(owner.getObjectId(), skillSkin);
 			} else {
 				PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_MSG_COSTUME_SKILL_ALREADY_HAS_COSTUME);
 				return false;
@@ -101,12 +101,12 @@ public class SkillSkinList {
 		}
 		skillskins.remove(skinId);
 		PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(owner));
-		DAOManager.getDAO(PlayerSkillSkinListDAO.class).removeSkillSkin(owner.getObjectId(), skinId);
+		GameRepositories.playerSkillSkins().remove(owner.getObjectId(), skinId);
 	}
 
 	public void setActive(int skinId) {
-		DAOManager.getDAO(PlayerSkillSkinListDAO.class).setActive(owner.getObjectId(), skinId);
-		owner.setSkillSkinList(DAOManager.getDAO(PlayerSkillSkinListDAO.class).loadSkillSkinList(owner.getObjectId()));
+		GameRepositories.playerSkillSkins().setActive(owner.getObjectId(), skinId, true);
+		owner.setSkillSkinList(GameRepositories.playerSkillSkins().findAll(owner.getObjectId()));
 		PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(owner));
 	}
 
@@ -124,8 +124,8 @@ public class SkillSkinList {
 				}
 			}
 		}
-		DAOManager.getDAO(PlayerSkillSkinListDAO.class).setDeactive(owner.getObjectId(), skinIdToremove);
-		owner.setSkillSkinList(DAOManager.getDAO(PlayerSkillSkinListDAO.class).loadSkillSkinList(owner.getObjectId()));
+		GameRepositories.playerSkillSkins().setActive(owner.getObjectId(), skinIdToremove, false);
+		owner.setSkillSkinList(GameRepositories.playerSkillSkins().findAll(owner.getObjectId()));
 		PacketSendUtility.sendPacket(owner, new SM_SKILL_ANIMATION(owner));
 	}
 

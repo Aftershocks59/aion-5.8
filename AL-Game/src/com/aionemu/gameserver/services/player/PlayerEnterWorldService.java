@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.repository.GameRepositories;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,7 +25,6 @@ import com.aionemu.gameserver.configs.main.HTMLConfig;
 import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerPasskeyDAO;
 import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.dao.WeddingDAO;
 import com.aionemu.gameserver.model.ChatType;
@@ -200,8 +200,7 @@ public final class PlayerEnterWorldService {
 	private static final void showPasskey(final int objectId, final AionConnection client) {
 		client.getAccount().getCharacterPasskey().setConnectType(ConnectType.ENTER);
 		client.getAccount().getCharacterPasskey().setObjectId(objectId);
-		boolean isExistPasskey = DAOManager.getDAO(PlayerPasskeyDAO.class)
-				.existCheckPlayerPasskey(client.getAccount().getId());
+		boolean isExistPasskey = GameRepositories.playerPasskeys().exists(client.getAccount().getId());
 		if (!isExistPasskey) {
 			client.sendPacket(new SM_CHARACTER_SELECT(0));
 		} else {
