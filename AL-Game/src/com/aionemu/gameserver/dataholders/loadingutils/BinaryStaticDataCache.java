@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.dataholders.StaticData;
+import com.aionemu.gameserver.world.zone.ZoneName;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.SerializerFactory;
@@ -80,7 +81,7 @@ public final class BinaryStaticDataCache {
 	 * the data holder classes changes, so an old snapshot is discarded instead of
 	 * being read back into incompatible classes.
 	 */
-	private static final int FORMAT_VERSION = 9;
+	private static final int FORMAT_VERSION = 10;
 
 	/** Sizes the streaming buffers. The graph is large, so read and write in bulk. */
 	private static final int BUFFER_SIZE = 1 << 20;
@@ -207,7 +208,7 @@ public final class BinaryStaticDataCache {
 	 *
 	 * @return a ready to use serialiser
 	 */
-	private static Kryo newKryo() {
+	static Kryo newKryo() {
 		Kryo kryo = new Kryo();
 
 		// The data holders are plain JAXB beans with no Kryo annotations, and the
@@ -254,7 +255,32 @@ public final class BinaryStaticDataCache {
 		// every zone polygon empty. Walk the path through its public iterator instead.
 		kryo.addDefaultSerializer(Path2D.class, new Path2DSerializer());
 
+		// ZoneName interns one instance per name in a static registry, and callers
+		// compare the instances with ==. That registry is filled as a side effect of
+		// the JAXB setter, which restoring from here never runs, so it held nothing
+		// but NONE: ZoneName.get answered NONE for every zone and the comparisons in
+		// PlayerController and FortressSiege were false forever. Carry the name and
+		// intern on the way back in, which fills the registry and keeps the identity
+		// those comparisons rely on.
+		kryo.addDefaultSerializer(ZoneName.class, new ZoneNameSerializer());
+
 		return kryo;
+	}
+
+	/**
+	 * Serialises a {@link ZoneName} as its name and interns it when reading back.
+	 */
+	private static final class ZoneNameSerializer extends Serializer<ZoneName> {
+
+		@Override
+		public void write(Kryo kryo, Output output, ZoneName object) {
+			output.writeString(object.name());
+		}
+
+		@Override
+		public ZoneName read(Kryo kryo, Input input, Class<? extends ZoneName> type) {
+			return ZoneName.createOrGet(input.readString());
+		}
 	}
 
 	/**
