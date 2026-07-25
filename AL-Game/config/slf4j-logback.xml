@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <configuration>
+	<!-- Drop the one warning Flyway's Galera probe provokes on a standalone server. -->
+	<turboFilter class="com.aionemu.commons.log.GaleraProbeFilter"/>
 	<property name="logFolder" value="log/"/>
 	<appender name="app_console" class="ch.qos.logback.core.FileAppender">
 		<filter class="com.aionl.slf4j.filters.ConsoleFilter"></filter>
