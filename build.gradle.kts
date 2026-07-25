@@ -98,7 +98,24 @@ fun Project.registerScriptCompilation() {
             destinationDirectory = layout.buildDirectory.dir("script-classes/$suffix")
         }
 
-        compileScripts.configure { dependsOn(contextTask) }
+        // Package the context so the server loads it instead of compiling it again.
+        // Compiling the scripts costs about twenty seconds of every start and only
+        // repeats what this task just did.
+        //
+        // The archive name must match PrecompiledScripts.archiveFor: the root path
+        // relative to data/scripts, separators turned into dashes. A mismatch only
+        // makes the server compile from source, never misbehave.
+        val archiveName = root.relativeTo(scriptsDir).invariantSeparatorsPath.replace('/', '-')
+
+        val packageTask = tasks.register<Jar>("packageScripts$suffix") {
+            description = "Package the ${root.relativeTo(projectDir).invariantSeparatorsPath} script context"
+            from(contextTask.map { it.destinationDirectory })
+            // Write beside the other generated caches, where the server reads them.
+            destinationDirectory = layout.projectDirectory.dir("cache/scripts")
+            archiveFileName = "$archiveName.jar"
+        }
+
+        compileScripts.configure { dependsOn(packageTask) }
     }
 
     // Fail the check task, so a broken script stops a build rather than a boot.

@@ -141,16 +141,20 @@ public class ScriptContextImpl implements ScriptContext {
             return;
         }
 
-        ScriptCompiler scriptCompiler = instantiateCompiler();
+        compilationResult = loadPrecompiled();
 
-        Collection<File> files = FileUtils.listFiles(root, scriptCompiler.getSupportedFileTypes(), true);
+        if (compilationResult == null) {
+            ScriptCompiler scriptCompiler = instantiateCompiler();
 
-        if (parentScriptContext != null) {
-            scriptCompiler.setParentClassLoader(parentScriptContext.getCompilationResult().getClassLoader());
+            Collection<File> files = FileUtils.listFiles(root, scriptCompiler.getSupportedFileTypes(), true);
+
+            if (parentScriptContext != null) {
+                scriptCompiler.setParentClassLoader(parentScriptContext.getCompilationResult().getClassLoader());
+            }
+
+            scriptCompiler.setLibraires(libraries);
+            compilationResult = scriptCompiler.compile(files);
         }
-
-        scriptCompiler.setLibraires(libraries);
-        compilationResult = scriptCompiler.compile(files);
 
         getClassListener().postLoad(compilationResult.getCompiledClasses());
 
@@ -158,6 +162,54 @@ public class ScriptContextImpl implements ScriptContext {
             for (ScriptContext context : childScriptContexts) {
                 context.init();
             }
+        }
+    }
+
+    /**
+     * Loads this context from the archive the build produced, when that archive is
+     * still current.
+     * <p>
+     * Compiling the scripts costs about twenty seconds of every start, and repeats
+     * work the build already did. The archive is used only while it is newer than
+     * every source under the root, so editing a script still falls back to
+     * compiling and the development loop is unchanged.
+     *
+     * @return the loaded context, or null to compile from source
+     */
+    private CompilationResult loadPrecompiled() {
+        File archive = PrecompiledScripts.archiveFor(root);
+
+        if (archive == null || !archive.isFile()) {
+            return null;
+        }
+
+        File newer = PrecompiledScripts.findSourceNewerThan(root, archive.lastModified());
+        if (newer != null) {
+            log.info("Script archive {} is older than {}, compiling from source.", archive.getName(), newer.getName());
+            return null;
+        }
+
+        try {
+            ClassLoader parent = parentScriptContext != null
+                    ? parentScriptContext.getCompilationResult().getClassLoader()
+                    : ScriptContextImpl.class.getClassLoader();
+
+            PrecompiledScriptClassLoader classLoader = new PrecompiledScriptClassLoader(archive, parent);
+            Set<String> names = classLoader.getCompiledClasses();
+            Class<?>[] classes = new Class<?>[names.size()];
+
+            int i = 0;
+            for (String name : names) {
+                classes[i++] = classLoader.loadClass(name);
+            }
+
+            log.info("Loaded {} classes from {} without compiling.", classes.length, archive.getName());
+            return new CompilationResult(classes, classLoader);
+        } catch (Exception e) {
+            // Never let a stale or damaged archive stop the server: compiling from
+            // source always remains available.
+            log.warn("Could not load script archive " + archive.getName() + ", compiling from source.", e);
+            return null;
         }
     }
 

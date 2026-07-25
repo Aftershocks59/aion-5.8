@@ -29,12 +29,19 @@ Gradle itself needs no installation: use the wrapper (`./gradlew`).
 ```
 
 `compileScripts` runs as part of `build`. `AL-Game/data/scripts/` holds thousands
-of quest, AI and instance sources the server compiles at startup, one context at
-a time, each into its own classloader. Each context is compiled separately here
-for the same reason: a shared compilation would accept references across
-contexts that the runtime classloaders reject. One bad file aborts its whole
-context at startup, so a broken quest script used to take the entire quest
-engine down with it, and only a full boot revealed it.
+of quest, AI and instance sources, one script context per directory, each loaded
+into its own classloader. Each context is compiled separately here for the same
+reason: a shared compilation would accept references across contexts that the
+runtime classloaders reject. One bad file aborts its whole context, so a broken
+quest script used to take all 6196 quests down with it, and only a full boot
+revealed it.
+
+The task also packages each context into `cache/scripts/<context>.jar`. The
+server loads those archives instead of compiling at startup, which is worth
+roughly twenty seconds. An archive is used only while it is newer than every
+source in its context, so editing a script recompiles that context on the next
+start and leaves the others alone. A missing, stale or damaged archive only
+means a slower start, never a broken one.
 
 ## Database
 
